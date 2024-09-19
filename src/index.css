@@ -1,0 +1,187 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px; /* Ajustado para mejor legibilidad */
+  color: #F5EDF4;
+}
+
+a:visited {
+  color: #efbe63;
+}
+a:hover {
+  text-decoration: none;
+  color: #ffffff;
+  transition: color 0.2s;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App {
+  width: 30rem; /* Un poco más ancho para comodidad */
+  padding: 1rem;
+}
+
+section {
+  width: 100%;
+  background-color: #3e79bcba; /* Un poco más oscuro */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  box-shadow: 0 4px 20px #3e79bc70; /* Sombra para profundidad */
+  padding: 2rem; /* Más espacio interno */
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  color: #33173C;
+  margin-bottom: 1rem; /* Mayor espacio debajo del título */
+  font-size: 24px; /* Tamaño de fuente más grande para el título */
+  text-align: center; /* Centrar el título */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Aumentar espaciado entre los elementos */
+}
+
+.input-group {
+  display: flex;
+  align-items: center; /* Alinear elementos verticalmente */
+  gap: 1rem; /* Espacio entre etiqueta y input */
+}
+
+label {
+  font-weight: bold; /* Negrita para etiquetas */
+  flex: 1; /* Tomar el espacio necesario */
+}
+
+input[type="text"],
+input[type="password"],
+button {
+  width: 100%;
+  font-size: 18px; /* Un poco más pequeño para mejor adaptación */
+  padding: 0.75rem; /* Aumentar el padding */
+  border: 1px solid #ccc; /* Borde ligero */
+  border-radius: 0.5rem;
+  background-color: #3e79bc9c; /* Fondo más claro */
+  color: #fff; /* Color de texto blanco */
+  transition: border 0.3s; /* Transición suave en el borde */
+}
+
+input:focus,
+button:focus {
+  border: 1px solid #3e79bcfd; /* Borde verde al enfocar */
+  outline: none; /* Eliminar el borde por defecto */
+}
+
+button {
+  background-color: #3e79bc; /* Color de fondo del botón */
+  color: #fff; /* Color del texto del botón */
+  cursor: pointer; /* Cambiar cursor al pasar por encima */
+  padding: 0.75rem; /* Mayor área de clic */
+  border: none; /* Sin borde */
+  border-radius: 0.5rem;
+  transition: background-color 0.3s; /* Transición en el fondo */
+}
+
+button:hover {
+  background-color: #0056b3; /* Color más oscuro al pasar el ratón */
+}
+
+button:disabled {
+  background-color: #6c757d; /* Color para botón deshabilitado */
+  cursor: not-allowed; /* Cambiar cursor al estar deshabilitado */
+}
+
+.instructions {
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  width: 15rem; /* Altura fija para mantener el espacio */
+  overflow: hidden; /* Evitar desbordamiento */
+  transition: opacity 0.3s;
+}
+
+.offscreen {
+  position: absolute;
+  left: -9999px;
+}
+
+.hide {
+  display: none;
+}
+
+.valid {
+  color: #67fa0cc5;
+  margin-left: 0.5rem;
+}
+
+.invalid {
+  color: red;
+  margin-left: 0.5rem;
+}
+
+.errmsg {
+  background-color: #3e6cbc7c; /* Fondo suave para mensajes de error */
+  color: #ff2121d2;
+  font-weight: bold;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem; /* Bordes redondeados para errores */
+}
+
+.line {
+  display: inline-block;
+  margin-top: 1rem; /* Espaciado superior */
+}
+
+.linkContainer {
+  margin-top: 1rem; /* Espaciado superior */
+}
+
+.showPwd:hover {
+  cursor: pointer;
+  color: rgb(50, 166, 205);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  html {
+    font-size: 16px; /* Reducir tamaño de fuente en pantallas pequeñas */
+  }
+
+  h1 {
+    font-size: 20px; /* Ajustar tamaño del título */
+  }
+
+  input[type="text"],
+  input[type="password"],
+  button {
+    font-size: 16px; /* Ajustar tamaño de los inputs y botones */
+  }
+
+  button {
+    padding: 0.5rem; /* Ajustar padding en pantallas pequeñas */
+  }
+  .App {
+    width: 100%;
+    padding: 0.5rem;
+    max-width: 100%;
+  }
+  label {
+    font-size: 0.8rem; /* Ajustar tamaño de la etiqueta */
+  }
+}
