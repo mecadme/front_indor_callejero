@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import {
   faCheck,
@@ -16,6 +17,11 @@ const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
   const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const userRef = useRef();
   const errRef = useRef();
 
@@ -24,7 +30,6 @@ const Login = () => {
   const [pwd, setPwd] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const LOGIN_URL = "/auth/login";
@@ -63,19 +68,19 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      const accessToken = response?.data?.token;
+      const accessToken = response?.data?.accessToken;
       console.log(accessToken);
       const decodedToken = jwtDecode(accessToken);
       console.log(decodedToken);
       const roles = decodedToken?.authorities
-      ? decodedToken.authorities.split(",")
-      : [];
+        ? decodedToken.authorities.split(",")
+        : [];
 
-    console.log("Roles:", roles);
+      console.log("Roles:", roles);
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");
-      setSuccess(true);
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg("Servidor no disponible.");
@@ -85,8 +90,7 @@ const Login = () => {
         setErrMsg("Usuario o contrasena incorrectos.");
       } else if (err.response?.status === 403) {
         setErrMsg("Usuario o contrasena incorrectos.");
-      }
-       else {
+      } else {
         setErrMsg("Error en la autenticación.");
       }
       console.log(err);
@@ -97,108 +101,104 @@ const Login = () => {
   };
 
   return (
-    <>
-      {success ? (
-        <section>
-          <h1>¡Inicio de sesión exitoso!</h1>
-          <br />
-          <p>
-            <a href="/home">Ir a la página principal</a>
-          </p>
-        </section>
-      ) : (
-        <section>
-          <p
-            ref={errRef}
-            className={errMsg ? "errmsg" : "offscreen"}
-            aria-live="assertive"
+    <section>
+      <p
+        ref={errRef}
+        className={errMsg ? "errmsg" : "offscreen"}
+        aria-live="assertive"
+      >
+        {errMsg}
+      </p>
+
+      <h1>Iniciar sesión</h1>
+
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username">
+          Usuario:
+          <FontAwesomeIcon
+            icon={faCheck}
+            className={validUser ? "valid" : "hide"}
+          />
+          <FontAwesomeIcon
+            icon={faTimes}
+            className={validUser || !user ? "hide" : "invalid"}
+          />
+        </label>
+        <input
+          type="text"
+          id="username"
+          ref={userRef}
+          autoComplete="off"
+          onChange={(e) => setUser(e.target.value)}
+          placeholder="juan_perez@example.com"
+          value={user}
+          required
+          aria-invalid={validUser ? "false" : "true"}
+          aria-describedby="uidnote"
+        />
+        <p
+          id="uidnote"
+          className={user && !validUser ? "instructions" : "offscreen"}
+        >
+          <FontAwesomeIcon icon={faInfoCircle} />
+          Por favor, introduzca un correo válido.
+        </p>
+
+        <label htmlFor="password">Contraseña:</label>
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <input
+            type={showPwd ? "text" : "password"}
+            id="password"
+            onChange={(e) => setPwd(e.target.value)}
+            placeholder="Ejemplo1234"
+            value={pwd}
+            required
+            aria-describedby="pwdnote"
+          />
+          <button
+            type="button"
+            className="showPwd"
+            onClick={toggleShowPwd}
+            style={{
+              position: "absolute",
+              left: "45%",
+              top: "50%",
+              transform: "translateY(-50%)",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+            }}
           >
-            {errMsg}
-          </p>
+            <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
+          </button>
+        </div>
 
-          <h1>Iniciar sesión</h1>
+        <button type="submit" disabled={!validUser || !pwd || isLoading}>
+          {isLoading ? (
+            <>
+              <FontAwesomeIcon icon={faSpinner} spin /> Iniciando sesión...
+            </>
+          ) : (
+            "Iniciar sesión"
+          )}
+        </button>
+      </form>
 
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="username">
-              Usuario:
-              <FontAwesomeIcon
-                icon={faCheck}
-                className={validUser ? "valid" : "hide"}
-              />
-              <FontAwesomeIcon
-                icon={faTimes}
-                className={validUser || !user ? "hide" : "invalid"}
-              />
-            </label>
-            <input
-              type="text"
-              id="username"
-              ref={userRef}
-              autoComplete="off"
-              onChange={(e) => setUser(e.target.value)}
-              placeholder="juan_perez@example.com"
-              value={user}
-              required
-              aria-invalid={validUser ? "false" : "true"}
-              aria-describedby="uidnote"
-            />
-            <p
-              id="uidnote"
-              className={user && !validUser ? "instructions" : "offscreen"}
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Por favor, introduzca un correo válido.
-            </p>
+      <p className="pwdForgot">
+        ¿Olvidaste tu contraseña? <br />
+        <span className="line">
+        <a href="/forgot-password">Recuper contraseña</a>
+        </span>
+      </p>
 
-            <label htmlFor="password">Contraseña:</label>
-            <div style={{ position: "relative", display: "inline-block" }}>
-              <input
-                type={showPwd ? "text" : "password"}
-                id="password"
-                onChange={(e) => setPwd(e.target.value)}
-                placeholder="Ejemplo1234"
-                value={pwd}
-                required
-                aria-describedby="pwdnote"
-              />
-              <button
-                type="button"
-                className="showPwd"
-                onClick={toggleShowPwd}
-                style={{
-                  position: "absolute",
-                  left: "45%",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  border: "none",
-                  background: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
-              </button>
-            </div>
 
-            <button type="submit" disabled={!validUser || !pwd || isLoading}>
-              {isLoading ? (
-                <>
-                  <FontAwesomeIcon icon={faSpinner} spin /> Iniciando sesión...
-                </>
-              ) : (
-                "Iniciar sesión"
-              )}
-            </button>
-          </form>
-
-          <p className="linkContainer">
-            ¿Necesitas una cuenta? <br />
-            <span className="line">
-              <a href="/register">Crear una cuenta</a>
-            </span>
-          </p>
-        </section>
-      )}
-    </>
+      <p className="linkContainer">
+        ¿Necesitas una cuenta? <br />
+        <span className="line">
+          <a href="/register">Crear una cuenta</a>
+        </span>
+      </p>
+    </section>
   );
 };
 

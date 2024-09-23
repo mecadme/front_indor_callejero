@@ -1,28 +1,17 @@
 import axios from "axios";
 
-// Verifica si la variable de entorno está definida
-const apiUrl = import.meta.env.VITE_APP_API_URL;
-// process.env.REACT_APP_API_URL;
+const BASE_URL = import.meta.env.VITE_APP_API_URL;
 
-if (!apiUrl) {
+if (!BASE_URL) {
     console.error("REACT_APP_API_URL no está definida en .env");
 }
-console.log(apiUrl);
 
-const instance = axios.create({
-    baseURL: apiUrl,
-    headers: {
-        "Content-Type": "application/json",
-    },
+export default axios.create({
+    baseURL: BASE_URL
 });
 
-// Opcional: puedes agregar interceptores para manejar respuestas o errores
-instance.interceptors.response.use(
-    response => response,
-    error => {
-        console.error("Error en la respuesta de la API:", error);
-        return Promise.reject(error);
-    }
-);
-
-export default instance;
+export const axiosPrivate = axios.create({
+    baseURL: BASE_URL,
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true
+});

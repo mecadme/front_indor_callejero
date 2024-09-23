@@ -10,6 +10,12 @@ html {
   color: #F5EDF4;
 }
 
+a {
+  padding: 0.5rem;
+  color: #efbe63;
+  text-decoration: none;
+}
+
 a:visited {
   color: #efbe63;
 }
@@ -149,12 +155,18 @@ button:disabled {
 }
 
 .linkContainer {
-  margin-top: 1rem; /* Espaciado superior */
+  margin-top: 1rem;
+   /* Espaciado superior */
 }
 
 .showPwd:hover {
   cursor: pointer;
   color: rgb(50, 166, 205);
+}
+
+.pwdForgot {
+  margin-top: 1rem; /* Espaciado superior */
+  text-align: center;
 }
 
 /* Responsive adjustments */
