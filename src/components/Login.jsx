@@ -16,7 +16,7 @@ import useAuth from "../hooks/useAuth";
 const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,10 +45,12 @@ const Login = () => {
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd]);
+
   const toggleShowPwd = () => setShowPwd((prev) => !prev);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validUser) {
       setErrMsg("Por favor, introduzca un correo válido.");
       errRef.current.focus();
@@ -56,6 +58,7 @@ const Login = () => {
     }
 
     setIsLoading(true);
+
     try {
       const response = await axios.post(
         LOGIN_URL,
@@ -68,19 +71,18 @@ const Login = () => {
           withCredentials: true,
         }
       );
+
       const accessToken = response?.data?.accessToken;
-      console.log(accessToken);
       const decodedToken = jwtDecode(accessToken);
-      console.log(decodedToken);
       const roles = decodedToken?.authorities
         ? decodedToken.authorities.split(",")
         : [];
 
-      console.log("Roles:", roles);
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");
       navigate(from, { replace: true });
+
     } catch (err) {
       if (!err?.response) {
         setErrMsg("Servidor no disponible.");
@@ -96,9 +98,17 @@ const Login = () => {
       console.log(err);
       errRef.current.focus();
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false); 
     }
   };
+
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
 
   return (
     <section>
@@ -109,9 +119,7 @@ const Login = () => {
       >
         {errMsg}
       </p>
-
       <h1>Iniciar sesión</h1>
-
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">
           Usuario:
@@ -182,15 +190,23 @@ const Login = () => {
             "Iniciar sesión"
           )}
         </button>
+            <div className="persistCheck">
+              <input
+                type="checkbox"
+                id="persist"
+                onChange={togglePersist}
+                checked={persist}
+              />
+              <label htmlFor="persist">Recordar usuario</label>
+            </div>
       </form>
 
       <p className="pwdForgot">
         ¿Olvidaste tu contraseña? <br />
         <span className="line">
-        <a href="/forgot-password">Recuper contraseña</a>
+          <a href="/forgot-password">Recuper contraseña</a>
         </span>
       </p>
-
 
       <p className="linkContainer">
         ¿Necesitas una cuenta? <br />
