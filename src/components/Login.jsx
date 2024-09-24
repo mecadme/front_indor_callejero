@@ -16,7 +16,7 @@ import useAuth from "../hooks/useAuth";
 const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -100,6 +100,14 @@ const Login = () => {
     }
   };
 
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
+
   return (
     <section>
       <p
@@ -182,15 +190,23 @@ const Login = () => {
             "Iniciar sesión"
           )}
         </button>
+            <div className="persistCheck">
+              <input
+                type="checkbox"
+                id="persist"
+                onChange={togglePersist}
+                checked={persist}
+              />
+              <label htmlFor="persist">Recordar usuario</label>
+            </div>
       </form>
 
       <p className="pwdForgot">
         ¿Olvidaste tu contraseña? <br />
         <span className="line">
-        <a href="/forgot-password">Recuper contraseña</a>
+          <a href="/forgot-password">Recuper contraseña</a>
         </span>
       </p>
-
 
       <p className="linkContainer">
         ¿Necesitas una cuenta? <br />
