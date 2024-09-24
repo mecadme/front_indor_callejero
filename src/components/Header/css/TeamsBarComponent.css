@@ -1,0 +1,47 @@
+.teams_logo_list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    list-style-type: none;
+    padding: 0.2% 0;
+    margin: 0;
+    max-width: 100%;
+    justify-content: space-around;
+  }
+  
+  .teams_bar.navbar.navbar-expand-lg.navbar-light.bg-light {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+  
+  
+  .teams_logo_list::-webkit-scrollbar {
+    display:inline;
+  }
+  
+  .logo_team {
+    max-width: 60px;
+    padding: 0.6rem;
+    margin:  0 1.5rem;
+    border-radius: 10px;
+  }
+  
+  .logo_team:hover {
+    transform: translate(0, -3px);
+    cursor: pointer;
+  } 
+  
+  .team_container-fluid {
+    white-space: nowrap;
+    overflow-x: auto;
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .teams_logo_list {
+      scroll-behavior: smooth;
+    }
+  }
+  

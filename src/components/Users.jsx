@@ -10,9 +10,6 @@ const Users = () => {
 
   const axiosPrivate = useAxiosPrivate();
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -26,7 +23,6 @@ const Users = () => {
         isMounted && setUsers(response.data.users);
       } catch (err) {
         console.log(err.message);
-        // navigate("/login", { state: { from: location }, replace: true });
       }
     };
     

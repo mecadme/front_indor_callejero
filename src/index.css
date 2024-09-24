@@ -1,23 +1,24 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
+  
 }
 
 html {
-  font-family: "Montserrat", sans-serif;
   font-size: 18px; 
   color: #F5EDF4;
 }
 
 a {
   padding: 0.5rem;
-  color: #efbe63;
+  color: #F5EDF4;
   text-decoration: none;
 }
 
 a:visited {
-  color: #efbe63;
+  color: #F5EDF4;
 }
 a:hover {
   text-decoration: none;
@@ -34,22 +35,15 @@ body {
 }
 
 .App {
-  width: 30rem; 
-  padding: 1rem;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100%;
 }
 
-section {
-  width: 100%;
-  background-color: #3e79bcba; 
-  border-radius: 0.5rem; 
-  box-shadow: 0 4px 20px #3e79bc70; 
-  padding: 2rem; 
-  display: flex;
-  flex-direction: column;
-}
+
 
 h1 {
-  color: #33173C;
+  color: #F5EDF4;
   margin-bottom: 1rem; 
   font-size: 24px; 
   text-align: center; 

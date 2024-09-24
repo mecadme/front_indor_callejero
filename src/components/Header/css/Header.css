@@ -1,0 +1,49 @@
+.header {
+    position: sticky;
+    top: 0;
+    background-color: #3e79bb;
+    border-bottom: 5px solid #3e79bb;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    align-content: center
+    ;
+  }
+
+  .containerHeader.container {
+    max-width: 100%;
+    margin: 0;
+    font-size: 1.25rem;
+    font-variant: small-caps;
+  }
+
+  .navbar-brand {
+    border: 1rem transparent;
+    margin: 0 2rem;
+  }
+
+  .navbar-collapse.collapse{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .navbar-collapse.collapse :hover {
+    transition: color 0.1s ease-in-out;
+    transform: scale(1.05);
+  }
+  
+  .logo {
+    max-width: 2rem;
+    padding: 0;
+    border: 1rem transparent;
+    margin: 0 2rem;
+    filter: grayscale(100) brightness(39);
+  }
+
+  .logo:hover {
+    filter: grayscale(0) brightness(100);
+    transform: scale(1.1);
+  }

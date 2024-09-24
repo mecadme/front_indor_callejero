@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import useLogOut from "../hooks/useLogOut";
+import Header from "./Header/Header";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Home = () => {
 
   return (
     <section>
+      <Header />
       <h1>Home</h1>
       <br />
       <p>You are logged in!</p>
