@@ -25,14 +25,12 @@ const Register = () => {
   const [matchPwd, setMatchPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
-
+  const [isLoading, setIsLoading] = useState(false);
   const [validName, setValidName] = useState(false);
   const [validLastName, setValidLastName] = useState(false);
   const [validUser, setValidUser] = useState(false);
   const [validPwd, setValidPwd] = useState(false);
   const [validMatch, setValidMatch] = useState(false);
-
   const [showPwd, setShowPwd] = useState(false);
   const [showMatchPwd, setShowMatchPwd] = useState(false);
 
@@ -71,7 +69,7 @@ const Register = () => {
       return;
     }
 
-    setIsLoading(true); // Activar el estado de carga
+    setIsLoading(true); 
 
     try {
       const response = await axios.post(
@@ -87,8 +85,8 @@ const Register = () => {
           withCredentials: true
         }
       );
-      console.log(JSON.stringify(response));
       setSuccess(true);
+
     } catch (err) {
       if (!err.response) {
         setErrMsg("No hay respuesta del servidor");
@@ -99,7 +97,7 @@ const Register = () => {
       }
       errRef.current.focus();
     } finally {
-      setIsLoading(false); // Desactivar el estado de carga
+      setIsLoading(false);
     }
   };
 
@@ -122,7 +120,7 @@ const Register = () => {
             {errMsg}
           </p>
           <h1>Registro</h1>
-          {isLoading ? ( // Mostrar mensaje de carga
+          {isLoading ? ( 
             <div>
               <FontAwesomeIcon icon={faSpinner} spin />
               <span>Cargando...</span>
@@ -325,7 +323,7 @@ const Register = () => {
                   !validUser ||
                   !validPwd ||
                   !validMatch ||
-                  isLoading // Desactivar botón durante carga
+                  isLoading 
                 }
               >
                 Registrar

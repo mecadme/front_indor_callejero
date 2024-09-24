@@ -45,10 +45,12 @@ const Login = () => {
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd]);
+
   const toggleShowPwd = () => setShowPwd((prev) => !prev);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validUser) {
       setErrMsg("Por favor, introduzca un correo válido.");
       errRef.current.focus();
@@ -56,6 +58,7 @@ const Login = () => {
     }
 
     setIsLoading(true);
+
     try {
       const response = await axios.post(
         LOGIN_URL,
@@ -68,19 +71,18 @@ const Login = () => {
           withCredentials: true,
         }
       );
+
       const accessToken = response?.data?.accessToken;
-      console.log(accessToken);
       const decodedToken = jwtDecode(accessToken);
-      console.log(decodedToken);
       const roles = decodedToken?.authorities
         ? decodedToken.authorities.split(",")
         : [];
 
-      console.log("Roles:", roles);
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");
       navigate(from, { replace: true });
+
     } catch (err) {
       if (!err?.response) {
         setErrMsg("Servidor no disponible.");
@@ -96,7 +98,7 @@ const Login = () => {
       console.log(err);
       errRef.current.focus();
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false); 
     }
   };
 
@@ -117,9 +119,7 @@ const Login = () => {
       >
         {errMsg}
       </p>
-
       <h1>Iniciar sesión</h1>
-
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">
           Usuario:
