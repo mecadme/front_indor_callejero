@@ -20,15 +20,43 @@ const useAxiosPrivate = () => {
     );
 
     const responseIntercept = axiosPrivate.interceptors.response.use(
-      (response) => response,
+      (response) => response, 
       async (error) => {
         const prevRequest = error?.config;
-        if (error?.response?.status === 403 && !prevRequest?.sent) {
-          prevRequest.sent = true;
-          const newAccessToken = await refresh();
-          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return axiosPrivate(prevRequest);
+    
+        
+        if (
+          error?.response?.status === 403 ||
+          (error?.response?.status === 500 &&
+            error?.response?.data?.message ===
+              "Expired or invalid JWT accessToken" &&
+            !prevRequest?.sent) 
+        ) {
+          prevRequest.sent = true; 
+    
+          try {
+            const newAccessToken = await refresh(); 
+    
+            
+            if (!newAccessToken) {
+              console.error("Error: no se recibió un nuevo token");
+              throw new Error("No se pudo renovar el token");
+            }
+    
+            prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`; 
+    
+            
+            return axiosPrivate(prevRequest);
+          } catch (refreshError) {
+            
+            console.error("Error al intentar refrescar el token:", refreshError);
+            
+            
+            return Promise.reject(refreshError);
+          }
         }
+    
+        
         return Promise.reject(error);
       }
     );
