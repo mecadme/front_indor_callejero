@@ -1,8 +1,8 @@
 .header {
     position: sticky;
     top: 0;
-    background-color: #3e79bb;
-    border-bottom: 5px solid #3e79bb;
+    background-color: #3e78bc;
+    border-bottom: 5px solid #3e78bc;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -16,25 +16,17 @@
     margin: 0;
     font-size: 1.25rem;
     font-variant: small-caps;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
   }
 
   .navbar-brand {
     border: 1rem transparent;
     margin: 0 2rem;
   }
-
-  .navbar-collapse.collapse{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-  }
-
-  .navbar-collapse.collapse :hover {
-    transition: color 0.1s ease-in-out;
-    transform: scale(1.05);
-  }
-  
   .logo {
     max-width: 2rem;
     padding: 0;
@@ -47,3 +39,37 @@
     filter: grayscale(0) brightness(100);
     transform: scale(1.1);
   }
+
+  .navbar-collapse.collapse{
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+  }
+  
+  .navbar-collapse.collapse :hover {
+    transition: color 0.1s ease-in-out;
+    transform: scale(1.05);
+  }
+  
+  .navbar-toggler {
+    max-width: 3.5rem;
+    padding: 0.5rem;
+    border: 1rem transparent;
+    margin: 0 2rem;
+  }
+  
+  .navbar-collapse.collapse.show {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem;
+    align-items: baseline;
+  }
+  .navbar-collapse.collapse.collapsing {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2rem;
+    align-items: center;
+  }
+

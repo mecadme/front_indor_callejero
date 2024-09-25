@@ -1,0 +1,76 @@
+.main-content {
+    padding: 5rem;
+    margin: 0;
+    align-content: center;
+    align-items: center;
+  }
+  
+  .round_container {
+    max-width: 100%;
+    display: flex;
+    gap: 3rem; /* Utilizamos gap en lugar de grid-gap */
+    justify-content: space-between;
+  }
+  
+  .row_week {
+    background-color: #359c4c;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    max-width: 100%;
+    max-height: 100%;
+    color: #f8f9fa;
+    align-items: center;
+  }
+  
+  .week_player {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .week_coach {
+    width: 100%;
+  }
+  
+  .week_team {
+    display: flex;
+    max-width: 100%;
+  }
+  
+  .sponsor_container {
+    margin-top: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    font-size: 3rem;
+    text-align: center; /* Centrado del texto */
+  }
+  
+  .position_container {
+    display: flex;
+    gap: 3rem; /* Reemplazamos grid-gap con flexbox gap */
+  }
+  
+  /* Media query para pantallas pequeñas */
+  @media (max-width: 768px) {
+  
+    .round_container {
+      display: block; /* Cambia el layout a block para pantallas pequeñas */
+      gap: 50px;
+    }
+  
+    .row_week {
+      display: block; /* Cada componente ocupará toda la fila */
+    }
+  
+    .week_team, .week_player, .week_coach {
+      width: 100%; /* Asegura que ocupen todo el ancho en pantallas pequeñas */
+      margin-bottom: 1rem; /* Espaciado inferior para separar los elementos */
+    }
+  
+    .position_container {
+      flex-direction: column; /* Cambia el layout de las posiciones a columnas */
+    }
+  }
+  

@@ -33,7 +33,8 @@ const Header = () => {
             <Nav.Link href="/palmares_historicos">Palmares Históricos</Nav.Link>
             <Nav.Link href="/pronostico_resultados">Pronóstico de Resultados</Nav.Link>
             <Nav.Item>
-              <Button variant="primary">Login</Button>
+              <Button variant="primary"
+                onClick={() => navigate("/login")}>Iniciar Sesión</Button>
             </Nav.Item>
           </Navbar.Collapse>
         </Container>
