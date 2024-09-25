@@ -16,8 +16,6 @@ const Rounds = () => {
       setLoading(true);
       const response = await axios.get(ROUNDS_URL);
 
-      console.log(response.data);
-
       const data = response.data;
 
       setRoundsData(data);

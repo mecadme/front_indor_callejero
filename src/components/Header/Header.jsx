@@ -11,7 +11,6 @@ const Header = () => {
 
   const { teams, isLoading, error } = useFetchTeams();
   
-  console.log(teams); // Usamos el hook para obtener los equipos
 
   const getAllTeams = (teamId) => {
     setSelectedTeam(teamId);
