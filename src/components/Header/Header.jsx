@@ -6,10 +6,18 @@ import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import useFetchTeams from "../../hooks/useFetchTeams.jsx"; 
 const Header = () => {
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectTeam, setSelectedTeam] = useState(null);
   const navigate = useNavigate();
 
   const { teams, isLoading, error } = useFetchTeams();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   
 
   const getAllTeams = (teamId) => {

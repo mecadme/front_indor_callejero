@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Sponsors from "./Sponsors";
 import Standings from "./Standings";
@@ -7,26 +7,70 @@ import Rounds from "./Rounds";
 import WeekPlayer from "./WeekPlayer";
 import WeekTeam from "./WeekTeam";
 import WeekVideos from "./WeekVideos";
+import RoleBased from "../Administration/RoleBased";
+
+import useFetchRounds from "../../hooks/useFetchRounds";
+import axios from "../../api/axios";
 
 import "./css/MainContent.css";
-import { Container, Row, Col } from "react-bootstrap";
-
+import { Container, Row, Col, Form } from "react-bootstrap";
 
 const MainContent = () => {
-    const [selectedDate, setSelectedDate] = useState("2024-09-25");
+  const [currentValues, setCurrentValues] = useState({});
+  const [isLoadingCurrentValues, setIsLoadingCurrentValues] = useState(true);
+  const [errorCurrentValues, setErrorCurrentValues] = useState(null);
+
+  const CURRENT_VALUES_URL = "/currentValues";
+  const MIN_CONTRIBUTION = 1000;
+
+  const fetchCurrentValues = async () => {
+    try {
+      setIsLoadingCurrentValues(true);
+
+      const response = await axios.get(CURRENT_VALUES_URL);
+
+      if (response.data) {
+        console.log(response.data);
+        setCurrentValues(response.data);
+      } else {
+        setCurrentValues({ roundDate: "2024-09-24", roundId: 3 });
+      }
+
+      setIsLoadingCurrentValues(false);
+    } catch (error) {
+      setErrorCurrentValues(error.message);
+      setIsLoadingCurrentValues(false);
+      console.log(error.message);
+    }finally{
+      setIsLoadingCurrentValues(false);
+      setCurrentValues({ roundDate: "2024-09-24", roundId: 3 });
+    }
+
+  };
+
+  useEffect(() => {
+    fetchCurrentValues();
+  }, []);
+
+  const selectedDate = currentValues.roundDate;
+  const { RoundsData, loading, error } = useFetchRounds(currentValues.roundId);
+
+  console.log(RoundsData);
+
+  if (loading) {
+    return <div>Cargando jornada...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
   return (
     <main className="mainContent">
       <Container>
         <div className="round_container">
-          <Rounds />
+          <Rounds RoundsData={RoundsData} />
         </div>
         <Row className="row_week">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-
           <Col md={4} className="week_team">
             <WeekTeam date={selectedDate} />
           </Col>
@@ -38,8 +82,7 @@ const MainContent = () => {
           </Col>
         </Row>
         <div className="sponsor_container text-center my-4">
-          Franja de auspicios
-          <Sponsors />
+          <Sponsors maxContributions={MIN_CONTRIBUTION} />
         </div>
 
         <Row className="row_standings">

@@ -13,16 +13,17 @@ html {
 
 a {
   padding: 0.5rem;
-  color: #F5EDF4;
+  color: #100f10;
   text-decoration: none;
 }
 
 a:visited {
-  color: #F5EDF4;
+  color: #100f0f;
 }
 a:hover {
+  transform: scale(1.05);
   text-decoration: none;
-  color: #ffffff;
+  color: #501717;
   transition: color 0.2s;
 }
 
