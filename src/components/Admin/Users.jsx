@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useNavigate, useLocation } from "react-router-dom";
 
 
 const Users = () => {
@@ -20,7 +19,7 @@ const Users = () => {
           signal: controller.signal,
         });
 
-        isMounted && setUsers(response.data.users);
+        isMounted && setUsers(response.dxita.users);
       } catch (err) {
         console.log(err.message);
       }

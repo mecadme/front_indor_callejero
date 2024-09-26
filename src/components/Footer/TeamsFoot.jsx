@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 const TeamsFoot = ({ content, getAllTeams }) => {
   return (
     <ListGroup>
-      <h5>Equipos</h5>
+      
+      <Link to="/equipos" className="nav-link"><h5>Equipos</h5></Link>
+      
       {content.length === 0 && (
         <div className="alert alert-info">No hay equipos</div>
       )}

@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 const ScheduleFoot = () => {
   return (
     <ListGroup>
-      <h5>Calendario</h5>
+      
+        <Link to="/jornadas" className="nav-link"><h5>Calendario</h5></Link>
       <ListGroup.Item>
         <Link to="/jornadas" className="nav-link">Todas las jornadas</Link>
       </ListGroup.Item>
