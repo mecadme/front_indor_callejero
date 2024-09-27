@@ -1,9 +1,11 @@
-import useWeekAward from "../../hooks/useWeekAward"; 
+import useWeekAward from "../../hooks/useWeekAward";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/WeekPlayer.css";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
-const WeekPlayer = ({ date }) => {  // Corrección en la estructura del componente
+const WeekPlayer = ({ date }) => {
+  // Corrección en la estructura del componente
 
   const { weekAward, isLoading, error } = useWeekAward(date);
 
@@ -23,27 +25,23 @@ const WeekPlayer = ({ date }) => {  // Corrección en la estructura del componen
   }
 
   return (
-    <div className="week-player container">
-      <h2 className="text-center mb-4">Jugador de la Fecha</h2>
-      <div className="row_player">
-        <div className="col-6 col-md-4 col-lg-3 mb-4">
-          <div className="card text-center">
-            {/* Mostramos la imagen del jugador */}
-            <img 
-              src={player.photoUrl} 
-              alt={`${player.firstName} ${player.lastName}`} 
-              className="card-img-top" 
-            />
-            <div className="card-body">
-              {/* Nombre completo del jugador */}
-              <h5 className="card-title">{`${player.firstName} ${player.lastName}`}</h5>
-              {/* Posición del jugador */}
-              <small className="text-muted">{player.position}</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Container className="week-player container">
+      <Row className="row_player">
+        <Card className="card text-center" style={{ alignItems: "center" }}>
+          <h4 className="text-center mb-4">Jugador de la Fecha</h4>
+          <Card.Img
+            variant="top"
+            src={player.photoUrl}
+            alt={`${player.firstName} ${player.lastName}`}
+            style={{ width: "4rem", height: "4rem" }}
+          />
+
+          <Card.Body className="card-body">
+            <h5 className="card-title">{`${player.firstName} ${player.lastName}`}</h5>
+          </Card.Body>
+        </Card>
+      </Row>
+    </Container>
   );
 };
 

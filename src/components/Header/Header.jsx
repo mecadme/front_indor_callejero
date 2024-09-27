@@ -35,10 +35,10 @@ const Header = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav.Link href="/proyecto_callejero">Proyecto Callejero</Nav.Link>
-            <Nav.Link href="/todo_lo_que_debes_saber">Todo lo que debes saber</Nav.Link>
-            <Nav.Link href="/palmares_historicos">Palmares Históricos</Nav.Link>
-            <Nav.Link href="/pronostico_resultados">Pronóstico de Resultados</Nav.Link>
+            <Nav.Link href="/street_project">Proyecto Callejero</Nav.Link>
+            <Nav.Link href="/all_you_need_to_know">Todo lo que debes saber</Nav.Link>
+            <Nav.Link href="/historical_events">Palmares Históricos</Nav.Link>
+            <Nav.Link href="/predict_result">Pronóstico de Resultados</Nav.Link>
             <Nav.Item>
               <Button variant="primary"
                 onClick={() => navigate("/login")}>Iniciar Sesión</Button>

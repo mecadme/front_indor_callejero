@@ -1,21 +1,34 @@
-import useWeekAward from "../../hooks/useWeekAward"; 
-
+import useWeekAward from "../../hooks/useWeekAward";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/WeekTeam.css";
+import { Container, Row, Col, Image } from "react-bootstrap";
 
 const gridPositionMap = {
-  GOALKEEPER: "portero",  // Modificado para seguir el formato de tu respuesta
+  GOALKEEPER: "portero",
   DEFENDER1: "defensa1",
   DEFENDER2: "defensa2",
   MIDFIELDER1: "medio1",
   MIDFIELDER2: "medio2",
-  FORWARD: "delantero",
+  ATTACKER: "delantero",
+};
+
+const PlayerCard = ({ player, gridArea }) => {
+  return (
+    <div className={`player player-${gridArea}`}>
+      <Image
+        src={player.photoUrl}
+        alt={`${player.firstName} ${player.lastName}`}
+        style={{ width: "3.5rem", height: "3.5rem" }}
+        className="img-player"
+      />
+      <span className="player-name mb-2" >{`${player.firstName} ${player.lastName}`}</span>
+    </div>
+  );
 };
 
 const WeekTeam = ({ date }) => {
   const { weekAward, isLoading, error } = useWeekAward(date);
 
-  // Cargando o manejando errores
   if (isLoading) {
     return <div>Cargando equipo...</div>;
   }
@@ -24,55 +37,35 @@ const WeekTeam = ({ date }) => {
     return <div>{error}</div>;
   }
 
-  // Obtener el equipo de la respuesta
   const team = weekAward.team?.players || [];
 
-  // Contadores para asignar posiciones únicas
   let defensaCount = 0;
   let medioCount = 0;
 
   return (
-    <div className="week-team container">
-      <h2 className="text-center mb-4">Equipo de la Semana</h2>
-      <div className="cancha justify-content-center">
-        <div className="field">
-          <div className="team-grid">
-            {team.map((player) => {
-              let gridArea = "";
+    <Container className="week-team">
+    
+      <Container className="cancha justify-content-center">
+      {team.map((player) => {
+          let gridArea = "";
 
-              // Asignación de posiciones según el backend
-              if (player.position === "GOALKEEPER") {
-                gridArea = gridPositionMap.GOALKEEPER;
-              } else if (player.position === "DEFENDER") {
-                defensaCount++;
-                gridArea = gridPositionMap[`DEFENDER${defensaCount}`];
-              } else if (player.position === "MIDFIELDER") {
-                medioCount++;
-                gridArea = gridPositionMap[`MIDFIELDER${medioCount}`];
-              } else if (player.position === "FORWARD") {
-                gridArea = gridPositionMap.FORWARD;
-              }
+          // Asignar el área del grid dependiendo de la posición del jugador
+          if (player.position === "GOALKEEPER") {
+            gridArea = gridPositionMap.GOALKEEPER;
+          } else if (player.position === "DEFENDER") {
+            defensaCount++;
+            gridArea = gridPositionMap[`DEFENDER${defensaCount}`];
+          } else if (player.position === "MIDFIELDER") {
+            medioCount++;
+            gridArea = gridPositionMap[`MIDFIELDER${medioCount}`];
+          } else if (player.position === "ATTACKER") {
+            gridArea = gridPositionMap.ATTACKER;
+          }
 
-              return (
-                <div
-                  key={player.playerId}
-                  className={`player player-${player.playerId}`}
-                  style={{ gridArea }}
-                >
-                  <img
-                    src={player.photoUrl}
-                    alt={player.firstName}
-                    className="img-player"
-                  />
-                  <span>{`${player.firstName} ${player.lastName}`}</span>
-                  <small className="text-muted">{player.position}</small>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
+          return <PlayerCard key={player.playerId} player={player} gridArea={gridArea} />;
+        })}
+      </Container>
+    </Container>
   );
 };
 

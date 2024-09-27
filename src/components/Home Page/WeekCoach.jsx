@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/WeekCoach.css";
-import useWeekAward from '../../hooks/useWeekAward'; // Asegúrate de que esta ruta sea correcta
+import useWeekAward from "../../hooks/useWeekAward"; // Asegúrate de que esta ruta sea correcta
+import { Card, Container, Row } from "react-bootstrap";
 
 const WeekCoach = ({ date }) => {
   const { weekAward, isLoading, error } = useWeekAward(date);
@@ -22,20 +23,21 @@ const WeekCoach = ({ date }) => {
   }
 
   return (
-    <div className="week-coach container">
-      <h2 className="text-center mb-4">Técnico de la Fecha</h2>
-      <div className="row_coach">
-        <div className="col-6 col-md-4 col-lg-3 mb-4">
-          <div className="card text-center">
-            {/* Mostrar imagen del técnico */}
-            <img src={tecnico.ethicOfficerPhotoUrl} alt={tecnico.ethicOfficerName} className="card-img-top" />
-            <div className="card-body">
-              <h5 className="card-title">{tecnico.ethicOfficerName}</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Container className="week-coach container">
+      <Row className="row_coach">
+        <Card className="card text-center" style={{ alignItems: "center" }}>
+          <h4 className="text-center mb-4">Técnico de la Fecha</h4>
+          <Card.Img
+            src={tecnico.ethicOfficerPhotoUrl}
+            alt={tecnico.ethicOfficerName}
+            style={{ width: "4rem", height: "4rem" }}
+          />
+          <Card.Body className="card-body">
+            <h5 className="card-title">{tecnico.ethicOfficerName}</h5>
+          </Card.Body>
+        </Card>
+      </Row>
+    </Container>
   );
 };
 

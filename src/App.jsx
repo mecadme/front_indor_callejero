@@ -1,44 +1,35 @@
+import { Route, Routes } from "react-router-dom";
 import Admin from "./components/Admin/Admin.jsx";
-import Aerials from "./components/Players/Statistics/Aerials.jsx";
-import Assists from "./components/Players/Statistics/Assists.jsx";
-import BallsStolen from "./components/Players/Statistics/BallsStolen.jsx";
-import Cards from "./components/Players/Statistics/Cards.jsx";
-import Clearences from "./components/Players/Statistics/Clearences.jsx";
-import Editor from "./components/Manager/Editor.jsx";
-import ForgotPassword from "./components/Authentication/ForgotPassword.jsx";
-import Goals from "./components/Players/Statistics/Goals.jsx";
-import GoalShots from "./components/Players/Statistics/GoalShots.jsx";
-import HistoricalEvents from "./components/Header/HistoricalEvents.jsx";
-import Home from "./components/Home";
-import Layout from "./components/Administration/Layout.jsx";
 import LinkPage from "./components/Admin/LinkPage.jsx";
-import Login from "./components/Authentication/Login.jsx";
-import Lounge from "./components/Manager/Lounge.jsx";
-import Matches from "./components/Matches/Matches.jsx";
-import MinutesPlayed from "./components/Players/Statistics/MinutesPlayed.jsx";
+import Layout from "./components/Administration/Layout.jsx";
 import Missing from "./components/Administration/Missing.jsx";
-import Passes from "./components/Players/Statistics/Passes.jsx";
+import ForgotPassword from "./components/Authentication/ForgotPassword.jsx";
+import Login from "./components/Authentication/Login.jsx";
 import PersistLogin from "./components/Authentication/PersistLogin.jsx";
 import Register from "./components/Authentication/Register.jsx";
 import RequiredAuth from "./components/Authentication/RequiredAuth.jsx";
-import ResultPredict from "./components/Header/ResultPredict.jsx";
-import Rounds from "./components/Home Page/Rounds.jsx";
-import Statistics from "./components/Players/Statistics.jsx";
-import StreetProject from "./components/Header/StreetProject.jsx";
-import Teams from "./components/Teams/Teams.jsx";
-import TeamPage from "./components/Teams/TeamPage.jsx";
-import TeamStandings from "./components/Teams/TeamStandings.jsx";
-import TLQDS from "./components/Header/TLQDS.jsx";
-import TotalShots from "./components/Players/Statistics/TotalShots.jsx";
 import Unauthorized from "./components/Authentication/Unauthorized.jsx";
-import UmbeatenMatches from "./components/Players/Statistics/UnbeatenMatches.jsx";
-import { Routes, Route } from "react-router-dom";
+import HistoricalEvents from "./components/Header/HistoricalEvents.jsx";
+import ResultPredict from "./components/Header/ResultPredict.jsx";
+import StreetProject from "./components/Header/StreetProject.jsx";
+import TLQDS from "./components/Header/TLQDS.jsx";
+import Home from "./components/Home";
+import Rounds from "./components/Home Page/Rounds.jsx";
+import Editor from "./components/Manager/Editor.jsx";
+import Lounge from "./components/Manager/Lounge.jsx";
+import Matches from "./components/Matches/Matches.jsx";
+import Statistics from "./components/Players/Statistics.jsx";
+import Cards from "./components/Players/Statistics/Cards.jsx";
+import FullStatistics from "./components/Players/Statistics/FullStats.jsx";
+import MinutesPlayed from "./components/Players/Statistics/MinutesPlayed.jsx";
+import TeamPage from "./components/Teams/TeamPage.jsx";
+import Teams from "./components/Teams/Teams.jsx";
+import TeamStandings from "./components/Teams/TeamStandings.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import useFetchTeams from "./hooks/useFetchTeams.jsx";
 import useFetchRounds from "./hooks/useFetchRounds.jsx";
-import { Card } from "react-bootstrap";
+import useFetchTeams from "./hooks/useFetchTeams.jsx";
 
 const ROLES = {
   User: "ROLE_USER",
@@ -62,28 +53,19 @@ function App() {
         <Route element={<PersistLogin />}>
           <Route path="/" element={<Home />} />
           <Route path="linkpage" element={<LinkPage />} />
-          <Route path="proyecto_callejero" element={<StreetProject />} />
-          <Route path="todo_lo_que_debes_saber" element={<TLQDS />} />
-          <Route path="palmares_historicos" element={<HistoricalEvents />} />
-          <Route path="pronostico_resultados" element={<ResultPredict />} />
-          <Route path="jornadas" element={<Rounds RoundsData={RoundsData} />} />
-          <Route path="partidos" element={<Matches />} />
+          <Route path="street_project" element={<StreetProject />} />
+          <Route path="all_you_need_to_know" element={<TLQDS />} />
+          <Route path="historical_events" element={<HistoricalEvents />} />
+          <Route path="predict_result" element={<ResultPredict />} />
+          <Route path="rounds" element={<Rounds RoundsData={RoundsData} />} />
+          <Route path="matches" element={<Matches />} />
           <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
-          <Route path="tablas_grupos" element={<TeamStandings />} />
-          <Route path="/estadisticas" element={<Statistics />} />
-          <Route path="equipos" element={<Teams />} />
-          <Route path="/estadisticas" element={<Statistics />} />
-          <Route path="/goleadores" element={<Goals />} />
-          <Route path="/asistencias" element={<Assists />} />
-          <Route path="/tarjetas" element={<Cards />} />
-          <Route path="/porterias_imbatidas" element={<UmbeatenMatches />} />
-          <Route path="/duelos_aereos" element={<Aerials />} />
-          <Route path="/robos_balon" element={<BallsStolen />} />
-          <Route path="/minutos_jugados" element={<MinutesPlayed />} />
-          <Route path="/pases" element={<Passes />} />
-          <Route path="/disparos_totales" element={<TotalShots />} />
-          <Route path="/disparos_arco" element={<GoalShots />} />
-          <Route path="/despejes" element={<Clearences />} />
+          <Route path="group_standings" element={<TeamStandings />} />
+          <Route path="/:eventType" element={<FullStatistics />} />
+          <Route path="/statistics" element={<Statistics />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/card" element={<Cards />} />
+          <Route path="/minutes_played" element={<MinutesPlayed />} />
 
           <Route element={<RequiredAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />

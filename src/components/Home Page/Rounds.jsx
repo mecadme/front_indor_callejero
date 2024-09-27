@@ -1,16 +1,15 @@
-import React from "react";
-import useFetchRounds from "../../hooks/useFetchRounds";
-import useAuth from "../../hooks/useAuth"; // Importar el hook personalizado
 import "bootstrap/dist/css/bootstrap.min.css";
+import React from "react";
+import { Container } from "react-bootstrap";
 
 const Rounds = ({ RoundsData }) => {
 
   return (
-    <div className="Rounds container">
+    <Container className="Rounds container">
       {RoundsData.length > 0 ? (
         RoundsData.map((round) => (
           <div key={round.roundId} className="Rounds-card">
-            <h2 className="Rounds-title">{round.roundName}</h2>
+            <h4 className="Rounds-title">{round.roundName}</h4>
             {round.matches.map((match, index) => (
               <div key={index} className="match-details">
                 <p className="Rounds-date">
@@ -38,7 +37,7 @@ const Rounds = ({ RoundsData }) => {
       ) : (
         <div>No se encontraron partidos para la jornada seleccionada.</div>
       )}
-    </div>
+    </Container>
   );
 };
 

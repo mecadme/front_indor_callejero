@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
+import Rounds from "./Rounds";
 import Sponsors from "./Sponsors";
 import Standings from "./Standings";
 import WeekCoach from "./WeekCoach";
-import Rounds from "./Rounds";
 import WeekPlayer from "./WeekPlayer";
 import WeekTeam from "./WeekTeam";
 import WeekVideos from "./WeekVideos";
-import RoleBased from "../Administration/RoleBased";
 
-import useFetchRounds from "../../hooks/useFetchRounds";
 import axios from "../../api/axios";
+import useFetchRounds from "../../hooks/useFetchRounds";
 
+import { Col, Container, Row } from "react-bootstrap";
 import "./css/MainContent.css";
-import { Container, Row, Col, Form } from "react-bootstrap";
 
 const MainContent = () => {
   const [currentValues, setCurrentValues] = useState({});
@@ -41,11 +40,10 @@ const MainContent = () => {
       setErrorCurrentValues(error.message);
       setIsLoadingCurrentValues(false);
       console.log(error.message);
-    }finally{
+    } finally {
       setIsLoadingCurrentValues(false);
       setCurrentValues({ roundDate: "2024-09-24", roundId: 3 });
     }
-
   };
 
   useEffect(() => {
@@ -66,30 +64,42 @@ const MainContent = () => {
   }
   return (
     <main className="mainContent">
-      <Container>
-        <div className="round_container">
-          <Rounds RoundsData={RoundsData} />
-        </div>
-        <Row className="row_week">
-          <Col md={4} className="week_team">
-            <WeekTeam date={selectedDate} />
+      <Container className="m-4" fluid>
+        <Row>
+          <Col xs={12} md={3}>
+            <Rounds RoundsData={RoundsData} />
           </Col>
-          <Col md={4} className="week_player">
-            <WeekPlayer date={selectedDate} />
-          </Col>
-          <Col md={4} className="week_coach">
-            <WeekCoach date={selectedDate} />
+          <Col xs={12} md={9}>
+            <Row className="row_week">
+              <Row className="mb-0">
+                <Col xs={12} md={7} className="text-center p-0 m-0">
+                  <h4>Equipo de la Semana</h4>
+                </Col>
+                <Col></Col>
+              </Row>
+              <Col xs={12} md={12} className="week_team">
+                <WeekTeam date={selectedDate} />
+              </Col>
+              <Col>
+                <Row className="row_player m-4">
+                  <WeekPlayer date={selectedDate} />
+                </Row>
+                <Row className="row_coach m-4">
+                  <WeekCoach date={selectedDate} />
+                </Row>
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <div className="sponsor_container text-center my-4">
+        <Row className="sponsor_container text-center my-4">
           <Sponsors maxContributions={MIN_CONTRIBUTION} />
-        </div>
+        </Row>
 
         <Row className="row_standings">
-          <Col md={6} className="standings">
+          <Col md={3} className="standings">
             <Standings />
           </Col>
-          <Col md={6} className="week_videos">
+          <Col md={9} className="week_videos">
             <WeekVideos />
           </Col>
         </Row>

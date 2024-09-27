@@ -7,7 +7,7 @@ const TeamsFoot = ({ content, getAllTeams }) => {
   return (
     <ListGroup>
       
-      <Link to="/equipos" className="nav-link"><h5>Equipos</h5></Link>
+      <Link to="/teams" className="nav-link"><h5>Equipos</h5></Link>
       
       {content.length === 0 && (
         <div className="alert alert-info">No hay equipos</div>
