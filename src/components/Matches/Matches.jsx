@@ -1,7 +1,10 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Asegúrate de tener Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import useFetchMatches from '../../hooks/useFetchMatches';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Container } from 'react-bootstrap';
+import EmptyData from '../Administration/EmptyData';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 const Matches = () => {
   const { matches, isLoading, error } = useFetchMatches();
@@ -15,11 +18,17 @@ const Matches = () => {
   }
 
   if (!matches || matches.length === 0) {
-    return <div>No hay partidos disponibles.</div>;
+    return (<Container fluid>
+      <Header />
+      <EmptyData />
+      <Footer />
+    </Container>)
   }
 
   return (
-    <div className="container mt-5">
+    <Container fluid>
+      <Header />
+    <Container className="container mt-5">
       <h2 className="text-center mb-4">Partidos</h2>
       <Row>
         {matches.map((match) => (
@@ -97,7 +106,9 @@ const Matches = () => {
           </Col>
         ))}
       </Row>
-    </div>
+    </Container>
+    <Footer />
+    </Container>
   );
 };
 

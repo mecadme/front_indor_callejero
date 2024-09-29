@@ -1,15 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 import {
   faCheck,
-  faTimes,
-  faInfoCircle,
   faEye,
   faEyeSlash,
-  faSpinner,
+  faInfoCircle,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Alert,
+  Button,
+  Container,
+  Form,
+  InputGroup,
+  Spinner,
+} from "react-bootstrap";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 
@@ -17,7 +24,6 @@ const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -62,10 +68,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({
-          username: user,
-          password: pwd,
-        }),
+        JSON.stringify({ username: user, password: pwd }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -82,23 +85,18 @@ const Login = () => {
       setUser("");
       setPwd("");
       navigate(from, { replace: true });
-
     } catch (err) {
+      const status = err.response?.status;
       if (!err?.response) {
         setErrMsg("Servidor no disponible.");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Usuario o contrasena incorrectos.");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Usuario o contrasena incorrectos.");
-      } else if (err.response?.status === 403) {
-        setErrMsg("Usuario o contrasena incorrectos.");
+      } else if ([400, 401, 403].includes(status)) {
+        setErrMsg("Usuario o contraseña incorrectos.");
       } else {
         setErrMsg("Error en la autenticación.");
       }
-      console.log(err);
       errRef.current.focus();
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -111,110 +109,94 @@ const Login = () => {
   }, [persist]);
 
   return (
-    <section>
-      <p
-        ref={errRef}
-        className={errMsg ? "errmsg" : "offscreen"}
-        aria-live="assertive"
-      >
-        {errMsg}
-      </p>
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">
-          Usuario:
-          <FontAwesomeIcon
-            icon={faCheck}
-            className={validUser ? "valid" : "hide"}
-          />
-          <FontAwesomeIcon
-            icon={faTimes}
-            className={validUser || !user ? "hide" : "invalid"}
-          />
-        </label>
-        <input
-          type="text"
-          id="username"
-          ref={userRef}
-          autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          placeholder="juan_perez@example.com"
-          value={user}
-          required
-          aria-invalid={validUser ? "false" : "true"}
-          aria-describedby="uidnote"
-        />
-        <p
-          id="uidnote"
-          className={user && !validUser ? "instructions" : "offscreen"}
+    <Container className="mt-5" fluid style={{ maxWidth: "40rem" }}>
+      <h2 className="text-center mb-4">Iniciar sesión</h2>
+
+      {errMsg && (
+        <Alert
+          ref={errRef}
+          variant="danger"
+          className="text-center"
+          aria-live="assertive"
         >
-          <FontAwesomeIcon icon={faInfoCircle} />
-          Por favor, introduzca un correo válido.
-        </p>
+          {errMsg}
+        </Alert>
+      )}
 
-        <label htmlFor="password">Contraseña:</label>
-        <div style={{ position: "relative", display: "inline-block" }}>
-          <input
-            type={showPwd ? "text" : "password"}
-            id="password"
-            onChange={(e) => setPwd(e.target.value)}
-            placeholder="Ejemplo1234"
-            value={pwd}
-            required
-            aria-describedby="pwdnote"
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="username" className="mb-3">
+          <Form.Label>Usuario:</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type="text"
+              ref={userRef}
+              autoComplete="off"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              placeholder="juan_perez@example.com"
+              isInvalid={user && !validUser}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              <FontAwesomeIcon icon={faInfoCircle} /> Por favor, introduzca un
+              correo válido.
+            </Form.Control.Feedback>
+          </InputGroup>
+        </Form.Group>
+
+        <Form.Group controlId="password" className="mb-0">
+          <Form.Label>Contraseña:</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type={showPwd ? "text" : "password"}
+              value={pwd}
+              onChange={(e) => setPwd(e.target.value)}
+              placeholder="Ejemplo1234"
+              required
+            />
+            <Button
+              variant="warning"
+              onClick={toggleShowPwd}
+              style={{
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+              }}
+            >
+              <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
+            </Button>
+          </InputGroup>
+        </Form.Group>
+
+        <Form.Group controlId="persist" className="mb-0">
+          <Form.Check
+            type="checkbox"
+            label="Recordar usuario"
+            checked={persist}
+            onChange={togglePersist}
           />
-          <button
-            type="button"
-            className="showPwd"
-            onClick={toggleShowPwd}
-            style={{
-              position: "absolute",
-              left: "45%",
-              top: "50%",
-              transform: "translateY(-50%)",
-              border: "none",
-              background: "none",
-              cursor: "pointer",
-            }}
-          >
-            <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
-          </button>
-        </div>
+        </Form.Group>
 
-        <button type="submit" disabled={!validUser || !pwd || isLoading}>
+        <Button type="submit" disabled={!validUser || !pwd || isLoading}>
           {isLoading ? (
             <>
-              <FontAwesomeIcon icon={faSpinner} spin /> Iniciando sesión...
+              <Spinner animation="border" size="sm" /> Iniciando sesión...
             </>
           ) : (
             "Iniciar sesión"
           )}
-        </button>
-            <div className="persistCheck">
-              <input
-                type="checkbox"
-                id="persist"
-                onChange={togglePersist}
-                checked={persist}
-              />
-              <label htmlFor="persist">Recordar usuario</label>
-            </div>
-      </form>
+        </Button>
+      </Form>
 
-      <p className="pwdForgot">
-        ¿Olvidaste tu contraseña? <br />
-        <span className="line">
-          <a href="/forgot-password">Recuper contraseña</a>
-        </span>
+      <p className="mt-4 text-center">
+        ¿Olvidaste tu contraseña?{" "}
+        <Link to="/forgot-password">Recuperar contraseña</Link>
       </p>
 
-      <p className="linkContainer">
-        ¿Necesitas una cuenta? <br />
-        <span className="line">
-          <a href="/register">Crear una cuenta</a>
-        </span>
+      <p className="text-center">
+        ¿Necesitas una cuenta? <Link to="/register">Crear una cuenta</Link>
       </p>
-    </section>
+    </Container>
   );
 };
 

@@ -3,7 +3,9 @@ import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import PlayerStatistics from "./Statistics/PlayerStatistics.jsx";
 import MinutesPlayed from "./Statistics/MinutesPlayed.jsx";
 import Cards from "./Statistics/Cards.jsx";
-import { useNavigate } from "react-router-dom"; // Para redireccionar
+import { useNavigate } from "react-router-dom";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
 const PlayerStatisticsOverview = () => {
   const statisticsCategories = [
@@ -29,11 +31,10 @@ const PlayerStatisticsOverview = () => {
   };
 
   return (
-    <Container className="mt-1">
+    <Container fluid className="mt-1">
+      <Header />
       <Container className="text-center mt-4">
-        <h2 style={{ textTransform: "uppercase" }}>
-          Centro de Estadísticas
-        </h2>
+        <h2 style={{ textTransform: "uppercase" }}>Centro de Estadísticas</h2>
       </Container>
       <Row>
         {statisticsCategories.map((category, index) => (
@@ -65,8 +66,7 @@ const PlayerStatisticsOverview = () => {
             </Card>
           </Col>
         ))}
-
-        {/* Componente específico para Minutos Jugados */}
+        
         <Col sm={12} md={6} lg={4} className="mb-4">
           <Card className="shadow-sm h-100">
             <Card.Header className="text-center bg-info text-white">
@@ -109,6 +109,7 @@ const PlayerStatisticsOverview = () => {
           </Card>
         </Col>
       </Row>
+      <Footer />
     </Container>
   );
 };

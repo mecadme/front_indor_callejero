@@ -1,14 +1,21 @@
-import { useRef, useState, useEffect } from "react";
 import {
-  faCheck,
-  faTimes,
-  faInfoCircle,
   faEye,
   faEyeSlash,
-  faSpinner, // Importar icono de carga
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef, useState } from "react";
+import {
+  Alert,
+  Button,
+  Container,
+  Form,
+  InputGroup,
+  Spinner
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
 import axios from "../../api/axios";
+import "./css/Register.css"; // Importar el archivo CSS
 
 const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const NAME_REGEX = /^[a-zA-Z]+$/;
@@ -69,7 +76,7 @@ const Register = () => {
       return;
     }
 
-    setIsLoading(true); 
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
@@ -82,15 +89,14 @@ const Register = () => {
         }),
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true
+          withCredentials: true,
         }
       );
       setSuccess(true);
-
     } catch (err) {
-      if (!err.response) {
+      if (!err?.response) {
         setErrMsg("No hay respuesta del servidor");
-      } else if (err.response.status === 409) {
+      } else if (err.response?.status === 409) {
         setErrMsg("El usuario ya existe");
       } else {
         setErrMsg("Registro fallido");
@@ -102,243 +108,177 @@ const Register = () => {
   };
 
   return (
-    <>
+    <Container className="mt-5" fluid style={{ maxWidth: "40rem" }}>
       {success ? (
         <section>
           <h1>Registro completado</h1>
-          <p>
-            <a href="/login">Iniciar sesión</a>
+          <p className="text-center">
+            <Link to="/login">Iniciar sesión</Link>
           </p>
         </section>
       ) : (
-        <section>
-          <p
-            ref={errRef}
-            className={errMsg ? "errmsg" : "offscreen"}
-            aria-live="assertive"
-          >
-            {errMsg}
-          </p>
-          <h1>Registro</h1>
-          {isLoading ? ( 
-            <div>
-              <FontAwesomeIcon icon={faSpinner} spin />
-              <span>Cargando...</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="firstName">
-                Ingrese su nombre:
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className={validName ? "valid" : "hide"}
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className={validName || !name ? "hide" : "invalid"}
-                />
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                ref={userRef}
-                autoComplete="off"
-                placeholder="Juan"
-                onChange={(e) => setName(e.target.value)}
-                required
-                value={name}
-                aria-invalid={!validName}
-                aria-describedby="nameNote"
-              />
-              <p
-                id="nameNote"
-                className={name && !validName ? "instructions" : "offscreen"}
-              >
-                <FontAwesomeIcon icon={faInfoCircle} />
-                El nombre no debe contener números, caracteres especiales o
-                espacios.
-              </p>
+        <>
+          <h2 className="text-center mb-4">Crear una cuenta</h2>
 
-              <label htmlFor="lastName">
-                Ingrese su apellido:
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className={validLastName ? "valid" : "hide"}
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className={validLastName || !lastName ? "hide" : "invalid"}
-                />
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                autoComplete="off"
-                placeholder="Perez"
-                onChange={(e) => setLastName(e.target.value)}
-                required
-                value={lastName}
-                aria-invalid={!validLastName}
-                aria-describedby="lastNameNote"
-              />
-              <p
-                id="lastNameNote"
-                className={
-                  lastName && !validLastName ? "instructions" : "offscreen"
-                }
-              >
-                <FontAwesomeIcon icon={faInfoCircle} />
-                El apellido no debe contener números, caracteres especiales o
-                espacios.
-              </p>
+          {errMsg && (
+            <Alert ref={errRef} variant="danger" className="text-center">
+              {errMsg}
+            </Alert>
+          )}
 
-              <label htmlFor="username">
-                Ingrese su correo electrónico:
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className={validUser ? "valid" : "hide"}
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className={validUser || !user ? "hide" : "invalid"}
-                />
-              </label>
-              <input
-                type="text"
-                id="username"
-                placeholder="juan_perez@example.com"
-                autoComplete="off"
-                onChange={(e) => setUser(e.target.value)}
-                required
-                value={user}
-                aria-invalid={!validUser}
-                aria-describedby="userNote"
-              />
-              <p
-                id="userNote"
-                className={user && !validUser ? "instructions" : "offscreen"}
-              >
-                <FontAwesomeIcon icon={faInfoCircle} />
-                Ingrese un correo electrónico válido.
-              </p>
-
-              <label htmlFor="password">
-                Contraseña:
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className={validPwd ? "valid" : "hide"}
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className={validPwd || !pwd ? "hide" : "invalid"}
-                />
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showPwd ? "text" : "password"}
-                  id="password"
-                  placeholder="Ejemplo1234"
-                  onChange={(e) => setPwd(e.target.value)}
-                  value={pwd}
+          <Form onSubmit={handleSubmit}>
+            {/* Nombre */}
+            <Form.Group controlId="firstName" className="m-0">
+              <Form.Label>Nombre:</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  ref={userRef}
+                  autoComplete="off"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Juan"
+                  isInvalid={name && !validName}
                   required
-                  aria-invalid={!validPwd}
-                  aria-describedby="pwdNote"
                 />
-                <button
-                  className="showPwd"
-                  type="button"
+                <Form.Control.Feedback type="invalid">
+                  <FontAwesomeIcon icon={faInfoCircle} /> El nombre no debe
+                  contener números ni caracteres especiales.
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Apellido */}
+            <Form.Group controlId="lastName" className="m-0">
+              <Form.Label>Apellido:</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  autoComplete="off"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Perez"
+                  isInvalid={lastName && !validLastName}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  <FontAwesomeIcon icon={faInfoCircle} /> El apellido no debe
+                  contener números ni caracteres especiales.
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Correo */}
+            <Form.Group controlId="username" className="m-0">
+              <Form.Label>Correo Electrónico:</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  autoComplete="off"
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
+                  placeholder="juan_perez@example.com"
+                  isInvalid={user && !validUser}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  <FontAwesomeIcon icon={faInfoCircle} /> Introduzca un correo
+                  válido.
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Contraseña */}
+            <Form.Group controlId="password" className="m-0">
+              <Form.Label>Contraseña:</Form.Label>
+              <InputGroup className="input-with-icon">
+                <Form.Control
+                  type={showPwd ? "text" : "password"}
+                  value={pwd}
+                  onChange={(e) => setPwd(e.target.value)}
+                  placeholder="Ejemplo1234"
+                  isInvalid={pwd && !validPwd}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  <FontAwesomeIcon icon={faInfoCircle} /> Debe incluir al menos
+                  una letra mayúscula, una minúscula y un número.
+                </Form.Control.Feedback>
+                <Button
+                  variant="warning"
+                  className="btn"
                   onClick={toggleShowPwd}
                   style={{
-                    position: "absolute",
-                    left: "45%",
-                    top: "50%",
-                    transform: "translateY(-50%)",
                     border: "none",
                     background: "none",
                     cursor: "pointer",
                   }}
                 >
                   <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
-                </button>
-              </div>
-              <p
-                id="pwdNote"
-                className={pwd && !validPwd ? "instructions" : "offscreen"}
-              >
-                <FontAwesomeIcon icon={faInfoCircle} />
-                Debe incluir al menos una letra mayúscula, una letra minúscula y
-                un número.
-              </p>
+                </Button>
+              </InputGroup>
+            </Form.Group>
 
-              <label htmlFor="confirm_pwd">
-                Repetir Contraseña:
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className={validMatch && matchPwd ? "valid" : "hide"}
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className={validMatch || !matchPwd ? "hide" : "invalid"}
-                />
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
+            {/* Repetir Contraseña */}
+            <Form.Group controlId="confirm_pwd" className="m-0">
+              <Form.Label>Repetir Contraseña:</Form.Label>
+              <InputGroup className="input-with-icon">
+                <Form.Control
                   type={showMatchPwd ? "text" : "password"}
-                  id="confirm_pwd"
-                  onChange={(e) => setMatchPwd(e.target.value)}
                   value={matchPwd}
+                  onChange={(e) => setMatchPwd(e.target.value)}
+                  placeholder="Repite tu contraseña"
+                  isInvalid={matchPwd && !validMatch}
                   required
-                  aria-invalid={!validMatch}
-                  aria-describedby="confirmNote"
                 />
-                <button
-                  type="button"
-                  className="showPwd"
+                <Form.Control.Feedback type="invalid">
+                  <FontAwesomeIcon icon={faInfoCircle} /> Las contraseñas deben
+                  coincidir.
+                </Form.Control.Feedback>
+                <Button
+                  variant="warning"
+                  className="password-toggle-btn"
                   onClick={toggleShowMatchPwd}
                   style={{
-                    position: "absolute",
-                    left: "45%",
-                    top: "50%",
-                    transform: "translateY(-50%)",
                     border: "none",
                     background: "none",
                     cursor: "pointer",
                   }}
                 >
                   <FontAwesomeIcon icon={showMatchPwd ? faEyeSlash : faEye} />
-                </button>
-              </div>
-              <p
-                id="confirmNote"
-                className={matchPwd && !validMatch ? "instructions" : "offscreen"}
-              >
-                <FontAwesomeIcon icon={faInfoCircle} />
-                Debe coincidir con la entrada anterior.
-              </p>
+                </Button>
+              </InputGroup>
+            </Form.Group>
 
-              <button
-                disabled={
-                  !validName ||
-                  !validLastName ||
-                  !validUser ||
-                  !validPwd ||
-                  !validMatch ||
-                  isLoading 
-                }
-              >
-                Registrar
-              </button>
-            </form>
-          )}
-          <p className="linkContainer">
-            ¿Ya tienes una cuenta? <br />
-            <span className="line">
-              <a href="/login">Inicia Sesión</a>
-            </span>
+            {/* Botón de Registro */}
+            <Button
+              type="submit"
+              disabled={
+                !validName ||
+                !validLastName ||
+                !validUser ||
+                !validPwd ||
+                !validMatch ||
+                isLoading
+              }
+              className="w-100 btn btn-primary"
+            >
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Registrando...
+                </>
+              ) : (
+                "Registrar"
+              )}
+            </Button>
+          </Form>
+
+          <p className="mt-4 text-center">
+            ¿Ya tienes una cuenta? <Link to="/login">Inicia Sesión</Link>
           </p>
-        </section>
+        </>
       )}
-    </>
+    </Container>
   );
 };
 

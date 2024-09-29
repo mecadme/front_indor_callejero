@@ -14,7 +14,6 @@ const useFetchRounds = (selectedRoundId) => {
       const response = await axios.get(ROUNDS_URL);
       const data = response.data;
 
-      // Agrupar por roundId y roundName
       const groupedData = data.reduce((acc, round) => {
         const key = `${round.roundId}-${round.roundName}`;
         if (!acc[key]) {

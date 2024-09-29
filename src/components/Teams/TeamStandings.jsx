@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { Table, Card, Spinner, Alert } from "react-bootstrap";
+import { Table, Card, Spinner, Alert, Container } from "react-bootstrap";
+import EmptyData from "../Administration/EmptyData";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
 const TeamStandings = () => {
-  const STANDINGS_URL = "/teams/all_standings_by_group"; // Cambia por la URL correcta de standings
+  const STANDINGS_URL = "/teams/all_standings_by_group"; 
   const [groupedStandings, setGroupedStandings] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -52,11 +55,19 @@ const TeamStandings = () => {
   }
 
   if (!groupedStandings || Object.keys(groupedStandings).length === 0) {
-    return <Alert variant="info">No hay posiciones disponibles.</Alert>;
+    return (
+      <Container fluid>
+        <Header />
+        <EmptyData />
+        <Footer />
+      </Container>
+    );
   }
 
   return (
-    <div className="container mt-4">
+    <Container fluid>
+      <Header />
+    <Container className="container mt-4">
       <h2 className="text-center mb-4">Tabla de Posiciones por Grupo</h2>
 
       {/* Iteramos por cada grupo */}
@@ -87,12 +98,17 @@ const TeamStandings = () => {
                         src={standing.team.logoUrl}
                         alt={standing.team.name}
                         className="img-fluid"
-                        style={{ width: "40px", height: "40px", marginRight: "10px" }}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          marginRight: "10px",
+                        }}
                       />
                       <Card.Body>
                         <h6>{standing.team.name}</h6>
                         <small className="text-muted">
-                          {standing.team.neighborhood} - Grupo {standing.team.teamGroup}
+                          {standing.team.neighborhood} - Grupo{" "}
+                          {standing.team.teamGroup}
                         </small>
                       </Card.Body>
                     </Card>
@@ -111,7 +127,9 @@ const TeamStandings = () => {
           </Table>
         </div>
       ))}
-    </div>
+    </Container>
+    <Footer />
+    </Container>
   );
 };
 

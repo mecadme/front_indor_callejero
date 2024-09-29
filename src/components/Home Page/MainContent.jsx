@@ -42,7 +42,7 @@ const MainContent = () => {
       console.log(error.message);
     } finally {
       setIsLoadingCurrentValues(false);
-      setCurrentValues({ roundDate: "2024-09-24", roundId: 3 });
+      setCurrentValues({ roundDate: "2024-09-24", roundId: 5 });
     }
   };
 
@@ -66,10 +66,10 @@ const MainContent = () => {
     <main className="mainContent">
       <Container className="m-4" fluid>
         <Row>
-          <Col xs={12} md={3}>
+          <Col xs={12} md={12} lg={3}>
             <Rounds RoundsData={RoundsData} />
           </Col>
-          <Col xs={12} md={9}>
+          <Col xs={12} md={12} lg={9}>
             <Row className="row_week">
               <Row className="mb-0">
                 <Col xs={12} md={7} className="text-center p-0 m-0">
@@ -96,10 +96,10 @@ const MainContent = () => {
         </Row>
 
         <Row className="row_standings">
-          <Col md={3} className="standings">
+          <Col xs={7} md={4} lg={3} className="standings">
             <Standings />
           </Col>
-          <Col md={9} className="week_videos">
+          <Col xs={11} md={8} lg={9} className="week_videos">
             <WeekVideos />
           </Col>
         </Row>

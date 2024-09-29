@@ -27,8 +27,7 @@ const Footer = () => {
   };
 
   return (
-    <main className="footer">
-      <Container>
+      <Container fluid className="mt-5">
         <Row>
           <Sponsors maxContributions={100} />
         </Row>
@@ -58,7 +57,6 @@ const Footer = () => {
           <PoweredBy />
         </Row>
       </Container>
-    </main>
   );
 };
 

@@ -1,42 +1,71 @@
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Card, ListGroup, Row, Col, Badge } from "react-bootstrap";
 
 const Rounds = ({ RoundsData }) => {
+  const navigate = useNavigate();
+
+  // Función para manejar el clic en un partido específico
+  const handleRoundClick = (matchId, homeTeam, awayTeam) => {
+    navigate(`/result/${matchId}/${homeTeam}/${awayTeam}`);
+  };
 
   return (
-    <Container className="Rounds container">
-      {RoundsData.length > 0 ? (
-        RoundsData.map((round) => (
-          <div key={round.roundId} className="Rounds-card">
-            <h4 className="Rounds-title">{round.roundName}</h4>
-            {round.matches.map((match, index) => (
-              <div key={index} className="match-details">
-                <p className="Rounds-date">
-                  <strong>{new Date(match.date).toLocaleDateString()}</strong> -{" "}
-                  {match.place}
-                </p>
-                <ul className="list-group">
-                  <li className="list-group-item match-card d-flex flex-column align-items-center">
-                    <div className="d-flex justify-content-between">
-                      <span className="team team1">{match.homeTeam}</span>
-                      <span className="score">
-                        {match.goalsHomeTeam} - {match.goalsAwayTeam}
-                      </span>
-                      <span className="team team2">{match.awayTeam}</span>
-                    </div>
-                    <span className="match-time">
-                      {new Date(match.date).toLocaleTimeString()}
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            ))}
+    <Container fluid>
+      <Container className="Rounds">
+        {RoundsData.length > 0 ? (
+          RoundsData.map((round) => (
+            <Card key={round.roundId} className="mb-4 shadow-sm">
+              <Card.Header as="h4" className="text-center">
+                {round.roundName}
+              </Card.Header>
+              <Card.Body>
+                {round.matches.map((match, index) => (
+                  <Row key={index} className="mb-3 align-items-center">
+                    <Col md={4} className="text-center mb-2 mb-md-0">
+                      <strong>
+                        {new Date(match.date).toLocaleDateString()}
+                      </strong>{" "}
+                      - {match.place}
+                    </Col>
+                    <Col md={8}>
+                      {/* El evento onClick debe ser una función de flecha para pasar el matchId correctamente */}
+                      <ListGroup
+                        onClick={() =>
+                          handleRoundClick(
+                            match.matchId,
+                            match.homeTeam,
+                            match.awayTeam
+                          )
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                          <span className="team">{match.homeTeam}</span>
+                          <Badge pill bg="info" className="mx-2">
+                            {match.goalsHomeTeam} - {match.goalsAwayTeam}
+                          </Badge>
+                          <span className="team">{match.awayTeam}</span>
+                        </ListGroup.Item>
+                        <ListGroup.Item className="text-center text-muted">
+                          <small>
+                            Hora: {new Date(match.date).toLocaleTimeString()}
+                          </small>
+                        </ListGroup.Item>
+                      </ListGroup>
+                    </Col>
+                  </Row>
+                ))}
+              </Card.Body>
+            </Card>
+          ))
+        ) : (
+          <div className="text-center mt-4">
+            No se encontraron partidos para la jornada seleccionada.
           </div>
-        ))
-      ) : (
-        <div>No se encontraron partidos para la jornada seleccionada.</div>
-      )}
+        )}
+      </Container>
     </Container>
   );
 };

@@ -14,21 +14,22 @@ import ResultPredict from "./components/Header/ResultPredict.jsx";
 import StreetProject from "./components/Header/StreetProject.jsx";
 import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import Rounds from "./components/Home Page/Rounds.jsx";
 import Editor from "./components/Manager/Editor.jsx";
 import Lounge from "./components/Manager/Lounge.jsx";
 import Matches from "./components/Matches/Matches.jsx";
+import PlayerPage from "./components/Players/PlayerPage.jsx";
 import Statistics from "./components/Players/Statistics.jsx";
 import Cards from "./components/Players/Statistics/Cards.jsx";
 import FullStatistics from "./components/Players/Statistics/FullStats.jsx";
 import MinutesPlayed from "./components/Players/Statistics/MinutesPlayed.jsx";
+import RoundsPage from "./components/Matches/RoundsPage.jsx";
 import TeamPage from "./components/Teams/TeamPage.jsx";
 import Teams from "./components/Teams/Teams.jsx";
 import TeamStandings from "./components/Teams/TeamStandings.jsx";
+import ResultPage from "./components/Results/ResultPage.jsx"; 
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import useFetchRounds from "./hooks/useFetchRounds.jsx";
 import useFetchTeams from "./hooks/useFetchTeams.jsx";
 
 const ROLES = {
@@ -39,8 +40,7 @@ const ROLES = {
 
 function App() {
   const { teams } = useFetchTeams();
-  const { RoundsData, loading, error } = useFetchRounds();
-  console.log(RoundsData);
+  
 
   return (
     <Routes>
@@ -57,9 +57,11 @@ function App() {
           <Route path="all_you_need_to_know" element={<TLQDS />} />
           <Route path="historical_events" element={<HistoricalEvents />} />
           <Route path="predict_result" element={<ResultPredict />} />
-          <Route path="rounds" element={<Rounds RoundsData={RoundsData} />} />
+          <Route path="rounds" element={<RoundsPage/>} />
           <Route path="matches" element={<Matches />} />
           <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
+          <Route path="/player/:playerId" element={<PlayerPage />} />
+          <Route path="/result/:matchId/:homeTeam/:awayTeam" element={<ResultPage />} />
           <Route path="group_standings" element={<TeamStandings />} />
           <Route path="/:eventType" element={<FullStatistics />} />
           <Route path="/statistics" element={<Statistics />} />

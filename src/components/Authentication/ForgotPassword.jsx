@@ -8,6 +8,14 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  Form,
+  Button,
+  InputGroup,
+  Container,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
 import axios from "../../api/axios";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -78,107 +86,88 @@ const ForgotPassword = () => {
   };
 
   return (
-    <section>
+    <Container className="mt-5" fluid style={{ maxWidth: "40rem" }}>
+      <h2 className="text-center mb-4">Recuperar Contraseña</h2>
+
       {/* Mensajes de error */}
-      <p
-        ref={errRef}
-        className={errMsg ? "errmsg" : "offscreen"}
-        aria-live="assertive"
-      >
-        {errMsg}
-      </p>
+      {errMsg && (
+        <Alert ref={errRef} variant="danger" className="text-center">
+          {errMsg}
+        </Alert>
+      )}
 
       {/* Mensaje de éxito */}
-      <p
-        className={successMsg ? "successmsg" : "offscreen"}
-        aria-live="assertive"
-      >
-        {successMsg}
-      </p>
+      {successMsg && (
+        <Alert variant="success" className="text-center">
+          {successMsg}
+        </Alert>
+      )}
 
-      <h1>Recuperar contraseña</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="email" className="mb-3">
+          <Form.Label>Correo Electrónico:</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type="text"
+              ref={emailRef}
+              autoComplete="off"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="juan_perez@example.com"
+              isInvalid={email && !validEmail}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              <FontAwesomeIcon icon={faInfoCircle} /> Por favor, introduzca un
+              correo válido.
+            </Form.Control.Feedback>
+          </InputGroup>
+        </Form.Group>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">
-          Correo electrónico:
-          <FontAwesomeIcon
-            icon={faCheck}
-            className={validEmail ? "valid" : "hide"}
-          />
-          <FontAwesomeIcon
-            icon={faTimes}
-            className={validEmail || !email ? "hide" : "invalid"}
-          />
-        </label>
-        <input
-          type="text"
-          id="email"
-          ref={emailRef}
-          autoComplete="off"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          placeholder="juan_perez@example.com"
-          required
-          aria-invalid={validEmail ? "false" : "true"}
-          aria-describedby="emailnote"
-        />
-        <p
-          id="emailnote"
-          className={email && !validEmail ? "instructions" : "offscreen"}
-        >
-          <FontAwesomeIcon icon={faInfoCircle} />
-          Por favor, introduzca un correo válido.
-        </p>
+        <Form.Group controlId="newPassword" className="mb-0">
+          <Form.Label>Nueva Contraseña:</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type={showPwd ? "text" : "password"}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Ejemplo1234"
+              required
+            />
+            <Button
+              variant="warning"
+              onClick={toggleShowPwd}
+              style={{
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+              }}
+            >
+              <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
+            </Button>
+          </InputGroup>
+        </Form.Group>
 
-        <label htmlFor="newPassword">Nueva contraseña:</label>
-        <div style={{ position: "relative" }}>
-        <input
-          type={showPwd ? "text" : "password"}
-          id="newPassword"
-          onChange={(e) => setNewPassword(e.target.value)}
-          value={newPassword}
-          placeholder="Ejemplo1234"
-          required
-        />
-        <button
-          className="showPwd"
-          type="button"
-          onClick={toggleShowPwd}
-          style={{
-            position: "absolute",
-            left: "45%",
-            top: "50%",
-            transform: "translateY(-50%)",
-            border: "none",
-            background: "none",
-            cursor: "pointer",
-          }}
-        >
-          <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
-        </button>
-        </div>
-
-        <button
+        <Button
           type="submit"
+          variant="primary"
+          className="w-100"
           disabled={!validEmail || !newPassword || isLoading}
         >
           {isLoading ? (
             <>
-              <FontAwesomeIcon icon={faSpinner} spin /> Enviando solicitud...
+              <Spinner animation="border" size="sm" /> Enviando solicitud...
             </>
           ) : (
-            "Restablecer contraseña"
+            "Restablecer Contraseña"
           )}
-        </button>
-      </form>
+        </Button>
+      </Form>
 
-      <p className="linkContainer">
-        ¿Ya tienes una cuenta? <br />
-        <span className="line">
-          <a href="/login">Iniciar sesión</a>
-        </span>
+      <p className="text-center mt-4">
+        ¿Ya tienes una cuenta? <a href="/login">Iniciar sesión</a>
       </p>
-    </section>
+    </Container>
   );
 };
 

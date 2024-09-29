@@ -12,6 +12,8 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
+import Header from "../../Header/Header";
+import Footer from "../../Footer/Footer";
 
 const PlayerStatistics = ({ eventType, name, limit }) => {
   const [players, setPlayers] = useState([]);
@@ -53,6 +55,7 @@ const PlayerStatistics = ({ eventType, name, limit }) => {
   const displayedPlayers = limit ? players.slice(0, limit) : players;
 
   return (
+    <Container fluid>
     <Container className="mt-4">
       <Col>
         {displayedPlayers.map((player, index) => (
@@ -115,6 +118,8 @@ const PlayerStatistics = ({ eventType, name, limit }) => {
           </Row>
         ))}
       </Col>
+    </Container>
+    <Footer />
     </Container>
   );
 };

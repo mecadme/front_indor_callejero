@@ -1,39 +1,52 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import useSponsors from "../../hooks/useSponsors";
 
-const Sponsors = ({maxContributions}) => {
+const Sponsors = ({ maxContributions }) => {
   const { sponsors, isLoading, error } = useSponsors();
 
   if (isLoading) {
-    return <div>Cargando auspiciantes...</div>;
+    return (
+      <Container className="text-center my-4">
+        <Spinner animation="border" variant="primary" />
+        <p>Cargando auspiciantes...</p>
+      </Container>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <Container className="text-center my-4">
+        <Alert variant="danger">{error}</Alert>
+      </Container>
+    );
   }
 
   return (
-    <footer className="footer container text-center">
-      <div className="row justify-content-center">
-        {sponsors.length > 0 ? (
-          sponsors.map(
-            (sponsor) =>
-              sponsor.contributionAmount > maxContributions && (
-                <div key={sponsor.sponsorId} className="col-4 col-md-2 mb-4">
-                  <img
-                    src={sponsor.photoUrl}
-                    alt={sponsor.sponsor}
-                    className="img-fluid"
-                    style={{ maxHeight: "100px" }}
-                  />
-                </div>
-              )
-          )
-        ) : (
-          <div>No hay patrocinadores disponibles</div>
-        )}
-      </div>
+    <footer className="footer">
+      <Container fluid>
+        <Row className="justify-content-center text-center">
+          {sponsors.length > 0 ? (
+            sponsors.map(
+              (sponsor) =>
+                sponsor.contributionAmount > maxContributions && (
+                  <Col key={sponsor.sponsorId} xs={6} md={4} lg={2} className="mb-4">
+                    <img
+                      src={sponsor.photoUrl}
+                      alt={sponsor.sponsor}
+                      className="img-fluid"
+                      style={{ height: "3rem", objectFit: "contain" }}
+                    />
+                  </Col>
+                )
+            )
+          ) : (
+            <Col>
+              <p>No hay patrocinadores disponibles</p>
+            </Col>
+          )}
+        </Row>
+      </Container>
     </footer>
   );
 };
