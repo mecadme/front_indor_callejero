@@ -1,89 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import "./css/Timeline.css";
+import { renderIconTimeline } from "../Utils/RenderIcon";
 
 const TimelineEvent = ({ event, offset }) => {
-  const { eventType, minute } = event;
+  const { eventType, minute } = event; 
 
-  // Función para renderizar el ícono correspondiente al evento
-  const renderIcon = () => {
-    switch (eventType) {
-      case "GOAL":
-        return "⚽";
-      case "ASSIST":
-        return "🅰️";
-      case "CARD":
-        return event.cardType === "YELLOW" ? "🟨" : "🟥";
-      default:
-        return "❓";
-    }
-  };
-
-  const leftPosition = (minute / 40) * 100;
+  if (!eventType || minute == null) {
+    return null;
+  }
 
   return (
     <div
       className="timeline-event"
-      style={{ left: `${leftPosition}%`, transform: `translateX(${offset}%)` }}
+      style={{
+        left: `${(minute / 40) * 90}%`,
+        transform: `translateX(${offset}%)`,
+      }}
     >
-      <span>{renderIcon()}</span>
+      <img
+        src={renderIconTimeline(eventType, event)}
+        alt={eventType}
+        className="event-icon"
+      />
       <div className="minute">{minute}'</div>
     </div>
   );
 };
 
-const Timeline = ({ matchId, homeTeam, awayTeam }) => {
-  const axiosPrivate = useAxiosPrivate();
-  const [events, setEvents] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+const Timeline = ({ events, matchDetails }) => {
+  const { homeTeam, awayTeam } = matchDetails;
+  const homeTeamLogo = homeTeam?.logoUrl;
+  const awayTeamLogo = awayTeam?.logoUrl;
 
-  // URL para obtener los eventos del partido
-  const MATCH_EVENTS_URL = `/player-statistics/matchEvents/${matchId}`;
+  // Filtramos solo los eventos GOAL, SUBSTITUTION y CARD
+  const filteredEvents = events.filter(
+    (event) =>
+      event.eventType === "GOAL" ||
+      event.eventType === "SUBSTITUTION" ||
+      event.eventType === "CARD"
+  );
 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const fetchMatchEvents = async () => {
-      try {
-        const response = await axiosPrivate.get(MATCH_EVENTS_URL, {
-          signal: controller.signal,
-        });
-        if (isMounted) {
-          setEvents(response.data);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err.message);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchMatchEvents();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [axiosPrivate, MATCH_EVENTS_URL]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  // Obtener el logo de los equipos
-  const homeTeamLogo = events.find((event) => event.teamName === homeTeam)?.teamLogoUrl;
-  const awayTeamLogo = events.find((event) => event.teamName === awayTeam)?.teamLogoUrl;
-
-  // Agrupar los eventos por minuto y por equipo
   const groupEventsByMinute = () => {
     const groupedEvents = {};
-    events.forEach((event) => {
+    filteredEvents.forEach((event) => {
       const key = `${event.teamId}-${event.minute}`;
       if (!groupedEvents[key]) {
         groupedEvents[key] = [];
@@ -95,34 +55,40 @@ const Timeline = ({ matchId, homeTeam, awayTeam }) => {
 
   const groupedEvents = groupEventsByMinute();
 
-  // Calcular el offset de los eventos que ocurren en el mismo minuto
   const calculateOffset = (minute, indexInSameMinute) => {
-    const baseOffset = 5; // Distancia para evitar que los eventos se superpongan
+    const baseOffset = 5;
     return baseOffset * indexInSameMinute;
   };
 
   const renderTeamEvents = (teamName, logoUrl) => (
-    <Row className={`timeline-row ${teamName === homeTeam ? "team1-row" : "team2-row"} mb-1`}>
+    <Row
+      className={`timeline-row ${
+        teamName === homeTeam?.name ? "team1-row" : "team2-row"
+      } mb-1`}
+    >
       <Col xs={1} className="team-logo-col">
         {logoUrl && (
-          <img src={logoUrl} alt={`${teamName} logo`} className="team-logo" style={{ height: "3rem" }} />
+          <img src={logoUrl} alt={`${teamName} logo`} className="team-logo" />
         )}
       </Col>
       <Col xs={11} className="timeline-events">
-        {events
+        {filteredEvents
           .filter((event) => event.teamName === teamName)
           .map((event, index) => {
-            const key = `${event.teamId}-${event.minute}`;
-            const indexInSameMinute = groupedEvents[key].indexOf(event);
+            const key = event.id || `${event.teamId}-${event.minute}-${index}`;
+            const indexInSameMinute =
+              groupedEvents[`${event.teamId}-${event.minute}`]?.indexOf(
+                event
+              ) || 0;
             const offset = calculateOffset(event.minute, indexInSameMinute);
 
             return (
               <div
-                key={index}
+                key={key} // Nueva clave única
                 className="timeline-col"
                 style={{
-                  position: "absolute",
-                  left: `${(event.minute / 40) * 100}%`,
+                  left: `${(event.minute / 40) * 90}%`,
+                  transform: `translateX(${offset}%)`,
                 }}
               >
                 <TimelineEvent event={event} offset={offset} />
@@ -134,10 +100,22 @@ const Timeline = ({ matchId, homeTeam, awayTeam }) => {
   );
 
   return (
-    <Container className="timeline-container">
-      {renderTeamEvents(homeTeam, homeTeamLogo)}
-      <hr style={{ border: "0.2rem solid #111" }} />
-      {renderTeamEvents(awayTeam, awayTeamLogo)}
+    <Container fluid className="timeline-container">
+      {renderTeamEvents(homeTeam?.name, homeTeamLogo)}
+      <Row className="align-items-center">
+        <Col xs={1} className="start-label">
+          INICIO
+        </Col>
+        <Col xs={10} className="text-center position-relative">
+          <hr className="timeline-separator" />
+          <span className="timeline-time">MT</span>
+          <div className="timeline-divider"></div>
+        </Col>
+        <Col xs={1} className="end-label">
+          FIN
+        </Col>
+      </Row>
+      {renderTeamEvents(awayTeam?.name, awayTeamLogo)}
     </Container>
   );
 };

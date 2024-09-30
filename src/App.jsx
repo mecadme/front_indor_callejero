@@ -61,7 +61,7 @@ function App() {
           <Route path="matches" element={<Matches />} />
           <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
           <Route path="/player/:playerId" element={<PlayerPage />} />
-          <Route path="/result/:matchId/:homeTeam/:awayTeam" element={<ResultPage />} />
+          <Route path="/result/:matchId" element={<ResultPage />} />
           <Route path="group_standings" element={<TeamStandings />} />
           <Route path="/:eventType" element={<FullStatistics />} />
           <Route path="/statistics" element={<Statistics />} />
