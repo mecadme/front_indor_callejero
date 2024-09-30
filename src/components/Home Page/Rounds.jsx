@@ -8,7 +8,7 @@ const Rounds = ({ RoundsData }) => {
 
   // Función para manejar el clic en un partido específico
   const handleRoundClick = (matchId, homeTeam, awayTeam) => {
-    navigate(`/result/${matchId}/${homeTeam}/${awayTeam}`);
+    navigate(`/result/${matchId}`);
   };
 
   return (

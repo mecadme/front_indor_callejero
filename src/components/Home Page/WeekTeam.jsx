@@ -1,7 +1,7 @@
-import useWeekAward from "../../hooks/useWeekAward";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Image } from "react-bootstrap";
+import useWeekAward from "../../hooks/useWeekAward";
 import "./css/WeekTeam.css";
-import { Container, Row, Col, Image } from "react-bootstrap";
 
 const gridPositionMap = {
   GOALKEEPER: "portero",
@@ -21,7 +21,7 @@ const PlayerCard = ({ player, gridArea }) => {
         style={{ width: "3.5rem", height: "3.5rem" }}
         className="img-player"
       />
-      <span className="player-name mb-2" >{`${player.firstName} ${player.lastName}`}</span>
+      <span className="player-name mb-2">{`${player.firstName} ${player.lastName}`}</span>
     </div>
   );
 };
@@ -44,12 +44,10 @@ const WeekTeam = ({ date }) => {
 
   return (
     <Container className="week-team">
-    
       <Container className="cancha justify-content-center">
-      {team.map((player) => {
+        {team.map((player) => {
           let gridArea = "";
 
-          // Asignar el área del grid dependiendo de la posición del jugador
           if (player.position === "GOALKEEPER") {
             gridArea = gridPositionMap.GOALKEEPER;
           } else if (player.position === "DEFENDER") {
@@ -62,7 +60,13 @@ const WeekTeam = ({ date }) => {
             gridArea = gridPositionMap.ATTACKER;
           }
 
-          return <PlayerCard key={player.playerId} player={player} gridArea={gridArea} />;
+          return (
+            <PlayerCard
+              key={player.playerId}
+              player={player}
+              gridArea={gridArea}
+            />
+          );
         })}
       </Container>
     </Container>

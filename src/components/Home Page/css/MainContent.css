@@ -21,7 +21,7 @@
   position: relative;
   width: 60%;
   height: 100%;
-  background-image: url("../../../assets/cancha.png"); /* Ruta de tu imagen */
+  background-image: url("../../../assets/mainPageField.png"); /* Ruta de tu imagen */
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

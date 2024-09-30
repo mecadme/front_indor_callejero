@@ -10,6 +10,7 @@ import useFetchMatchEventsById from "../../hooks/useFetchMatchEventsById";
 import Loading from "../Utils/Loading";
 import EmptyData from "../Administration/EmptyData";
 import ResultBanner from "./ResultBanner";
+import Field from "./Field";
 
 const ResultPage = () => {
   const { matchId } = useParams();
@@ -26,7 +27,7 @@ const ResultPage = () => {
     error: matchDetailsError,
   } = useFetchMatchById(matchId);
 
-  if (eventsLoading || matchDetailsLoading || matchLoading) return <Loading />; 
+  if (eventsLoading || matchDetailsLoading || matchLoading) return <Loading />;
   if (eventsError || matchDetailsError || matchError)
     return <div>Error: {eventsError || matchDetailsError || matchError}</div>;
 
@@ -38,8 +39,9 @@ const ResultPage = () => {
     <Container fluid className="mt-0 p-0">
       <Header />
       <Container fluid className="m-0">
-        <ResultBanner events={events} matchDetails={matchDetails} />
+        <ResultBanner events={events} matchDetails={matchDetails} className="m-0" />
         <Timeline events={events} matchDetails={matchDetails} />
+        <Field/>
       </Container>
       <Footer />
     </Container>
