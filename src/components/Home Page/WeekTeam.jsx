@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Image } from "react-bootstrap";
 import useWeekAward from "../../hooks/useWeekAward";
 import "./css/WeekTeam.css";
+import { useNavigate } from "react-router-dom";
 
 const gridPositionMap = {
   GOALKEEPER: "portero",
@@ -28,6 +29,8 @@ const PlayerCard = ({ player, gridArea }) => {
 
 const WeekTeam = ({ date }) => {
   const { weekAward, isLoading, error } = useWeekAward(date);
+  const navigate = useNavigate();
+
 
   if (isLoading) {
     return <div>Cargando equipo...</div>;
@@ -38,12 +41,21 @@ const WeekTeam = ({ date }) => {
   }
 
   const team = weekAward.team?.players || [];
+ const teamId = weekAward.team?.teamId
 
   let defensaCount = 0;
   let medioCount = 0;
 
+  const handleTeamClick = () => {
+    navigate(`/team/${teamId}`);
+  };
+
   return (
-    <Container className="week-team">
+    <Container
+      className="week-team"
+      onClick={() => handleTeamClick()}
+      style={{ cursor: "pointer" }}
+    >
       <Container className="cancha justify-content-center">
         {team.map((player) => {
           let gridArea = "";

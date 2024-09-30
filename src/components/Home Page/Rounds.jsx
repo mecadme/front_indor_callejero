@@ -7,8 +7,12 @@ const Rounds = ({ RoundsData }) => {
   const navigate = useNavigate();
 
   // Función para manejar el clic en un partido específico
-  const handleRoundClick = (matchId, homeTeam, awayTeam) => {
+  const handleMatchClick = (matchId, homeTeam, awayTeam) => {
     navigate(`/result/${matchId}`);
+  };
+
+  const handleRoundClick = () => {
+    navigate(`/rounds`);
   };
 
   return (
@@ -16,8 +20,13 @@ const Rounds = ({ RoundsData }) => {
       <Container className="Rounds">
         {RoundsData.length > 0 ? (
           RoundsData.map((round) => (
-            <Card key={round.roundId} className="mb-4 shadow-sm">
-              <Card.Header as="h4" className="text-center">
+            <Card key={round.roundId} className="mb-4 shadow-sm" >
+              <Card.Header
+                onClick={() => handleRoundClick()}
+                style={{cursor: "pointer"}}
+                as="h4"
+                className="text-center"
+              >
                 {round.roundName}
               </Card.Header>
               <Card.Body>
@@ -30,15 +39,8 @@ const Rounds = ({ RoundsData }) => {
                       - {match.place}
                     </Col>
                     <Col md={8}>
-                      {/* El evento onClick debe ser una función de flecha para pasar el matchId correctamente */}
                       <ListGroup
-                        onClick={() =>
-                          handleRoundClick(
-                            match.matchId,
-                            match.homeTeam,
-                            match.awayTeam
-                          )
-                        }
+                        onClick={() => handleMatchClick(match.matchId)}
                         style={{ cursor: "pointer" }}
                       >
                         <ListGroup.Item className="d-flex justify-content-between align-items-center">

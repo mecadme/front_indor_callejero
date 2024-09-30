@@ -4,66 +4,50 @@ import fieldImage from "../../assets/field.png";
 // Componente que genera un círculo con un color dinámico
 const Circle = ({ color }) => (
   <svg width="50" height="50">
-    <circle cx="25" cy="25" r="15" fill={color} />
+    <circle cx="25" cy="25" r="10" fill={color} />
   </svg>
 );
 
+// Datos de los jugadores con sus áreas de la cuadrícula
+const players = {
+  home: ["home1", "home2", "home3", "home4", "home5", "home6"],
+  away: ["away1", "away2", "away3", "away4", "away5", "away6"],
+};
+
 // Componente principal del campo de fútbol con CSS Grid
 const Field = ({ homeTeamColor, awayTeamColor }) => {
-  // Estilo para el campo usando CSS Grid
   const fieldStyle = {
-    backgroundImage: `url(${fieldImage})`, // Usamos la imagen importada
+    backgroundImage: `url(${fieldImage})`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    height: "500px",
+    height: "12rem",
     display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)", // 5 columnas en total
-    gridTemplateRows: "repeat(5, 1fr)", // 5 filas en total
+    gridTemplateColumns: "repeat(9, 1fr)",
+    gridTemplateRows: "repeat(5, 1fr)",
     gridTemplateAreas: `
-      "home1 . . . away1"
-      ". home2 . away2 ."
-      "home3 . . . away3"
-      ". home4 . away4 ."
-      "home5 . . . away5"
+      ". . . home1 . away1 . . ."
+      ". home2 . . . . . away2 ."
+      "home4 . home3 . . . away3 . away4"
+      ". home5 . . . . . away5 ."
+      ". . . home6 . away6 . . ."
     `,
   };
 
-  return (
-    <div style={fieldStyle}>
-      {/* Jugadores del equipo local */}
-      <div style={{ gridArea: "home1" }}>
-        <Circle color={homeTeamColor} />
+  // Renderizar los círculos (jugadores) en las posiciones de la cuadrícula
+  const renderPlayers = (team, color) =>
+    players[team].map((position) => (
+      <div key={position} style={{ gridArea: position }}>
+        <Circle color={color} />
       </div>
-      <div style={{ gridArea: "home2" }}>
-        <Circle color={homeTeamColor} />
-      </div>
-      <div style={{ gridArea: "home3" }}>
-        <Circle color={homeTeamColor} />
-      </div>
-      <div style={{ gridArea: "home4" }}>
-        <Circle color={homeTeamColor} />
-      </div>
-      <div style={{ gridArea: "home5" }}>
-        <Circle color={homeTeamColor} />
-      </div>
+    ));
 
+  return (
+    <div className="field m-0 p-0" style={fieldStyle}>
+      {/* Jugadores del equipo local */}
+      {renderPlayers("home", homeTeamColor)}
       {/* Jugadores del equipo visitante */}
-      <div style={{ gridArea: "away1" }}>
-        <Circle color={awayTeamColor} />
-      </div>
-      <div style={{ gridArea: "away2" }}>
-        <Circle color={awayTeamColor} />
-      </div>
-      <div style={{ gridArea: "away3" }}>
-        <Circle color={awayTeamColor} />
-      </div>
-      <div style={{ gridArea: "away4" }}>
-        <Circle color={awayTeamColor} />
-      </div>
-      <div style={{ gridArea: "away5" }}>
-        <Circle color={awayTeamColor} />
-      </div>
+      {renderPlayers("away", awayTeamColor)}
     </div>
   );
 };

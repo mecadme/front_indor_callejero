@@ -1,13 +1,16 @@
 import useWeekAward from "../../hooks/useWeekAward";
+import { useNavigate } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/WeekPlayer.css";
 import { Card, Col, Container, Row } from "react-bootstrap";
 
 const WeekPlayer = ({ date }) => {
-  // Corrección en la estructura del componente
+  
 
   const { weekAward, isLoading, error } = useWeekAward(date);
+  const navigate = useNavigate();
+
 
   if (isLoading) {
     return <div>Cargando jugador...</div>;
@@ -18,14 +21,24 @@ const WeekPlayer = ({ date }) => {
   }
 
   const player = weekAward.player;
+  const playerId = player?.playerId
 
-  // Si no hay jugador disponible
+ const handlePlayerClick=()=>{
+  navigate(`/player/${playerId}`);
+  }
+ 
+
+
+
   if (!player) {
     return <div className="alert alert-info">No hay jugador disponible</div>;
   }
 
   return (
-    <Container className="week-player container">
+    <Container  className="week-player container"
+    onClick={() => handlePlayerClick()}
+      style={{ cursor: "pointer" }}
+    >
       <Row className="row_player">
         <Card className="card text-center" style={{ alignItems: "center" }}>
           <h4 className="text-center mb-4">Jugador de la Fecha</h4>

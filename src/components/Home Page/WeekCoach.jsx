@@ -3,9 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/WeekCoach.css";
 import useWeekAward from "../../hooks/useWeekAward"; // Asegúrate de que esta ruta sea correcta
 import { Card, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const WeekCoach = ({ date }) => {
   const { weekAward, isLoading, error } = useWeekAward(date);
+  const navigate = useNavigate();
+
 
   if (isLoading) {
     return <div>Cargando técnico...</div>;
@@ -15,15 +18,23 @@ const WeekCoach = ({ date }) => {
     return <div>{error}</div>;
   }
 
-  // Extraer el técnico (ethicOfficer) desde la respuesta de weekAward
+  
   const tecnico = weekAward?.ethicOfficer;
+  // console.log(weekAward?.ethicOfficer.ethicOfficerId || {})
 
   if (!tecnico) {
     return <div className="alert alert-info">No hay técnico disponible</div>;
   }
 
+   const handleCoachClick = () => {
+    navigate(`/coach`);
+  };
+
   return (
-    <Container className="week-coach container">
+    <Container className="week-coach container"
+    onClick={() => handleCoachClick()}
+      style={{ cursor: "pointer" }}
+    >
       <Row className="row_coach">
         <Card className="card text-center" style={{ alignItems: "center" }}>
           <h4 className="text-center mb-4">Técnico de la Fecha</h4>

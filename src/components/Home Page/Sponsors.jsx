@@ -30,7 +30,15 @@ const Sponsors = ({ maxContributions }) => {
             sponsors.map(
               (sponsor) =>
                 sponsor.contributionAmount > maxContributions && (
-                  <Col key={sponsor.sponsorId} xs={6} md={4} lg={2} className="mb-4">
+                  <Col
+                    key={sponsor.sponsorId}
+                    xs={6}
+                    md={4}
+                    lg={2}
+                    className="mb-4"
+                    onClick={() => handleTeamClick()}
+                    style={{ cursor: "pointer" }}
+                  >
                     <img
                       src={sponsor.photoUrl}
                       alt={sponsor.sponsor}

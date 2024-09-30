@@ -31,6 +31,7 @@ import ResultPage from "./components/Results/ResultPage.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import useFetchTeams from "./hooks/useFetchTeams.jsx";
+import CoachPage from "./components/Matches/CoachPage.jsx";
 
 const ROLES = {
   User: "ROLE_USER",
@@ -68,6 +69,7 @@ function App() {
           <Route path="/teams" element={<Teams />} />
           <Route path="/card" element={<Cards />} />
           <Route path="/minutes_played" element={<MinutesPlayed />} />
+          <Route path="/coach" element={<CoachPage/>}/>
 
           <Route element={<RequiredAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />
