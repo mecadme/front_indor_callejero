@@ -1,16 +1,16 @@
 import React from "react";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
-import Timeline from "./Timeline";
-import useFetchMatchStats from "../../hooks/useFetchMatchStats";
 import useFetchMatchById from "../../hooks/useFetchMatchById";
 import useFetchMatchEventsById from "../../hooks/useFetchMatchEventsById";
-import Loading from "../Utils/Loading";
+import useFetchMatchStats from "../../hooks/useFetchMatchStats";
 import EmptyData from "../Administration/EmptyData";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
+import Loading from "../Utils/Loading";
+import LineUps from "./LineUps";
 import ResultBanner from "./ResultBanner";
-import Field from "./Field";
+import Timeline from "./Timeline";
 
 const ResultPage = () => {
   const { matchId } = useParams();
@@ -41,7 +41,9 @@ const ResultPage = () => {
       <Container fluid className="m-0">
         <ResultBanner events={events} matchDetails={matchDetails} className="m-0" />
         <Timeline events={events} matchDetails={matchDetails} />
-        <Field/>
+        <LineUps matchDetails={matchDetails} />
+       
+       
       </Container>
       <Footer />
     </Container>

@@ -4,7 +4,7 @@ import fieldImage from "../../assets/field.png";
 // Componente que genera un círculo con un color dinámico
 const Circle = ({ color }) => (
   <svg width="50" height="50">
-    <circle cx="25" cy="25" r="10" fill={color} />
+    <circle cx="25" cy="25" r="6" fill={color} />
   </svg>
 );
 
@@ -21,7 +21,8 @@ const Field = ({ homeTeamColor, awayTeamColor }) => {
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    height: "12rem",
+    width: "105%", // Ajuste completo al ancho del contenedor
+    height: "auto", 
     display: "grid",
     gridTemplateColumns: "repeat(9, 1fr)",
     gridTemplateRows: "repeat(5, 1fr)",
@@ -34,7 +35,6 @@ const Field = ({ homeTeamColor, awayTeamColor }) => {
     `,
   };
 
-  // Renderizar los círculos (jugadores) en las posiciones de la cuadrícula
   const renderPlayers = (team, color) =>
     players[team].map((position) => (
       <div key={position} style={{ gridArea: position }}>
@@ -44,9 +44,7 @@ const Field = ({ homeTeamColor, awayTeamColor }) => {
 
   return (
     <div className="field m-0 p-0" style={fieldStyle}>
-      {/* Jugadores del equipo local */}
       {renderPlayers("home", homeTeamColor)}
-      {/* Jugadores del equipo visitante */}
       {renderPlayers("away", awayTeamColor)}
     </div>
   );

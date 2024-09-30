@@ -1,30 +1,30 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "./useAxiosPrivate";
 
-const useFetchMatchById = (matchId) => {
-  const [matchDetails, setMatchDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); 
+const useFetchLineUp = (matchId) => {
+  const [lineUp, setLineUp] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
-  const MATCHES_URL = `/matches/${matchId}`; 
+  const LINE_UP_URL = `/matches/${matchId}/line_up`;
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
 
-    const getMatchDetails = async () => {
+    const getLineUp = async () => {
       try {
-        const response = await axiosPrivate.get(MATCHES_URL, {
+        const response = await axiosPrivate.get(LINE_UP_URL, {
           signal: controller.signal,
         });
         if (isMounted) {
           console.log(response.data);
-          setMatchDetails(response.data); 
+          setLineUp(response.data);
         }
       } catch (err) {
         if (isMounted) {
-          setError(err.message);
+          setError(err.response ? err.response.data.message : err.message);
         }
       } finally {
         if (isMounted) {
@@ -33,15 +33,14 @@ const useFetchMatchById = (matchId) => {
       }
     };
 
-    getMatchDetails();
+    getLineUp();
 
     return () => {
       isMounted = false;
       controller.abort();
     };
-  }, [matchId, axiosPrivate]);
-
-  return { matchDetails, isLoading, error };
+  }, [matchId]); 
+  return { lineUp, isLoading, error };
 };
 
-export default useFetchMatchById;
+export default useFetchLineUp;

@@ -100,7 +100,7 @@ const Timeline = ({ events, matchDetails }) => {
   );
 
   return (
-    <Container fluid className="timeline-container">
+    <Container fluid className="timeline-container mb-3">
       {renderTeamEvents(homeTeam?.name, homeTeamLogo)}
       <Row className="align-items-center">
         <Col xs={1} className="start-label">
