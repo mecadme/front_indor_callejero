@@ -11,21 +11,14 @@ import Loading from "../Utils/Loading";
 import LineUps from "./LineUps";
 import ResultBanner from "./ResultBanner";
 import Timeline from "./Timeline";
+import MatchOverview from "./MatchOverview";
 
 const ResultPage = () => {
   const { matchId } = useParams();
 
   const { matchStats, matchLoading, matchError } = useFetchMatchStats(matchId);
-  const {
-    events,
-    isLoading: eventsLoading,
-    error: eventsError,
-  } = useFetchMatchEventsById(matchId);
-  const {
-    matchDetails,
-    loading: matchDetailsLoading,
-    error: matchDetailsError,
-  } = useFetchMatchById(matchId);
+  const { events, isLoading: eventsLoading, error: eventsError} = useFetchMatchEventsById(matchId);
+  const { matchDetails, loading: matchDetailsLoading, error: matchDetailsError } = useFetchMatchById(matchId);
 
   if (eventsLoading || matchDetailsLoading || matchLoading) return <Loading />;
   if (eventsError || matchDetailsError || matchError)
@@ -34,16 +27,20 @@ const ResultPage = () => {
   if (!matchStats || !matchDetails) {
     return <EmptyData message={"No se encontraron datos del partido"} />;
   }
+  console.log(matchStats, matchDetails);
 
   return (
     <Container fluid className="mt-0 p-0">
       <Header />
       <Container fluid className="m-0">
-        <ResultBanner events={events} matchDetails={matchDetails} className="m-0" />
+        <ResultBanner
+          events={events}
+          matchDetails={matchDetails}
+          className="m-0"
+        />
         <Timeline events={events} matchDetails={matchDetails} />
         <LineUps matchDetails={matchDetails} />
-       
-       
+        <MatchOverview matchDetails={matchDetails} matchStats={matchStats} />
       </Container>
       <Footer />
     </Container>

@@ -1,5 +1,6 @@
 import React from "react";
 import fieldImage from "../../assets/field.png";
+import "./css/Field.css";
 
 // Componente que genera un círculo con un color dinámico
 const Circle = ({ color }) => (
@@ -17,22 +18,7 @@ const players = {
 // Componente principal del campo de fútbol con CSS Grid
 const Field = ({ homeTeamColor, awayTeamColor }) => {
   const fieldStyle = {
-    backgroundImage: `url(${fieldImage})`,
-    backgroundSize: "contain",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    width: "105%", // Ajuste completo al ancho del contenedor
-    height: "auto", 
-    display: "grid",
-    gridTemplateColumns: "repeat(9, 1fr)",
-    gridTemplateRows: "repeat(5, 1fr)",
-    gridTemplateAreas: `
-      ". . . home1 . away1 . . ."
-      ". home2 . . . . . away2 ."
-      "home4 . home3 . . . away3 . away4"
-      ". home5 . . . . . away5 ."
-      ". . . home6 . away6 . . ."
-    `,
+    backgroundImage: `url(${fieldImage})`
   };
 
   const renderPlayers = (team, color) =>

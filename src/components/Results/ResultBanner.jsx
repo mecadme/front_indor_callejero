@@ -3,6 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { renderIconBanner } from "../Utils/RenderIcon";
 import StyleUtils from "../Utils/StyleUtils";
 import FinalScore from "./FinalScore";
+import "./css/ResultBanner.css";
 
 const BannerEvent = React.memo(({ event, assistEvent, assistPlayer }) => {
   const { eventType, minute, playerFirstName, playerLastName } = event;
@@ -136,8 +137,12 @@ const ResultBanner = ({ events, matchDetails }) => {
           onMouseLeave={() => setHovered(false)}
         >
           <h2
-            className="text-center text-md-left"
-            style={{ fontWeight: "bold", margin: "0" }}
+            className="text-md-left"
+            style={{
+              fontWeight: "bold",
+              margin: "0",
+              textAlign: direction === "right" ? "left" : "right", // Alineación contraria
+            }}
           >
             {team.name.toUpperCase()}
           </h2>

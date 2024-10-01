@@ -1,0 +1,176 @@
+/* General Container Styles */
+.result-banner {
+    padding: 1rem;
+  }
+  
+  .result-banner h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+  }
+  
+  @media (min-width: 768px) {
+    .result-banner h2 {
+      font-size: 2.5rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .result-banner h2 {
+      font-size: 3rem;
+    }
+  }
+  
+  /* Banner Section - Resultados */
+  .result-banner .text-white {
+    background-color: #33173C;
+    padding: 1rem;
+  }
+  
+  .result-banner .text-white h2 {
+    font-size: 2.5rem;
+    margin: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .result-banner .text-white h2 {
+      font-size: 3rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .result-banner .text-white h2 {
+      font-size: 3.5rem;
+    }
+  }
+  
+  /* Event Details Styling */
+  .banner-event {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+  
+  .banner-event .minute {
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+  }
+  
+  .banner-event .event-details {
+    display: flex;
+    align-items: center;
+  }
+  
+  .banner-event .event-details img {
+    margin-right: 0.3rem;
+  }
+  
+  .banner-event .player-name {
+    font-weight: bold;
+    font-size: 0.85rem;
+  }
+  
+  .banner-event .assist img {
+    margin-right: 0.3rem;
+  }
+  
+  /* Team Events Row */
+  .team-events-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  @media (min-width: 768px) {
+    .team-events-row {
+      justify-content: flex-start;
+    }
+  }
+  
+  /* Team Names Styling */
+  .team-events-row h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .team-events-row h2 {
+      font-size: 2rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .team-events-row h2 {
+      font-size: 2.5rem;
+    }
+  }
+  
+  /* Hover Effects for Team Backgrounds */
+  .team-events-row:hover {
+    background-size: cover;
+    color: white;
+    transition: background-image 0.2s ease, color 0.2s ease;
+  }
+  
+  /* Final Score Section */
+  .result-banner .final-score {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  @media (min-width: 768px) {
+    .result-banner .final-score {
+      font-size: 2.5rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .result-banner .final-score {
+      font-size: 3rem;
+    }
+  }
+  
+  /* Mobile Adjustments */
+  @media (max-width: 576px) {
+    .banner-event {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .result-banner h2 {
+      font-size: 1.5rem;
+    }
+  
+    .banner-event .minute,
+    .banner-event .player-name {
+      font-size: 0.8rem;
+    }
+  }
+  
+  .result-banner .text-black {
+    background-color: #f7f7f7;
+    padding: 1rem;
+  }
+  
+  .result-banner .text-black h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .result-banner .text-black h2 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .result-banner .text-black h2 {
+      font-size: 1.8rem;
+    }
+  }
+  
