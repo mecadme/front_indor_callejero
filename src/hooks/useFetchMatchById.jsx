@@ -19,7 +19,6 @@ const useFetchMatchById = (matchId) => {
           signal: controller.signal,
         });
         if (isMounted) {
-          console.log(response.data);
           setMatchDetails(response.data); 
         }
       } catch (err) {

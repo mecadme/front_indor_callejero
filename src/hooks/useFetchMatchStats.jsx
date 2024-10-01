@@ -21,7 +21,6 @@ const useFetchMatchStats = (matchId) => {
         const response = await axiosPrivate.get(MATCH_StATS_URL(matchId), {
           signal: controller.signal,
         });
-        console.log(response.data);
 
         isMounted && setMatchStats(response.data);
       } catch (err) {

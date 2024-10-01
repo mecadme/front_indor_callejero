@@ -42,7 +42,6 @@ const PlayerCard = ({ player }) => {
 const TeamPage = ({ teams }) => {
   const { teamId } = useParams();
   const team = teams.find((team) => team.teamId === parseInt(teamId));
-  console.log(team);
 
   if (!team) {
     return <EmptyData message="El equipo no existe" />;

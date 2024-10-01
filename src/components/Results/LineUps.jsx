@@ -9,7 +9,6 @@ import "./css/LineUps.css";
 const LineUps = ({ matchDetails }) => {
   const { matchId, homeTeam, awayTeam } = matchDetails;
   const { lineUp, isLoading, error } = useFetchLineUp(matchId);
-  console.log(lineUp);
 
   if (isLoading)
     return (

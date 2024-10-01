@@ -5,7 +5,6 @@ const TeamSelector = ({ teams, onSelectTeam }) => {
   const [searchTerm, setSearchTerm] = useState("");     
   const [currentPage, setCurrentPage] = useState(1);    
   const teamsPerPage = 5;                              
-  console.log(teams)
 
   const filteredTeams = teams.filter((team) =>
     team.teamName.toLowerCase().includes(searchTerm.toLowerCase())

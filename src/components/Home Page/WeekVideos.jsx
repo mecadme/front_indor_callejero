@@ -23,7 +23,6 @@ const WeekVideos = () => {
       const response = await axios.get(WEEKVIDEOS_URL);
 
       setVideos(response.data);
-      console.log(response.data);
     } catch (err) {
       setError(err.message);
     } finally {

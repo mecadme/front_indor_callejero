@@ -27,7 +27,6 @@ const Standings = () => {
 
       if (response.data && typeof response.data === "object") {
         setGroups(response.data);
-        console.log(response.data)
       } else {
         throw new Error("Formato de datos incorrecto");
       }

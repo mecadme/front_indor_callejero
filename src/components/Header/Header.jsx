@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../assets/indor_callejero_logo.png";
 import TeamsBarComponent from "./TeamsBarComponent";
 import useFetchTeams from "../../hooks/useFetchTeams";
+import useAuth from "../../hooks/useAuth";
 import "./css/Header.css";
 
 const Header = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const navigate = useNavigate();
   const { teams, isLoading, error } = useFetchTeams();
+  const {auth} = useAuth();
+  console.log(auth);
 
   // Spinner de carga
   if (isLoading) {

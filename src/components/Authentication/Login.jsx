@@ -1,9 +1,7 @@
 import {
-  faCheck,
   faEye,
   faEyeSlash,
-  faInfoCircle,
-  faTimes,
+  faInfoCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { jwtDecode } from "jwt-decode";
@@ -81,7 +79,7 @@ const Login = () => {
         ? decodedToken.authorities.split(",")
         : [];
 
-      setAuth({ user, pwd, roles, accessToken });
+      setAuth({ user, roles, accessToken });
       setUser("");
       setPwd("");
       navigate(from, { replace: true });

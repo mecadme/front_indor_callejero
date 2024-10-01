@@ -20,7 +20,6 @@ const WeekCoach = ({ date }) => {
 
   
   const tecnico = weekAward?.ethicOfficer;
-  // console.log(weekAward?.ethicOfficer.ethicOfficerId || {})
 
   if (!tecnico) {
     return <div className="alert alert-info">No hay técnico disponible</div>;

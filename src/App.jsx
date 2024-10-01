@@ -47,35 +47,19 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="unauthorized" element={<Unauthorized />} />
+      <Route element={<PersistLogin />}>
+        <Route path="/" element={<Layout />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="unauthorized" element={<Unauthorized />} />
 
-        <Route element={<PersistLogin />}>
           <Route path="/" element={<Home />} />
           <Route path="linkpage" element={<LinkPage />} />
           <Route path="street_project" element={<StreetProject />} />
           <Route path="all_you_need_to_know" element={<TLQDS />} />
           <Route path="historical_events" element={<HistoricalEvents />} />
           <Route path="predict_result" element={<ResultPredict />} />
-          <Route path="rounds" element={<RoundsPage />} />
-          <Route path="matches" element={<Matches />} />
-          <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
-          <Route path="/player/:playerId" element={<PlayerPage />} />
-          <Route path="/result/:matchId" element={<ResultPage />} />
-          <Route path="group_standings" element={<TeamStandings />} />
-          <Route path="/:eventType" element={<FullStatistics />} />
-          <Route path="/statistics" element={<Statistics />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/card" element={<Cards />} />
-          <Route path="/minutes_played" element={<MinutesPlayed />} />
-          <Route path="/coach" element={<CoachPage />} />
-
-          <Route path="/comparisons" element={<ComparisonsPage />} />
-          <Route path="/comparisons/teams" element={<TeamsComparison />} />
-          <Route path="/comparisons/players" element={<PlayersComparison />} />
 
           <Route element={<RequiredAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />
@@ -87,9 +71,29 @@ function App() {
 
           <Route
             element={
-              <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
+              <RequiredAuth
+                allowedRoles={[ROLES.Editor, ROLES.Admin, ROLES.User]}
+              />
             }
           >
+            <Route path="/comparisons" element={<ComparisonsPage />} />
+            <Route path="/comparisons/teams" element={<TeamsComparison />} />
+            <Route
+              path="/comparisons/players"
+              element={<PlayersComparison />}
+            />
+            <Route path="rounds" element={<RoundsPage />} />
+            <Route path="matches" element={<Matches />} />
+            <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
+            <Route path="/player/:playerId" element={<PlayerPage />} />
+            <Route path="/result/:matchId" element={<ResultPage />} />
+            <Route path="group_standings" element={<TeamStandings />} />
+            <Route path="/:eventType" element={<FullStatistics />} />
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/card" element={<Cards />} />
+            <Route path="/minutes_played" element={<MinutesPlayed />} />
+            <Route path="/coach" element={<CoachPage />} />
             <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route>

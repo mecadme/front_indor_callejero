@@ -19,7 +19,6 @@ const useFetchLineUp = (matchId) => {
           signal: controller.signal,
         });
         if (isMounted) {
-          console.log(response.data);
           setLineUp(response.data);
         }
       } catch (err) {

@@ -27,7 +27,6 @@ const ResultPage = () => {
   if (!matchStats || !matchDetails) {
     return <EmptyData message={"No se encontraron datos del partido"} />;
   }
-  console.log(matchStats, matchDetails);
 
   return (
     <Container fluid className="mt-0 p-0">

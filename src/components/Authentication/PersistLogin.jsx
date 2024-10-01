@@ -1,10 +1,9 @@
-import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Outlet } from "react-router-dom";
 
-import useRefreshToken from "../../hooks/useRefreshToken";
 import useAuth from "../../hooks/useAuth";
+import useRefreshToken from "../../hooks/useRefreshToken";
+import Loading from "../Utils/Loading";
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
@@ -22,7 +21,7 @@ const PersistLogin = () => {
         isMounted && setIsLoading(false);
       }
     };
-    auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);
+    !auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);
 
     return () => {
       isMounted = false;
@@ -34,8 +33,8 @@ const PersistLogin = () => {
         <Outlet />
       ) : isLoading ? (
         <>
-          <FontAwesomeIcon icon={faSpinner} spin /> Cargando...
-        </>
+          <Loading/>
+          </>
       ) : (
         <Outlet />
       )}

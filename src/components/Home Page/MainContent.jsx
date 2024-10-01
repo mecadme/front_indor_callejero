@@ -29,7 +29,6 @@ const MainContent = () => {
       const response = await axios.get(CURRENT_VALUES_URL);
 
       if (response.data) {
-        console.log(response.data);
         setCurrentValues(response.data);
       } else {
         setCurrentValues({ roundDate: "2024-09-24", roundId: 3 });
@@ -53,7 +52,6 @@ const MainContent = () => {
   const selectedDate = currentValues.roundDate;
   const { RoundsData, loading, error } = useFetchRounds(currentValues.roundId);
 
-  console.log(RoundsData);
 
   if (loading) {
     return <div>Cargando jornada...</div>;
