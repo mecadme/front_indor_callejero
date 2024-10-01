@@ -30,6 +30,7 @@ import ResultPage from "./components/Results/ResultPage.jsx";
 import ComparisonsPage from "./components/Comparisons/ComparisonsPage.jsx";
 import PlayersComparison from "./components/Comparisons/PlayersComparison.jsx";
 import TeamsComparison from "./components/Comparisons/TeamsComparison.jsx";
+import UserPage from "./components/User/UserPage.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -94,6 +95,7 @@ function App() {
             <Route path="/card" element={<Cards />} />
             <Route path="/minutes_played" element={<MinutesPlayed />} />
             <Route path="/coach" element={<CoachPage />} />
+            <Route path="/user/:userName" element={<UserPage />} />
             <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route>
