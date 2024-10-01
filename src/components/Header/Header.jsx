@@ -8,7 +8,8 @@ import Loading from "../Utils/Loading";
 import useFetchTeams from "../../hooks/useFetchTeams";
 import useFetchUser from "../../hooks/useFetchUser";
 import useAuth from "../../hooks/useAuth";
-import useLogOut from "../../hooks/useLogOut"; // Importamos el hook de logout
+import useLogOut from "../../hooks/useLogOut";
+import RoleBased from "../Administration/RoleBased";
 import "./css/Header.css";
 
 const Header = () => {
@@ -25,7 +26,7 @@ const Header = () => {
 
   const renderUserInfo = (user) => {
     const handleUserClick = (user) => {
-      localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem("currentUser", JSON.stringify(user));
       navigate(`/user/${user.username}`);
     };
     console.log(user);
@@ -133,6 +134,20 @@ const Header = () => {
                   Comparar Jugadores
                 </NavDropdown.Item>
               </NavDropdown>
+              <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
+                <NavDropdown title="Administración" id="basic-nav-dropdown">
+                  <RoleBased allowedRoles={["ROLE_ADMIN"]}>
+                    <NavDropdown.Item href="/managment/admin">
+                      Administrar Sistema
+                    </NavDropdown.Item>
+                  </RoleBased>
+                  <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
+                    <NavDropdown.Item href="/managment/manager">
+                      Administrar Partidos
+                    </NavDropdown.Item>
+                  </RoleBased>
+                </NavDropdown>
+              </RoleBased>
               <Nav.Link
                 href="https://www.facebook.com/IndorCallejeroAzogues"
                 aria-label="Facebook"

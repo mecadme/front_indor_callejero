@@ -3,6 +3,7 @@ import useAuth from "../../hooks/useAuth";
 const RoleBased = ({ allowedRoles, children }) => {
   const { auth } = useAuth();
   const roles = auth?.roles || [];
+  console.log(roles)
 
   const hasAccess = roles.some(role => allowedRoles.includes(role));
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 
+
 const Users = () => {
   const USERS_URL = "users/fetch";
 
@@ -19,7 +20,9 @@ const Users = () => {
           signal: controller.signal,
         });
 
-        isMounted && setUsers(response.dxita.users);
+        console.log(response);
+
+        isMounted && setUsers(response.data.users);
       } catch (err) {
         console.log(err.message);
       }

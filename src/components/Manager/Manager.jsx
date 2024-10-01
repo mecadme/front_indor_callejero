@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-const Editor = () => {
+const Manager = () => {
     return (
         <section>
             <h1>Editors Page</h1>
@@ -13,4 +13,4 @@ const Editor = () => {
     )
 }
 
-export default Editor
+export default Manager

@@ -14,7 +14,7 @@ import ResultPredict from "./components/Header/ResultPredict.jsx";
 import StreetProject from "./components/Header/StreetProject.jsx";
 import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import Editor from "./components/Manager/Editor.jsx";
+import Manager from "./components/Manager/Manager.jsx";
 import Lounge from "./components/Manager/Lounge.jsx";
 import Matches from "./components/Matches/Matches.jsx";
 import PlayerPage from "./components/Players/PlayerPage.jsx";
@@ -39,7 +39,7 @@ import CoachPage from "./components/Matches/CoachPage.jsx";
 
 const ROLES = {
   User: "ROLE_USER",
-  Editor: "ROLE_ADMIN",
+  Editor: "ROLE_MANAGER",
   Admin: "ROLE_ADMIN",
 };
 
@@ -62,12 +62,12 @@ function App() {
           <Route path="historical_events" element={<HistoricalEvents />} />
           <Route path="predict_result" element={<ResultPredict />} />
 
-          <Route element={<RequiredAuth allowedRoles={[ROLES.Editor]} />}>
-            <Route path="editor" element={<Editor />} />
+          <Route element={<RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}>
+            <Route path="/managment/manager" element={<Manager />} />
           </Route>
 
           <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-            <Route path="admin" element={<Admin />} />
+            <Route path="/managment/admin" element={<Admin />} />
           </Route>
 
           <Route
