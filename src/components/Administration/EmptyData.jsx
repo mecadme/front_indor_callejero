@@ -5,7 +5,7 @@ const EmptyData = ({ message }) => {
   return (
     <Container
       className="d-flex flex-column align-items-center justify-content-center"
-      style={{ height: "30rem", textAlign: "center", maxWidth: "5rem" }}
+      style={{ height: "30rem", textAlign: "center", maxWidth: "4rem" }}
     >
       <Alert
         variant="info"

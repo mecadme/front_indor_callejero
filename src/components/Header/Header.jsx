@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Container, Nav, Navbar, Spinner } from "react-bootstrap";
+import { Button, Container, Nav, Navbar, NavDropdown, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/indor_callejero_logo.png";
 import TeamsBarComponent from "./TeamsBarComponent";
@@ -51,9 +51,13 @@ const Header = () => {
               <Nav.Link href="/historical_events" aria-label="Palmarés Históricos">
                 Palmarés Históricos
               </Nav.Link>
-              <Nav.Link href="/predict_result" aria-label="Pronóstico de Resultados">
-                Pronóstico de Resultados
-              </Nav.Link>
+              <NavDropdown title="Comparaciones" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/comparisons/teams">Comparar Equipos</NavDropdown.Item>
+              <NavDropdown.Item href="/comparisons/players">
+                Comparar Jugadores
+              </NavDropdown.Item>
+                </NavDropdown>
+         
               <Nav.Link
                 href="https://www.facebook.com/IndorCallejeroAzogues"
                 aria-label="Facebook"

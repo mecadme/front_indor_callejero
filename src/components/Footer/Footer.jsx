@@ -45,9 +45,7 @@ const Footer = () => {
           <Col>
             <StatisticsFoot />
           </Col>
-          <Col>
-            <PredictionsFoot />
-          </Col>
+       
           <Col>
             <ComparasonsFoot />
           </Col>

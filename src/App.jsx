@@ -26,7 +26,10 @@ import RoundsPage from "./components/Matches/RoundsPage.jsx";
 import TeamPage from "./components/Teams/TeamPage.jsx";
 import Teams from "./components/Teams/Teams.jsx";
 import TeamStandings from "./components/Teams/TeamStandings.jsx";
-import ResultPage from "./components/Results/ResultPage.jsx"; 
+import ResultPage from "./components/Results/ResultPage.jsx";
+import ComparisonsPage from "./components/Comparisons/ComparisonsPage.jsx";
+import PlayersComparison from "./components/Comparisons/PlayersComparison.jsx";
+import TeamsComparison from "./components/Comparisons/TeamsComparison.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -41,7 +44,6 @@ const ROLES = {
 
 function App() {
   const { teams } = useFetchTeams();
-  
 
   return (
     <Routes>
@@ -58,7 +60,7 @@ function App() {
           <Route path="all_you_need_to_know" element={<TLQDS />} />
           <Route path="historical_events" element={<HistoricalEvents />} />
           <Route path="predict_result" element={<ResultPredict />} />
-          <Route path="rounds" element={<RoundsPage/>} />
+          <Route path="rounds" element={<RoundsPage />} />
           <Route path="matches" element={<Matches />} />
           <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
           <Route path="/player/:playerId" element={<PlayerPage />} />
@@ -69,7 +71,11 @@ function App() {
           <Route path="/teams" element={<Teams />} />
           <Route path="/card" element={<Cards />} />
           <Route path="/minutes_played" element={<MinutesPlayed />} />
-          <Route path="/coach" element={<CoachPage/>}/>
+          <Route path="/coach" element={<CoachPage />} />
+
+          <Route path="/comparisons" element={<ComparisonsPage />} />
+          <Route path="/comparisons/teams" element={<TeamsComparison />} />
+          <Route path="/comparisons/players" element={<PlayersComparison />} />
 
           <Route element={<RequiredAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />

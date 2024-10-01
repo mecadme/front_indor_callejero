@@ -119,7 +119,6 @@ const PlayerStatistics = ({ eventType, name, limit }) => {
         ))}
       </Col>
     </Container>
-    <Footer />
     </Container>
   );
 };
