@@ -31,25 +31,38 @@ const Rounds = ({ RoundsData }) => {
               </Card.Header>
               <Card.Body>
                 {round.matches.map((match, index) => (
-                  <Row key={index} className="mb-3 align-items-center">
-                    <Col md={4} className="text-center mb-2 mb-md-0">
-                      <strong>
-                        {new Date(match.date).toLocaleDateString()}
-                      </strong>{" "}
-                      - {match.place}
-                    </Col>
-                    <Col md={8}>
+                  <Row key={index} className="mb-3 align-items-center d-flex justify-content-center">
+                    
+                    <Col md={6}>
                       <ListGroup
                         onClick={() => handleMatchClick(match.matchId)}
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: "pointer",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+
+                         }}
+
                       >
                         <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                          {match.place}
+                          </ListGroup.Item>
+                        <ListGroup.Item className="d-flex justify-content-between align-items-center"
+                        style={{ gap: "0.25rem", padding: "0.5rem" }}>
                           <span className="team">{match.homeTeam}</span>
                           <Badge pill bg="info" className="mx-2">
                             {match.goalsHomeTeam} - {match.goalsAwayTeam}
                           </Badge>
                           <span className="team">{match.awayTeam}</span>
                         </ListGroup.Item>
+
+                        <ListGroup.Item className="text-center text-muted">
+                          <small>
+                          {new Date(match.date).toLocaleDateString()}
+                          </small>
+                        </ListGroup.Item>
+
                         <ListGroup.Item className="text-center text-muted">
                           <small>
                             Hora: {new Date(match.date).toLocaleTimeString()}

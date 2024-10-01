@@ -66,10 +66,10 @@ const MainContent = () => {
     <main className="mainContent">
       <Container className="m-4" fluid>
         <Row>
-          <Col xs={12} md={12} lg={3}>
+          <Col xs={12} md={12} lg={4}>
             <Rounds RoundsData={RoundsData} />
           </Col>
-          <Col xs={12} md={12} lg={9}>
+          <Col xs={12} md={12} lg={8}>
             <Row className="row_week">
               <Row className="mb-0">
                 <Col xs={12} md={7} className="text-center p-0 m-0">
