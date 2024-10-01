@@ -1,56 +1,111 @@
-import React, { useState } from "react";
-import EmptyData from "../Administration/EmptyData";
-import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
-import { Container, Row, Col, Table, Button } from "react-bootstrap";
+import chroma from "chroma-js";
+import React, { useMemo, useState } from "react";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Spinner,
+  Table,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import {
+  Legend,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 import useFetchAllPlayersStats from "../../hooks/useFetchAllPlayersStats";
-import Loading from "../Utils/Loading";
+import EmptyData from "../Administration/EmptyData";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
 import PlayerSelector from "./PlayerSelector";
-import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
 
-// Componente del gráfico radial
-const RadarChartComponent = ({ data }) => {
+// RadarChart Component
+const RadarChartComponent = ({ data, player1, player2 }) => {
+  const sameTeam = player1.teamColor === player2.teamColor;
+  const player1Color = player1.teamColor;
+  const player2Color = sameTeam
+    ? chroma(player2.teamColor).darken(1.5).hex()
+    : player2.teamColor;
+
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <RadarChart outerRadius={90} data={data}>
+    <ResponsiveContainer width="80%" height={500}>
+      <RadarChart outerRadius={150} data={data}>
         <PolarGrid />
-        <PolarAngleAxis dataKey="stat" />
-        <PolarRadiusAxis angle={30} domain={[0, 10]} />
-        <Radar name="Player 1" dataKey="player1" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-        <Radar name="Player 2" dataKey="player2" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+        <PolarAngleAxis dataKey="stat" tick={{ fontSize: 12 }} />
+        <PolarRadiusAxis angle={30} domain={[0, 100]} />
+        <Radar
+          name={player1.player.lastName.toUpperCase()}
+          dataKey="player1"
+          stroke={player1Color}
+          fill={player1Color}
+          fillOpacity={0.6}
+        />
+        <Radar
+          name={player2.player.lastName.toUpperCase()}
+          dataKey="player2"
+          stroke={player2Color}
+          fill={player2Color}
+          fillOpacity={0.6}
+        />
+        <Tooltip />
+        <Legend verticalAlign="top" />
       </RadarChart>
     </ResponsiveContainer>
   );
 };
 
-// Genera la tabla de estadísticas comparadas
+// Helper function to calculate percentage
+const calculatePercentage = (value1, value2) => {
+  const total = value1 + value2;
+  return total === 0 ? 0 : (value1 / total) * 100;
+};
+
+// StatsTable Component
 const StatsTable = ({ player1, player2 }) => {
-  const data = [
-    { stat: "Passes", player1: player1.passes || 0, player2: player2.passes || 0 },
-    { stat: "Total Shots", player1: player1.totalShots || 0, player2: player2.totalShots || 0 },
-    { stat: "Shots on Goal", player1: player1.goalsShots || 0, player2: player2.goalsShots || 0 },
-    { stat: "Aerial Duels", player1: player1.aerials || 0, player2: player2.aerials || 0 },
-    { stat: "Ball Steals", player1: player1.ballStolen || 0, player2: player2.ballStolen || 0 },
-    { stat: "Clearances", player1: player1.clearances || 0, player2: player2.clearances || 0 },
-    { stat: "Yellow Cards", player1: player1.yellowCards || 0, player2: player2.yellowCards || 0 },
-    { stat: "Red Cards", player1: player1.redCards || 0, player2: player2.redCards || 0 },
+  const stats = [
+    { label: "GOLES", key: "goals" },
+    { label: "ASISTENCIAS", key: "assists" },
+    { label: "MINUTOS JUGADOS", key: "minutesPlayed" },
+    { label: "DISPAROS AL ARCO", key: "goalsShots" },
+    { label: "DISPAROS TOTALES", key: "totalShots" },
+    { label: "PASES", key: "passes" },
+    { label: "DUELOS AÉREOS", key: "aerials" },
+    { label: "ROBOS DE BALÓN", key: "ballStolen" },
+    { label: "DESPEJES", key: "clearances" },
+    { label: "AMARILLAS", key: "yellowCards" },
+    { label: "ROJAS", key: "redCards" },
+    { label: "PORTERÍAS IMBATIDAS", key: "unbeatenMatches" },
   ];
 
   return (
-    <Table striped bordered hover>
+    <Table
+      responsive
+      hover
+      className="stats-table text-center p-0"
+      style={{ fontSize: "1rem", width: "100%" }}
+    >
       <thead>
         <tr>
-          <th>Statistic</th>
-          <th>{player1.firstName} {player1.lastName}</th>
-          <th>{player2.firstName} {player2.lastName}</th>
+          <th>{player1.player.lastName.toUpperCase()}</th>
+          <th>ESTADÍSTICAS</th>
+          <th>{player2.player.lastName.toUpperCase()}</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((stat, index) => (
+        {stats.map((stat, index) => (
           <tr key={index}>
-            <td>{stat.stat}</td>
-            <td>{stat.player1}</td>
-            <td>{stat.player2}</td>
+            <td>{player1[stat.key]}</td>
+            <td>{stat.label}</td>
+            <td>{player2[stat.key]}</td>
           </tr>
         ))}
       </tbody>
@@ -58,94 +113,231 @@ const StatsTable = ({ player1, player2 }) => {
   );
 };
 
+// PlayerCard Component
+const PlayerCard = ({ player }) => {
+  const { firstName, lastName, photoUrl, jerseyNumber, position, status } =
+    player;
+  const navigate = useNavigate();
+
+  const handlePlayerClick = (playerId) => {
+    navigate(`/player/${playerId}`);
+  };
+
+  return (
+    <Col key={player.playerId} className="mb-2">
+      <Card
+        style={{ width: "10rem", alignItems: "center", cursor: "pointer" }}
+        onClick={() => handlePlayerClick(player.playerId)}
+        className="shadow-sm"
+      >
+        <Card.Img
+          variant="top"
+          src={photoUrl}
+          alt={`${firstName} ${lastName}`}
+          style={{ width: "7rem", height: "7rem", objectFit: "contain" }}
+        />
+        <Card.Body className="text-center">
+          <Card.Title>{`${firstName} ${lastName}`}</Card.Title>
+          <Card.Text>
+            <p style={{ fontSize: "1.5rem" }}>#{jerseyNumber}</p>
+            <p>POSICIÓN {position}</p>
+            <Badge variant={status === "Active" ? "success" : "danger"}>
+              {status}
+            </Badge>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </Col>
+  );
+};
+
 const PlayersComparison = () => {
   const { allPlayersStats, loading, error } = useFetchAllPlayersStats();
   const [selectedPlayer1, setSelectedPlayer1] = useState(null);
   const [selectedPlayer2, setSelectedPlayer2] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  if (loading) {
-    return <Loading />;
-  }
+  const radarData = useMemo(() => {
+    if (!selectedPlayer1 || !selectedPlayer2) return [];
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+    const stats = [
+      { label: "GOLES", key: "goals" },
+      { label: "ASISTENCIAS", key: "assists" },
+      { label: "MINUTOS JUGADOS", key: "minutesPlayed" },
+      { label: "DISPAROS AL ARCO", key: "goalsShots" },
+      { label: "DISPAROS TOTALES", key: "totalShots" },
+      { label: "PASES", key: "passes" },
+      { label: "DUELOS AÉREOS", key: "aerials" },
+      { label: "ROBOS DE BALÓN", key: "ballStolen" },
+      { label: "DESPEJES", key: "clearances" },
+      { label: "AMARILLAS", key: "yellowCards" },
+      { label: "ROJAS", key: "redCards" },
+      { label: "PORTERÍAS IMBATIDAS", key: "unbeatenMatches" },
+    ];
 
-  if (!allPlayersStats) {
-    return <EmptyData message={"No player information available"} />;
-  }
+    return stats.map(({ label, key }) => ({
+      stat: label,
+      player1: calculatePercentage(selectedPlayer1[key], selectedPlayer2[key]),
+      player2: calculatePercentage(selectedPlayer2[key], selectedPlayer1[key]),
+    }));
+  }, [selectedPlayer1, selectedPlayer2]);
 
-  const handlePlayer1Select = (player) => {
-    setSelectedPlayer1(player);  // Asigna el jugador 1
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  if (error)
+    return (
+      <Alert variant="danger">
+        {error}{" "}
+        <Button
+          variant="outline-danger"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </Button>
+      </Alert>
+    );
+  if (!allPlayersStats)
+    return <EmptyData message="No player information available" />;
+
+  const handlePlayerSelect = (setPlayer, otherPlayer) => (player) => {
+    if (player === otherPlayer) {
+      setErrorMsg(
+        "No puedes seleccionar el mismo jugador para ambas comparaciones."
+      );
+      return;
+    }
+    setErrorMsg("");
+    setPlayer(player);
   };
 
-  const handlePlayer2Select = (player) => {
-    setSelectedPlayer2(player);  // Asigna el jugador 2
-  };
-
-  const resetPlayer1 = () => setSelectedPlayer1(null);
-  const resetPlayer2 = () => setSelectedPlayer2(null);
+  const resetPlayer = (setPlayer) => () => setPlayer(null);
 
   return (
-    <Container fluid className="m-0 p-0">
+    <Container fluid className="py-0 px-2 align-items-center">
       <Header />
+      {errorMsg && (
+        <Alert variant="danger" className="mt-2">
+          {errorMsg}
+        </Alert>
+      )}
 
-      {/* Selección de jugadores */}
-      <Row className="mb-4">
+      {/* Player Selection */}
+      <Row className="mb-3">
         <Col md={5}>
           {!selectedPlayer1 ? (
-            <PlayerSelector players={allPlayersStats} onSelectPlayer={handlePlayer1Select} />
+            <PlayerSelector
+              players={allPlayersStats.filter(
+                (player) => player !== selectedPlayer2
+              )}
+              onSelectPlayer={handlePlayerSelect(
+                setSelectedPlayer1,
+                selectedPlayer2
+              )}
+            />
           ) : (
             <div className="d-flex justify-content-between align-items-center">
-              <h5>{selectedPlayer1.firstName} {selectedPlayer1.lastName}</h5>
-              <Button variant="danger" onClick={resetPlayer1}>Cambiar Jugador 1</Button>
+              <Button
+                variant="primary"
+                onClick={resetPlayer(setSelectedPlayer1)}
+              >
+                CAMBIAR JUGADOR
+              </Button>
+              <h5 className="m-4 text-center">
+                {selectedPlayer1.player.firstName}{" "}
+                {selectedPlayer1.player.lastName.toUpperCase()}
+              </h5>
             </div>
           )}
         </Col>
-        <Col md={2} className="d-flex justify-content-center align-items-center">
+        <Col
+          md={2}
+          className="d-flex justify-content-center align-items-center"
+        >
           <h5>VS</h5>
         </Col>
         <Col md={5}>
           {!selectedPlayer2 ? (
-            <PlayerSelector players={allPlayersStats} onSelectPlayer={handlePlayer2Select} />
+            <PlayerSelector
+              players={allPlayersStats.filter(
+                (player) => player !== selectedPlayer1
+              )}
+              onSelectPlayer={handlePlayerSelect(
+                setSelectedPlayer2,
+                selectedPlayer1
+              )}
+            />
           ) : (
             <div className="d-flex justify-content-between align-items-center">
-              <h5>{selectedPlayer2.firstName} {selectedPlayer2.lastName}</h5>
-              <Button variant="danger" onClick={resetPlayer2}>Cambiar Jugador 2</Button>
+              <h5 className="m-4 text-center">
+                {selectedPlayer2.player.firstName}{" "}
+                {selectedPlayer2.player.lastName.toUpperCase()}
+              </h5>
+              <Button
+                variant="primary"
+                onClick={resetPlayer(setSelectedPlayer2)}
+              >
+                CAMBIAR JUGADOR
+              </Button>
             </div>
           )}
         </Col>
       </Row>
 
-      {/* Tabla comparativa de estadísticas */}
+      {/* Players' Cards and Radar Chart */}
       {selectedPlayer1 && selectedPlayer2 && (
         <>
-          <Row className="mb-4">
-            <Col>
-              <StatsTable player1={selectedPlayer1} player2={selectedPlayer2} />
+          <Row className="mb-3 align-items-center justify-content-center">
+            <Col
+              xs={12}
+              md={2}
+              lg={2}
+              className="d-flex justify-content-right align-items-center text-center"
+            >
+              <PlayerCard player={selectedPlayer1.player} />
+            </Col>
+
+            <Col
+              xs={12}
+              md={8}
+              lg={6}
+              className="d-flex justify-content-center align-items-center text-center"
+            >
+              {radarData.length ? (
+                <RadarChartComponent
+                  data={radarData}
+                  player1={selectedPlayer1}
+                  player2={selectedPlayer2}
+                />
+              ) : (
+                <p>Radar chart not available</p>
+              )}
+            </Col>
+
+            <Col
+              xs={12}
+              md={2}
+              lg={2}
+              className="d-flex justify-content-center text-center"
+            >
+              <PlayerCard player={selectedPlayer2.player} />
             </Col>
           </Row>
 
-          {/* Gráfico radial para comparar estadísticas */}
-          <Row className="mb-4">
-            <Col>
-              <RadarChartComponent
-                data={[
-                  { stat: "Passes", player1: selectedPlayer1.passes, player2: selectedPlayer2.passes },
-                  { stat: "Total Shots", player1: selectedPlayer1.totalShots, player2: selectedPlayer2.totalShots },
-                  { stat: "Shots on Goal", player1: selectedPlayer1.goalsShots, player2: selectedPlayer2.goalsShots },
-                  { stat: "Aerial Duels", player1: selectedPlayer1.aerials, player2: selectedPlayer2.aerials },
-                  { stat: "Ball Steals", player1: selectedPlayer1.ballStolen, player2: selectedPlayer2.ballStolen },
-                  { stat: "Clearances", player1: selectedPlayer1.clearances, player2: selectedPlayer2.clearances },
-                  { stat: "Yellow Cards", player1: selectedPlayer1.yellowCards, player2: selectedPlayer2.yellowCards },
-                  { stat: "Red Cards", player1: selectedPlayer1.redCards, player2: selectedPlayer2.redCards },
-                ]}
-              />
+          {/* Stats Table */}
+          <Row className="mb-3 align-items-center justify-content-center">
+            <Col xs={6} md={8} lg={4} className="d-flex justify-content-center">
+              <StatsTable player1={selectedPlayer1} player2={selectedPlayer2} />
             </Col>
           </Row>
         </>
       )}
-
       <Footer />
     </Container>
   );

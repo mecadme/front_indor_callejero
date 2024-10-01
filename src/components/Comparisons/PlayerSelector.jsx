@@ -1,10 +1,22 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Dropdown, ListGroup, Image, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Dropdown,
+  ListGroup,
+  Image,
+  Button,
+  Pagination,
+} from "react-bootstrap";
+import { FaSearch } from "react-icons/fa";
 
 const PlayerSelector = ({ players, onSelectPlayer }) => {
-  const [selectedTeam, setSelectedTeam] = useState("");   // Equipo seleccionado
-  const [searchTerm, setSearchTerm] = useState("");       // Término de búsqueda
-  const [selectedPlayer, setSelectedPlayer] = useState(null);  // Jugador seleccionado
+  const [selectedTeam, setSelectedTeam] = useState(""); // Equipo seleccionado
+  const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda
+  const [currentPage, setCurrentPage] = useState(1); // Página actual
+  const playersPerPage = 5; // Jugadores por página
 
   // Obtener equipos únicos
   const teams = [...new Set(players.map((player) => player.teamName))];
@@ -12,30 +24,37 @@ const PlayerSelector = ({ players, onSelectPlayer }) => {
   // Filtrar jugadores según el equipo seleccionado y el término de búsqueda
   const filteredPlayers = players.filter((player) => {
     const matchesTeam = selectedTeam ? player.teamName === selectedTeam : true;
-    const matchesSearch = `${player.firstName} ${player.lastName}`
+    const matchesSearch = `${player.player.firstName} ${player.player.lastName}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
     return matchesTeam && matchesSearch;
   });
 
-  // Manejar la selección de un jugador
-  const handlePlayerSelect = (player) => {
-    setSelectedPlayer(player);  // Guardar el jugador seleccionado
-    onSelectPlayer(player);     // Notificar al componente padre
-  };
+  const indexOfLastPlayer = currentPage * playersPerPage;
+  const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
+  const currentPlayers = filteredPlayers.slice(
+    indexOfFirstPlayer,
+    indexOfLastPlayer
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
 
   return (
-    <Container>
+    <Container className="py-4">
       <Row className="mb-3">
         <Col md={6}>
           {/* Dropdown para seleccionar equipo */}
-          <Dropdown onSelect={(team) => setSelectedTeam(team)}>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
+          <Dropdown onSelect={(team) => { setSelectedTeam(team); setCurrentPage(1); }}>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic">
               {selectedTeam || "Seleccionar Equipo"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => setSelectedTeam("")}>Todos los equipos</Dropdown.Item>
+              <Dropdown.Item onClick={() => { setSelectedTeam(""); setCurrentPage(1); }}>
+                Todos los equipos
+              </Dropdown.Item>
               {teams.map((team, index) => (
                 <Dropdown.Item key={index} eventKey={team}>
                   {team}
@@ -44,46 +63,99 @@ const PlayerSelector = ({ players, onSelectPlayer }) => {
             </Dropdown.Menu>
           </Dropdown>
         </Col>
-
         <Col md={6}>
-          {/* Input de búsqueda */}
-          <Form.Control
-            type="text"
-            placeholder="Buscar jugador..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          {/* Input de búsqueda de jugadores */}
+          <Form.Group className="position-relative">
+            <Form.Control
+              type="text"
+              placeholder="Buscar jugador"
+              value={searchTerm}
+              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+              className="pl-5"
+            />
+            <FaSearch
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "80%",
+                transform: "translateY(-50%)",
+                height: "1.5rem",
+                color: "#33173C",
+              }}
+            />
+          </Form.Group>
         </Col>
       </Row>
 
-      <ListGroup>
-        {filteredPlayers.length === 0 ? (
-          <ListGroup.Item>No se encontraron jugadores</ListGroup.Item>
-        ) : (
-          filteredPlayers.map((player) => (
+      {currentPlayers.length > 0 ? (
+        <ListGroup>
+          {currentPlayers.map((player) => (
             <ListGroup.Item
-              key={player.playerId}
-              className={`d-flex align-items-center ${selectedPlayer && selectedPlayer.playerId === player.playerId ? "active" : ""}`} 
-              onClick={() => handlePlayerSelect(player)}
-              style={{ cursor: "pointer" }}
+              key={player.player.playerId}
+              onClick={() => onSelectPlayer(player)}
+              action
+              className="player-item p-3 my-2"
+              style={{ borderRadius: '10px', transition: 'background-color 0.2s' }}
             >
-              <Image src={player.photoUrl.trim()} alt={player.firstName} width="50" roundedCircle />
-              <div className="ms-3">
-                <h5>{player.firstName} {player.lastName}</h5>
-                <p>Equipo: {player.teamName}</p>
-              </div>
-              {/* Botón para confirmar la selección del jugador */}
-              <Button
-                variant="primary"
-                className="ms-auto"
-                onClick={() => handlePlayerSelect(player)}
-              >
-                Seleccionar
-              </Button>
+              <Row className="align-items-center">
+                <Col xs={3}>
+                  <Image
+                    src={player.player.photoUrl}
+                    alt={`${player.player.firstName} ${player.player.lastName}`}
+                    fluid
+                    roundedCircle
+                  />
+                </Col>
+                <Col xs={9}>
+                  <h6 className="mb-0">
+                    {player.player.firstName} {player.player.lastName}
+                  </h6>
+                  <small className="text-muted">{player.teamName}</small>
+                </Col>
+              </Row>
             </ListGroup.Item>
-          ))
-        )}
-      </ListGroup>
+          ))}
+        </ListGroup>
+      ) : (
+        <p className="text-center text-muted mt-3">
+          No se encontraron jugadores que coincidan con la búsqueda
+        </p>
+      )}
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <Row className="mt-3 justify-content-center">
+          <Col xs="auto">
+            <Pagination>
+              <Pagination.First
+                onClick={() => paginate(1)}
+                disabled={currentPage === 1}
+              />
+              <Pagination.Prev
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              />
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Pagination.Item
+                  key={index + 1}
+                  active={index + 1 === currentPage}
+                  onClick={() => paginate(index + 1)}
+                >
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              />
+              <Pagination.Last
+                onClick={() => paginate(totalPages)}
+                disabled={currentPage === totalPages}
+              />
+            </Pagination>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 };
