@@ -10,6 +10,7 @@ import useFetchUser from "../../hooks/useFetchUser";
 import useAuth from "../../hooks/useAuth";
 import useLogOut from "../../hooks/useLogOut";
 import RoleBased from "../Administration/RoleBased";
+import { Link } from "react-router-dom";
 import "./css/Header.css";
 
 const Header = () => {
@@ -105,45 +106,53 @@ const Header = () => {
       <TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />
       <Navbar expand="lg" className="navbarHeader" sticky="top">
         <Container className="containerHeader">
-          <Navbar.Brand href="/" className="navbar-logo">
-            <img src={logo} alt="IndorCallejero logo" className="logo" />
+          <Navbar.Brand className="navbar-logo">
+            <Link to="/" className="nav-link">
+              <img src={logo} alt="IndorCallejero logo" className="logo" />
+            </Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/street_project" aria-label="Proyecto Callejero">
-                Proyecto Callejero
+              <Nav.Link aria-label="Proyecto Callejero">
+                <Link to="/street_project" className="nav-link">
+                  Proyecto Callejero
+                </Link>
               </Nav.Link>
-              <Nav.Link
-                href="/all_you_need_to_know"
-                aria-label="Todo lo que debes saber"
-              >
-                Todo lo que debes saber
+              <Nav.Link aria-label="Todo lo que debes saber">
+                <Link to="/all_you_need_to_know" className="nav-link">
+                  Todo lo que debes saber
+                </Link>
               </Nav.Link>
-              <Nav.Link
-                href="/historical_events"
-                aria-label="Palmarés Históricos"
-              >
-                Palmarés Históricos
+              <Nav.Link aria-label="Palmarés Históricos">
+                <Link to="/historical_events" className="nav-link">
+                  Palmarés Históricos
+                </Link>
               </Nav.Link>
               <NavDropdown title="Comparaciones" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/comparisons/teams">
+                <NavDropdown.Item>
+                  <Link to="/comparisons/teams" className="nav-link">
+                    Comparar Equipos
+                  </Link>
+                </NavDropdown.Item>
+                <Link to="/comparisons/players" className="nav-link">
                   Comparar Equipos
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/comparisons/players">
-                  Comparar Jugadores
-                </NavDropdown.Item>
+                </Link>
               </NavDropdown>
               <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
                 <NavDropdown title="Administración" id="basic-nav-dropdown">
                   <RoleBased allowedRoles={["ROLE_ADMIN"]}>
-                    <NavDropdown.Item href="/managment/admin">
-                      Administrar Sistema
+                    <NavDropdown.Item>
+                      <Link to="/managment/admin" className="nav-link">
+                        Administrar Sistema
+                      </Link>
                     </NavDropdown.Item>
                   </RoleBased>
                   <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
-                    <NavDropdown.Item href="/managment/manager">
-                      Administrar Partidos
+                    <NavDropdown.Item>
+                      <Link to="/managment/manager" className="nav-link">
+                        Administrar Partidos
+                      </Link>
                     </NavDropdown.Item>
                   </RoleBased>
                 </NavDropdown>
