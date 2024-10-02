@@ -62,14 +62,6 @@ function App() {
           <Route path="historical_events" element={<HistoricalEvents />} />
           <Route path="predict_result" element={<ResultPredict />} />
 
-          <Route element={<RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}>
-            <Route path="/managment/manager" element={<Manager />} />
-          </Route>
-
-          <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/managment/admin" element={<Admin />} />
-          </Route>
-
           <Route
             element={
               <RequiredAuth
@@ -77,6 +69,17 @@ function App() {
               />
             }
           >
+            <Route
+              element={
+                <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
+              }
+            >
+              <Route path="/managment/manager" element={<Manager />} />
+            </Route>
+
+            <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
+              <Route path="/managment/admin" element={<Admin />} />
+            </Route>
             <Route path="/comparisons" element={<ComparisonsPage />} />
             <Route path="/comparisons/teams" element={<TeamsComparison />} />
             <Route

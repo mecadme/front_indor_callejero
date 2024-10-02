@@ -1,4 +1,4 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
 const PLAYERS_URL = "/players";
 
@@ -13,36 +13,77 @@ const playerEndpoints = {
   injure: (playerId) => `${PLAYERS_URL}/${playerId}/injured`,
 };
 
-const getPlayers = () => useAPI("public", playerEndpoints.getAll, GET);
+const useGetPlayers = () => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const getPlayerById = (playerId) =>
-  useAPI("private", playerEndpoints.getById(playerId), GET);
+  const getPlayers = () => fetchData("GET", playerEndpoints.getAll);
 
-const createPlayer = (body) =>
-  useAPI("private", playerEndpoints.create, POST, body);
+  return { data, error, loading, getPlayers };
+};
 
-const updatePlayer = (playerId, body) =>
-  useAPI("private", playerEndpoints.update(playerId), PATCH, body);
+const useGetPlayerById = (playerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const deletePlayer = (playerId) =>
-  useAPI("private", playerEndpoints.delete(playerId), DELETE);
+  const getPlayerById = () => fetchData("GET", playerEndpoints.getById(playerId));
 
-const activatePlayer = (playerId) =>
-  useAPI("private", playerEndpoints.activate(playerId), PUT);
+  return { data, error, loading, getPlayerById };
+};
 
-const suspendPlayer = (playerId) =>
-  useAPI("private", playerEndpoints.suspend(playerId), PUT);
+const useCreatePlayer = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const injurePlayer = (playerId) =>
-  useAPI("private", playerEndpoints.injure(playerId), PUT);
+  const createPlayer = (body) => fetchData("POST", playerEndpoints.create, body);
+
+  return { data, error, loading, createPlayer };
+};
+
+const useUpdatePlayer = (playerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updatePlayer = (body) => fetchData("PATCH", playerEndpoints.update(playerId), body);
+
+  return { data, error, loading, updatePlayer };
+};
+
+const useDeletePlayer = (playerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deletePlayer = () => fetchData("DELETE", playerEndpoints.delete(playerId));
+
+  return { data, error, loading, deletePlayer };
+};
+
+const useActivatePlayer = (playerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const activatePlayer = () => fetchData("PUT", playerEndpoints.activate(playerId));
+
+  return { data, error, loading, activatePlayer };
+};
+
+const useSuspendPlayer = (playerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const suspendPlayer = () => fetchData("PUT", playerEndpoints.suspend(playerId));
+
+  return { data, error, loading, suspendPlayer };
+};
+
+const useInjurePlayer = (playerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const injurePlayer = () => fetchData("PUT", playerEndpoints.injure(playerId));
+
+  return { data, error, loading, injurePlayer };
+};
 
 export {
-  getPlayers,
-  getPlayerById,
-  createPlayer,
-  updatePlayer,
-  deletePlayer,
-  activatePlayer,
-  suspendPlayer,
-  injurePlayer,
+  useGetPlayers,
+  useGetPlayerById,
+  useCreatePlayer,
+  useUpdatePlayer,
+  useDeletePlayer,
+  useActivatePlayer,
+  useSuspendPlayer,
+  useInjurePlayer,
 };
