@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Col, Row, Image } from 'react-bootstrap';
+import useUploadPhoto from '../../hooks/useUploadPhoto';  // Importamos el hook
 
-const UploadPhoto = ({ onPhotoUpload }) => {
+const UploadPhoto = ({ entity, endpointUrl }) => {
+  const { uploadPhoto, loading, error, uploadSuccess } = useUploadPhoto(entity, endpointUrl); // Usamos el hook con la entidad
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -11,18 +13,17 @@ const UploadPhoto = ({ onPhotoUpload }) => {
       setSelectedFile(file);
       const fileUrl = URL.createObjectURL(file);
       setPreviewUrl(fileUrl);
-
-      if (onPhotoUpload) {
-        onPhotoUpload(file);
-      }
     }
   };
 
   const handleRemovePhoto = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
-    if (onPhotoUpload) {
-      onPhotoUpload(null); // Para limpiar la imagen en el componente padre
+  };
+
+  const handleUpload = () => {
+    if (selectedFile) {
+      uploadPhoto(selectedFile);
     }
   };
 
@@ -44,8 +45,12 @@ const UploadPhoto = ({ onPhotoUpload }) => {
         </Row>
       )}
 
-      <Button variant="primary" type="button" disabled={!selectedFile}>
-        Subir foto
+      {loading && <p>Cargando...</p>}
+      {error && <p className="text-danger">Error: {error}</p>}
+      {uploadSuccess && <p className="text-success">Foto subida con éxito: {uploadSuccess}</p>}
+
+      <Button variant="primary" type="button" onClick={handleUpload} disabled={!selectedFile || loading}>
+        {loading ? "Subiendo..." : "Subir foto"}
       </Button>
     </Form>
   );

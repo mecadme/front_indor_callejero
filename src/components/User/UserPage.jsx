@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Button, Row, Col, Image, Tabs, Tab } from "react-bootstrap";
+import {
+  Container,
+  Form,
+  Button,
+  Row,
+  Col,
+  Image,
+  Tabs,
+  Tab,
+} from "react-bootstrap";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useParams } from "react-router-dom";
 import ChangePassword from "./ChangePassword";
+import UploadPhoto from "../Utils/UploadPhoto";
 
 const UserPage = () => {
   const { userName } = useParams();
@@ -12,6 +22,8 @@ const UserPage = () => {
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("info"); // Estado para controlar la pestaña activa
   const axiosPrivate = useAxiosPrivate();
+  const USER_UPLOAD_PHOTO_URL = `/upload_photo`;
+  const USER_KEY = {"userId": userData.userId};
 
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
@@ -38,7 +50,7 @@ const UserPage = () => {
         username: userData.username,
       });
       setMessage("Datos actualizados correctamente");
-      localStorage.setItem('currentUser', JSON.stringify(userData));
+      localStorage.setItem("currentUser", JSON.stringify(userData));
       setActiveTab("info"); // Volver a la pestaña de información después de actualizar los datos
     } catch (error) {
       console.error("Error updating user data", error);
@@ -54,13 +66,23 @@ const UserPage = () => {
     return <p>Cargando datos del usuario...</p>;
   }
 
+  const handlePhotoUpload = (file) => {
+    console.log("Archivo subido:", file);
+  };
+
   return (
     <Container fluid>
       <Header />
       <Container>
-        <h2>{userData.firstName} {userData.lastName}</h2>
+        <h2>
+          {userData.firstName} {userData.lastName}
+        </h2>
         <p>{userData.bio}</p>
-        <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
+        <Tabs
+          activeKey={activeTab}
+          onSelect={(k) => setActiveTab(k)}
+          className="mb-3"
+        >
           {/* Pestaña de Información */}
           <Tab eventKey="info" title="Información de la cuenta">
             <Row>
@@ -74,12 +96,30 @@ const UserPage = () => {
               </Col>
               <Col md={8}>
                 <h3>Información de la cuenta</h3>
-                <p><strong>Cuenta creada:</strong> {new Date(userData.createdAt).toLocaleDateString()}</p>
-                <p><strong>Cuenta activada:</strong> {userData.enabled ? "Sí" : "No"}</p>
-                <p><strong>Cuenta no expirada:</strong> {userData.accountNoExpired ? "Sí" : "No"}</p>
-                <p><strong>Cuenta no bloqueada:</strong> {userData.accountNoLocked ? "Sí" : "No"}</p>
-                <p><strong>Credenciales no expiradas:</strong> {userData.credentialNoExpired ? "Sí" : "No"}</p>
-                <p><strong>Roles:</strong> {userData.roles.map((role) => role.roleEnum).join(", ")}</p>
+                <p>
+                  <strong>Cuenta creada:</strong>{" "}
+                  {new Date(userData.createdAt).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Cuenta activada:</strong>{" "}
+                  {userData.enabled ? "Sí" : "No"}
+                </p>
+                <p>
+                  <strong>Cuenta no expirada:</strong>{" "}
+                  {userData.accountNoExpired ? "Sí" : "No"}
+                </p>
+                <p>
+                  <strong>Cuenta no bloqueada:</strong>{" "}
+                  {userData.accountNoLocked ? "Sí" : "No"}
+                </p>
+                <p>
+                  <strong>Credenciales no expiradas:</strong>{" "}
+                  {userData.credentialNoExpired ? "Sí" : "No"}
+                </p>
+                <p>
+                  <strong>Roles:</strong>{" "}
+                  {userData.roles.map((role) => role.roleEnum).join(", ")}
+                </p>
               </Col>
             </Row>
           </Tab>
@@ -130,6 +170,7 @@ const UserPage = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
+                <UploadPhoto onPhotoUpload={handlePhotoUpload} />
 
               <Button variant="primary" type="submit">
                 Actualizar

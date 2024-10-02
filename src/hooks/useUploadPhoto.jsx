@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useAxiosPrivate from "./useAxiosPrivate";
 
-const useUploadPhoto = (userId) => {
+const useUploadPhoto = (entity, endpointUrl) => {
   const axiosPrivate = useAxiosPrivate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(null);
-
-  const UPLOAD_PHOTO_URL = `/upload_photo`; // Endpoint del servidor para subir fotos
 
   const uploadPhoto = async (file) => {
     setLoading(true);
@@ -15,11 +13,11 @@ const useUploadPhoto = (userId) => {
     setUploadSuccess(null);
 
     const formData = new FormData();
-    formData.append("userId", userId);
+    formData.append(entity.key, entity.value); 
     formData.append("file", file);
 
     try {
-      const response = await axiosPrivate.put(UPLOAD_PHOTO_URL, formData, {
+      const response = await axiosPrivate.put(endpointUrl, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
