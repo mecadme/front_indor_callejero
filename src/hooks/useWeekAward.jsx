@@ -9,7 +9,7 @@ const useWeekAward = (date) => {
     const WEEKAWARD_URL = `/weekly-awards?date=${date}`;
 
     useEffect(() => {
-        let isMounted = true; // Evita actualizar el estado si el componente se desmonta
+        let isMounted = true; 
         const controller = new AbortController();
 
         const getWeekAward = async () => {

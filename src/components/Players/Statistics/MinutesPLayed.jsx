@@ -9,11 +9,11 @@ const MinutesPlayed = ({ limit }) => {
   const [error, setError] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
-  const CARDS_URL = "player-statistics/minutesPlayed";
+  const MINUTES_URL = "player-statistics/minutesPlayed";
 
   useEffect(() => {
     axiosPrivate
-      .get(CARDS_URL)
+      .get(MINUTES_URL)
       .then((response) => {
         setPlayers(response.data);
         setLoading(false);
