@@ -17,14 +17,12 @@ import ChangePassword from "./ChangePassword";
 import UploadPhoto from "../Utils/UploadPhoto";
 
 const UserPage = () => {
-  const { userName } = useParams();
+  const { userName, userId } = useParams();
   const [userData, setUserData] = useState(null);
   const [message, setMessage] = useState("");
-  const [activeTab, setActiveTab] = useState("info"); // Estado para controlar la pestaña activa
+  const [activeTab, setActiveTab] = useState("info"); 
   const axiosPrivate = useAxiosPrivate();
-  const USER_UPLOAD_PHOTO_URL = `/upload_photo`;
-  const USER_KEY = {"userId": userData.userId};
-
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
@@ -33,6 +31,9 @@ const UserPage = () => {
       console.error("No user data found.");
     }
   }, []);
+  
+  const USER_UPLOAD_PHOTO_URL = `users/upload_photo`;
+  const USER_KEY_VALUE = { key: "userId", value: userId };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +52,7 @@ const UserPage = () => {
       });
       setMessage("Datos actualizados correctamente");
       localStorage.setItem("currentUser", JSON.stringify(userData));
-      setActiveTab("info"); // Volver a la pestaña de información después de actualizar los datos
+      setActiveTab("info"); 
     } catch (error) {
       console.error("Error updating user data", error);
       setMessage("Error al actualizar los datos");
@@ -65,10 +66,6 @@ const UserPage = () => {
   if (!userData) {
     return <p>Cargando datos del usuario...</p>;
   }
-
-  const handlePhotoUpload = (file) => {
-    console.log("Archivo subido:", file);
-  };
 
   return (
     <Container fluid>
@@ -101,20 +98,20 @@ const UserPage = () => {
                   {new Date(userData.createdAt).toLocaleDateString()}
                 </p>
                 <p>
-                  <strong>Cuenta activada:</strong>{" "}
-                  {userData.enabled ? "Sí" : "No"}
+                  <strong>Cuenta Activa:</strong>{" "}
+                  {userData.enabled ? "SÍ" : "NO"}
                 </p>
                 <p>
-                  <strong>Cuenta no expirada:</strong>{" "}
-                  {userData.accountNoExpired ? "Sí" : "No"}
+                  <strong>Cuenta expirada:</strong>{" "}
+                  {userData.accountNoExpired ? "NO" : "SÍ"}
                 </p>
                 <p>
-                  <strong>Cuenta no bloqueada:</strong>{" "}
-                  {userData.accountNoLocked ? "Sí" : "No"}
+                  <strong>Cuenta bloqueada:</strong>{" "}
+                  {userData.accountNoLocked ? "NO" : "SÍ"}
                 </p>
                 <p>
-                  <strong>Credenciales no expiradas:</strong>{" "}
-                  {userData.credentialNoExpired ? "Sí" : "No"}
+                  <strong>Credenciales expiradas:</strong>{" "}
+                  {userData.credentialNoExpired ? "NO" : "SÍ"}
                 </p>
                 <p>
                   <strong>Roles:</strong>{" "}
@@ -170,7 +167,10 @@ const UserPage = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-                <UploadPhoto onPhotoUpload={handlePhotoUpload} />
+              <UploadPhoto
+                entity={USER_KEY_VALUE}
+                endpointUrl={USER_UPLOAD_PHOTO_URL}
+              />
 
               <Button variant="primary" type="submit">
                 Actualizar

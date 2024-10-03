@@ -23,9 +23,9 @@ const useUploadPhoto = (entity, endpointUrl) => {
         },
       });
 
-      setUploadSuccess(response.data); // Guardar la respuesta exitosa
+      setUploadSuccess(response.data); 
     } catch (err) {
-      setError(err.message); // Manejar errores
+      setError(err.message); 
     } finally {
       setLoading(false);
     }

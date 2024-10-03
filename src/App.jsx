@@ -98,7 +98,7 @@ function App() {
             <Route path="/card" element={<Cards />} />
             <Route path="/minutes_played" element={<MinutesPlayed />} />
             <Route path="/coach" element={<CoachPage />} />
-            <Route path="/user/:userName" element={<UserPage />} />
+            <Route path="/user/:userName/:userId" element={<UserPage />} />
             <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route>

@@ -18,8 +18,6 @@ const Header = () => {
   const navigate = useNavigate();
   const { teams, isLoading, error } = useFetchTeams();
   const { auth } = useAuth();
-  const logout = useLogOut();
-  console.log(auth.accessToken);
   const decodedToken = auth?.accessToken ? jwtDecode(auth.accessToken) : null;
   const userName = auth?.user?.username || decodedToken?.sub || null;
 
@@ -28,9 +26,8 @@ const Header = () => {
   const renderUserInfo = (user) => {
     const handleUserClick = (user) => {
       localStorage.setItem("currentUser", JSON.stringify(user));
-      navigate(`/user/${user.username}`);
+      navigate(`/user/${user.username}/${user.userId}`);
     };
-    console.log(user);
     if (!user) return null;
 
     if (userIsLoading) return <Loading />;
@@ -40,6 +37,14 @@ const Header = () => {
     const handleImageError = (e) => {
       e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
     };
+    const logOut = useLogOut();
+
+    const SingOut = async () => {
+      await logOut();
+      localStorage.removeItem("currentUser");
+      navigate("/");
+    };
+  
 
     return (
       <Container
@@ -73,7 +78,7 @@ const Header = () => {
 
         <Button
           variant="outline-dark"
-          onClick={logout}
+          onClick={SingOut}
           aria-label="Cerrar Sesión"
           title="Cerrar Sesión"
           style={{ marginRight: "0.5rem", width: "auto" }}
@@ -100,6 +105,9 @@ const Header = () => {
     setSelectedTeam(teamId);
     navigate(`/team/${teamId}`);
   };
+
+
+
 
   return (
     <header className="header">

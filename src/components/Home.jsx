@@ -13,7 +13,7 @@ const Home = () => {
 
   const SingOut = async () => {
     await logOut();
-    navigate("/linkpage");
+    navigate("/");
   };
 
   return (

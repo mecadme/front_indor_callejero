@@ -1,39 +1,50 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "./useAxiosPrivate";
 
-const useUploadPhoto = (userId) => {
+const useFetchAllPlayersStats = (playerId) => {
   const axiosPrivate = useAxiosPrivate();
-  const [loading, setLoading] = useState(false);
+
+  const [allPlayersStats, setAllPlayersStats] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [uploadSuccess, setUploadSuccess] = useState(null);
 
-  const UPLOAD_PHOTO_URL = `/upload_photo`; // Endpoint del servidor para subir fotos
+  const PLAYER_STATS_URL = "/player-statistics/allPlayersStats";
 
-  const uploadPhoto = async (file) => {
-    setLoading(true);
-    setError(null);
-    setUploadSuccess(null);
+  useEffect(() => {
+    let isMounted = true;
 
-    const formData = new FormData();
-    formData.append("userId", userId);
-    formData.append("file", file);
+    const controller = new AbortController();
 
-    try {
-      const response = await axiosPrivate.put(UPLOAD_PHOTO_URL, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    const getAllPlayersStats = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosPrivate.get(PLAYER_STATS_URL, {
+          signal: controller.signal,
+        });
 
-      setUploadSuccess(response.data); // Guardar la respuesta exitosa
-    } catch (err) {
-      setError(err.message); // Manejar errores
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (isMounted) {
+          setAllPlayersStats(response.data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err.message);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
 
-  return { uploadPhoto, loading, error, uploadSuccess };
+    getAllPlayersStats();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [playerId]);
+
+  return { allPlayersStats, loading, error };
 };
 
-export default useUploadPhoto;
+export default useFetchAllPlayersStats;
