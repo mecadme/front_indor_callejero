@@ -7,6 +7,10 @@ import {
   Form,
   Modal,
   Pagination,
+  Dropdown,
+  DropdownButton,
+  InputGroup,
+  FormControl,
 } from "react-bootstrap";
 import UploadPhoto from "../Utils/UploadPhoto";
 import {
@@ -16,10 +20,24 @@ import {
   useDeletePlayer,
 } from "../../api/Service/PlayerService";
 
+const PlayerPositionEnum = {
+  GOALKEEPER: "Portero",
+  DEFENDER: "Defensa",
+  MIDFIELDER: "Mediocampo",
+  ATTACKER: "Delantero",
+};
+
+const PlayerStatusEnum = {
+  ACTIVE: "Activo",
+  DISABLED: "Lesionado",
+  INACTIVE: "Suspendido",
+};
+
 const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
   const [players, setPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const playersPerPage = 5;
 
@@ -28,33 +46,58 @@ const PlayerDashboard = () => {
   const { updatePlayer } = useUpdatePlayer();
   const { deletePlayer } = useDeletePlayer();
 
+  // Obtener lista de jugadores al cargar el componente
   useEffect(() => {
     getPlayers();
   }, []);
 
+  // Sincronizar jugadores obtenidos con el estado local
   useEffect(() => {
     if (allPlayers) {
       setPlayers(allPlayers);
     }
   }, [allPlayers]);
 
+  // Actualizar paginación
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
   const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleCreatePlayer = (newPlayer) => {
-    createPlayer(newPlayer);
-    getPlayers();
+  // Crear nuevo jugador
+  const handleCreatePlayer = async (newPlayer) => {
+    await createPlayer(newPlayer);
+    await getPlayers(); // Asegurarse de que la lista se actualice
+    setActiveTab("list");
   };
-  const handleDeletePlayer = (playerId) => {
+
+  // Eliminar jugador
+  const handleDeletePlayer = async (playerId) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este jugador?")) {
-      deletePlayer(playerId);
+      await deletePlayer(playerId);
       getPlayers();
     }
   };
 
+  // Seleccionar jugador para editar
+  const handleEditClick = (player) => {
+    setSelectedPlayer(player);
+    setActiveTab("edit");
+  };
+
+  // Cambiar término de búsqueda
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredPlayers = players.filter((player) =>
+    `${player.firstName} ${player.lastName}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
+  // Renderizar paginación
   const renderPagination = () => {
     const totalPages = Math.ceil(players.length / playersPerPage);
     return (
@@ -70,11 +113,6 @@ const PlayerDashboard = () => {
         ))}
       </Pagination>
     );
-  };
-
-  const handleEditClick = (player) => {
-    setSelectedPlayer(player);
-    setActiveTab("edit");
   };
 
   return (
@@ -98,9 +136,9 @@ const PlayerDashboard = () => {
               <tr key={player.playerId}>
                 <td>{player.playerId}</td>
                 <td>
-                  {player.playerName} {player.playerLastName}
+                  {player.firstName} {player.lastName}
                 </td>
-                <td>{player.position}</td>
+                <td>{PlayerPositionEnum[player.position]}</td>
                 <td>
                   <Button
                     variant="primary"
@@ -110,7 +148,7 @@ const PlayerDashboard = () => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => handleDeletePlayer(player.id)}
+                    onClick={() => handleDeletePlayer(player.playerId)}
                   >
                     Eliminar
                   </Button>
@@ -123,19 +161,46 @@ const PlayerDashboard = () => {
       </Tab>
 
       <Tab eventKey="create" title="Crear Jugador">
-        <PlayerForm
-          onSubmit={handleCreatePlayer}
-          buttonText="Crear Jugador"
-          onEdit={handleEditClick}
-        />
+        <PlayerForm onSubmit={handleCreatePlayer} buttonText="Crear Jugador" />
       </Tab>
 
       <Tab eventKey="edit" title="Editar Jugador">
+        <h4>Buscar Jugador</h4>
+        <InputGroup className="mb-3">
+          <FormControl
+            placeholder="Buscar por nombre..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </InputGroup>
+
+        {filteredPlayers.length > 0 ? (
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={
+              selectedPlayer
+                ? `${selectedPlayer.firstName} ${selectedPlayer.lastName}`
+                : "Selecciona un jugador"
+            }
+          >
+            {filteredPlayers.map((player) => (
+              <Dropdown.Item
+                key={player.playerId}
+                onClick={() => setSelectedPlayer(player)}
+              >
+                {player.firstName} {player.lastName}
+              </Dropdown.Item>
+            ))}
+          </DropdownButton>
+        ) : (
+          <p>No se encontraron jugadores.</p>
+        )}
+
         {selectedPlayer ? (
           <PlayerForm
             player={selectedPlayer}
             onSubmit={(updatedPlayer) =>
-              updatePlayer(selectedPlayer.id, updatedPlayer)
+              updatePlayer(selectedPlayer.playerId, updatedPlayer)
             }
             buttonText="Actualizar Jugador"
           />
@@ -159,18 +224,20 @@ const PlayerForm = ({ player = {}, onSubmit, buttonText }) => {
     photoUrl: player.photoUrl || null,
   });
 
-  const PlayerPositionEnum = {
-    GOALKEEPER: "GOALKEEPER",
-    DEFENDER: "Defensa",
-    MIDFIELDER: "Mediocampo",
-    ATTACKER: "Delantero",
-  };
-
-  const PlayerStatusEnum = {
-    ACTIVE: "Activo",
-    DISABLED: "Lesionado",
-    INACTIVE: "Suspendido",
-  };
+  useEffect(() => {
+    if (player && player.playerId !== formData.playerId) {
+      setFormData({
+        firstName: player.firstName || "",
+        lastName: player.lastName || "",
+        jerseyNumber: player.jerseyNumber || "",
+        age: player.age || "",
+        height: player.height || "",
+        position: player.position || "",
+        status: player.status || "",
+        photoUrl: player.photoUrl || null,
+      });
+    }
+  }, [player]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -191,6 +258,7 @@ const PlayerForm = ({ player = {}, onSubmit, buttonText }) => {
     e.preventDefault();
     onSubmit(formData);
   };
+
   const PLAYER_KEY_VALUE = { key: "playerId", value: player.playerId };
   const PLAYER_UPLOAD_PHOTO_URL = "players/uploadPhoto";
 

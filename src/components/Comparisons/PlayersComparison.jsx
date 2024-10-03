@@ -28,7 +28,6 @@ import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import PlayerSelector from "./PlayerSelector";
 
-// RadarChart Component
 const RadarChartComponent = ({ data, player1, player2 }) => {
   const sameTeam = player1.teamColor === player2.teamColor;
   const player1Color = player1.teamColor;
@@ -63,13 +62,11 @@ const RadarChartComponent = ({ data, player1, player2 }) => {
   );
 };
 
-// Helper function to calculate percentage
 const calculatePercentage = (value1, value2) => {
   const total = value1 + value2;
   return total === 0 ? 0 : (value1 / total) * 100;
 };
 
-// StatsTable Component
 const StatsTable = ({ player1, player2 }) => {
   const stats = [
     { label: "GOLES", key: "goals" },
@@ -113,7 +110,6 @@ const StatsTable = ({ player1, player2 }) => {
   );
 };
 
-// PlayerCard Component
 const PlayerCard = ({ player }) => {
   const { firstName, lastName, photoUrl, jerseyNumber, position, status } =
     player;
@@ -228,7 +224,6 @@ const PlayersComparison = () => {
         </Alert>
       )}
 
-      {/* Player Selection */}
       <Row className="mb-3">
         <Col md={5}>
           {!selectedPlayer1 ? (

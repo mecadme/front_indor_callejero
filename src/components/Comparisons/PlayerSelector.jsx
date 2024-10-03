@@ -13,15 +13,13 @@ import {
 import { FaSearch } from "react-icons/fa";
 
 const PlayerSelector = ({ players, onSelectPlayer }) => {
-  const [selectedTeam, setSelectedTeam] = useState(""); // Equipo seleccionado
-  const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda
-  const [currentPage, setCurrentPage] = useState(1); // Página actual
-  const playersPerPage = 5; // Jugadores por página
+  const [selectedTeam, setSelectedTeam] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const playersPerPage = 5;
 
-  // Obtener equipos únicos
   const teams = [...new Set(players.map((player) => player.teamName))];
 
-  // Filtrar jugadores según el equipo seleccionado y el término de búsqueda
   const filteredPlayers = players.filter((player) => {
     const matchesTeam = selectedTeam ? player.teamName === selectedTeam : true;
     const matchesSearch = `${player.player.firstName} ${player.player.lastName}`
@@ -46,7 +44,6 @@ const PlayerSelector = ({ players, onSelectPlayer }) => {
     <Container className="py-4">
       <Row className="mb-3">
         <Col md={6}>
-          {/* Dropdown para seleccionar equipo */}
           <Dropdown onSelect={(team) => { setSelectedTeam(team); setCurrentPage(1); }}>
             <Dropdown.Toggle variant="primary" id="dropdown-basic">
               {selectedTeam || "Seleccionar Equipo"}
@@ -64,7 +61,6 @@ const PlayerSelector = ({ players, onSelectPlayer }) => {
           </Dropdown>
         </Col>
         <Col md={6}>
-          {/* Input de búsqueda de jugadores */}
           <Form.Group className="position-relative">
             <Form.Control
               type="text"
@@ -122,7 +118,6 @@ const PlayerSelector = ({ players, onSelectPlayer }) => {
         </p>
       )}
 
-      {/* Paginación */}
       {totalPages > 1 && (
         <Row className="mt-3 justify-content-center">
           <Col xs="auto">
