@@ -1,4 +1,4 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
 const TEAMS_URL = "/teams";
 
@@ -10,42 +10,93 @@ const teamEndpoints = {
   delete: (teamId) => `${TEAMS_URL}/${teamId}`,
   getStandings: `${TEAMS_URL}/standings`,
   getStandingsByGroup: `${TEAMS_URL}/standings_by_group`,
+  uploadPhoto: `${TEAMS_URL}/upload_photo`,
+  getPhoto: (fileName) => `${TEAMS_URL}/photo/${fileName}`,
 };
 
-const getTeams = () => useAPI("public", teamEndpoints.getAll, GET);
+const useGetTeams = () => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const getTeamById = (teamId) =>
-  useAPI("private", teamEndpoints.getById(teamId), GET);
+  const getTeams = () => fetchData("GET", teamEndpoints.getAll);
 
-const createTeam = (body) =>
-  useAPI("private", teamEndpoints.create, POST, body);
+  return { data, error, loading, getTeams };
+};
 
-const updateTeam = (teamId, body) =>
-  useAPI("private", teamEndpoints.update(teamId), PATCH, body);
+const useGetTeamById = (teamId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const deleteTeam = (teamId) =>
-  useAPI("private", teamEndpoints.delete(teamId), DELETE);
+  const getTeamById = () => fetchData("GET", teamEndpoints.getById(teamId));
 
-const uploadTeamPhoto = (teamId, file) =>
-  useAPI("private", teamEndpoints.uploadPhoto, PUT, { teamId, file });
+  return { data, error, loading, getTeamById };
+};
 
-const getTeamPhoto = (fileName) =>
-  useAPI("public", teamEndpoints.getPhoto(fileName), GET);
+const useCreateTeam = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const getTeamStandings = () =>
-  useAPI("private", teamEndpoints.getStandings, GET);
+  const createTeam = (body) => fetchData("POST", teamEndpoints.create, body);
 
-const getStandingsByGroup = () =>
-  useAPI("private", teamEndpoints.getStandingsByGroup, GET);
+  return { data, error, loading, createTeam };
+};
+
+const useUpdateTeam = (teamId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updateTeam = (body) =>
+    fetchData("PATCH", teamEndpoints.update(teamId), body);
+
+  return { data, error, loading, updateTeam };
+};
+
+const useDeleteTeam = (teamId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deleteTeam = () => fetchData("DELETE", teamEndpoints.delete(teamId));
+
+  return { data, error, loading, deleteTeam };
+};
+
+const useUploadTeamPhoto = (teamId, file) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const uploadTeamPhoto = () =>
+    fetchData("PUT", teamEndpoints.uploadPhoto, { teamId, file });
+
+  return { data, error, loading, uploadTeamPhoto };
+};
+
+const useGetTeamPhoto = (fileName) => {
+  const { data, error, loading, fetchData } = useAPI("public");
+
+  const getTeamPhoto = () => fetchData("GET", teamEndpoints.getPhoto(fileName));
+
+  return { data, error, loading, getTeamPhoto };
+};
+
+const useGetTeamStandings = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const getTeamStandings = () => fetchData("GET", teamEndpoints.getStandings);
+
+  return { data, error, loading, getTeamStandings };
+};
+
+const useGetStandingsByGroup = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const getStandingsByGroup = () =>
+    fetchData("GET", teamEndpoints.getStandingsByGroup);
+
+  return { data, error, loading, getStandingsByGroup };
+};
 
 export {
-  getTeams,
-  getTeamById,
-  createTeam,
-  updateTeam,
-  deleteTeam,
-  uploadTeamPhoto,
-  getTeamPhoto,
-  getTeamStandings,
-  getStandingsByGroup,
+  useGetTeams,
+  useGetTeamById,
+  useCreateTeam,
+  useUpdateTeam,
+  useDeleteTeam,
+  useUploadTeamPhoto,
+  useGetTeamPhoto,
+  useGetTeamStandings,
+  useGetStandingsByGroup,
 };

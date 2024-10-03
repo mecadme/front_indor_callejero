@@ -10,7 +10,6 @@ const useAPI = (axiosType = "public") => {
   const axiosPrivate = useAxiosPrivate();
   const axiosInstance = axiosType === "private" ? axiosPrivate : axios;
 
-  // No llamamos `fetchData` directamente desde aquí, sino cuando el usuario lo haga
   const fetchData = async (method, url, body = null) => {
     const controller = new AbortController();
     setLoading(true);

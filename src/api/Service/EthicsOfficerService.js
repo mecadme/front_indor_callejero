@@ -1,4 +1,4 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
 const ETHICS_OFFICER_URL = "/ethics_officers";
 
@@ -12,32 +12,74 @@ const ethicsOfficerEndpoints = {
   getPhoto: (fileName) => `${ETHICS_OFFICER_URL}/photo/${fileName}`,
 };
 
-const getEthicsOfficers = () => useAPI("public", ethicsOfficerEndpoints.getAll, GET);
+const useGetEthicsOfficers = () => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const getEthicsOfficerById = (ethicsOfficerId) =>
-  useAPI("private", ethicsOfficerEndpoints.getById(ethicsOfficerId), GET);
+  const getEthicsOfficers = () => fetchData("GET", ethicsOfficerEndpoints.getAll);
 
-const createEthicsOfficer = (body) =>
-  useAPI("private", ethicsOfficerEndpoints.create, POST, body);
+  return { data, error, loading, getEthicsOfficers };
+};
 
-const updateEthicsOfficer = (ethicsOfficerId, body) =>
-  useAPI("private", ethicsOfficerEndpoints.update(ethicsOfficerId), PATCH, body);
+const useGetEthicsOfficerById = (ethicsOfficerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const deleteEthicsOfficer = (ethicsOfficerId) =>
-  useAPI("private", ethicsOfficerEndpoints.delete(ethicsOfficerId), DELETE);
+  const getEthicsOfficerById = () =>
+    fetchData("GET", ethicsOfficerEndpoints.getById(ethicsOfficerId));
 
-const uploadEthicsOfficerPhoto = (ethicsOfficerId, file) =>
-  useAPI("private", ethicsOfficerEndpoints.uploadPhoto, PUT, { ethicsOfficerId, file });
+  return { data, error, loading, getEthicsOfficerById };
+};
 
-const getEthicsOfficerPhoto = (fileName) =>
-  useAPI("public", ethicsOfficerEndpoints.getPhoto(fileName), GET);
+const useCreateEthicsOfficer = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const createEthicsOfficer = (body) =>
+    fetchData("POST", ethicsOfficerEndpoints.create, body);
+
+  return { data, error, loading, createEthicsOfficer };
+};
+
+const useUpdateEthicsOfficer = (ethicsOfficerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updateEthicsOfficer = (body) =>
+    fetchData("PATCH", ethicsOfficerEndpoints.update(ethicsOfficerId), body);
+
+  return { data, error, loading, updateEthicsOfficer };
+};
+
+const useDeleteEthicsOfficer = (ethicsOfficerId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deleteEthicsOfficer = () =>
+    fetchData("DELETE", ethicsOfficerEndpoints.delete(ethicsOfficerId));
+
+  return { data, error, loading, deleteEthicsOfficer };
+};
+
+const useUploadEthicsOfficerPhoto = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const uploadEthicsOfficerPhoto = (ethicsOfficerId, file) =>
+    fetchData("PUT", ethicsOfficerEndpoints.uploadPhoto, { ethicsOfficerId, file });
+
+  return { data, error, loading, uploadEthicsOfficerPhoto };
+};
+
+const useGetEthicsOfficerPhoto = (fileName) => {
+  const { data, error, loading, fetchData } = useAPI("public");
+
+  const getEthicsOfficerPhoto = () =>
+    fetchData("GET", ethicsOfficerEndpoints.getPhoto(fileName));
+
+  return { data, error, loading, getEthicsOfficerPhoto };
+};
 
 export {
-  getEthicsOfficers,
-  getEthicsOfficerById,
-  createEthicsOfficer,
-  updateEthicsOfficer,
-  deleteEthicsOfficer,
-  uploadEthicsOfficerPhoto,
-  getEthicsOfficerPhoto,
+  useGetEthicsOfficers,
+  useGetEthicsOfficerById,
+  useCreateEthicsOfficer,
+  useUpdateEthicsOfficer,
+  useDeleteEthicsOfficer,
+  useUploadEthicsOfficerPhoto,
+  useGetEthicsOfficerPhoto,
 };

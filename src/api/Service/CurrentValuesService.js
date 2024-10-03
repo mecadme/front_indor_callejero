@@ -1,29 +1,53 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
-const CURRENT_VALUE_URL = "/api/currentValue";
+const CURRENT_VALUE_URL = "/currentValue";
 
 const currentValueEndpoints = {
   get: (currentValueId) => `${CURRENT_VALUE_URL}/${currentValueId}`,
   create: CURRENT_VALUE_URL,
-  update: CURRENT_VALUE_URL,
+  update: (currentValueId) => `${CURRENT_VALUE_URL}/${currentValueId}`,
   delete: (currentValueId) => `${CURRENT_VALUE_URL}/${currentValueId}`,
 };
 
-const getCurrentValue = (currentValueId) => 
-  useAPI("public", currentValueEndpoints.get(currentValueId), "GET");
+const useGetCurrentValue = (currentValueId) => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const createCurrentValue = (body) => 
-  useAPI("private", currentValueEndpoints.create, "POST", body);
+  const getCurrentValue = () =>
+    fetchData("GET", currentValueEndpoints.get(currentValueId));
 
-const updateCurrentValue = (body) => 
-  useAPI("private", currentValueEndpoints.update, "PUT", body);
+  return { data, error, loading, getCurrentValue };
+};
 
-const deleteCurrentValue = (currentValueId) => 
-  useAPI("private", currentValueEndpoints.delete(currentValueId), "DELETE");
+const useCreateCurrentValue = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const createCurrentValue = (body) =>
+    fetchData("POST", currentValueEndpoints.create, body);
+
+  return { data, error, loading, createCurrentValue };
+};
+
+const useUpdateCurrentValue = (currentValueId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updateCurrentValue = (body) =>
+    fetchData("PUT", currentValueEndpoints.update(currentValueId), body);
+
+  return { data, error, loading, updateCurrentValue };
+};
+
+const useDeleteCurrentValue = (currentValueId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deleteCurrentValue = () =>
+    fetchData("DELETE", currentValueEndpoints.delete(currentValueId));
+
+  return { data, error, loading, deleteCurrentValue };
+};
 
 export {
-  getCurrentValue,
-  createCurrentValue,
-  updateCurrentValue,
-  deleteCurrentValue,
+  useGetCurrentValue,
+  useCreateCurrentValue,
+  useUpdateCurrentValue,
+  useDeleteCurrentValue,
 };

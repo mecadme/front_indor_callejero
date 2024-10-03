@@ -1,4 +1,5 @@
 import useAPI from "../../hooks/useAPI";
+import { useCallback } from "react";
 
 const PLAYERS_URL = "/players";
 
@@ -16,7 +17,9 @@ const playerEndpoints = {
 const useGetPlayers = () => {
   const { data, error, loading, fetchData } = useAPI("public");
 
-  const getPlayers = () => fetchData("GET", playerEndpoints.getAll);
+  const getPlayers = useCallback(() => {
+    fetchData("GET", playerEndpoints.getAll);
+  }, [fetchData]);
 
   return { data, error, loading, getPlayers };
 };
@@ -24,7 +27,8 @@ const useGetPlayers = () => {
 const useGetPlayerById = (playerId) => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getPlayerById = () => fetchData("GET", playerEndpoints.getById(playerId));
+  const getPlayerById = () =>
+    fetchData("GET", playerEndpoints.getById(playerId));
 
   return { data, error, loading, getPlayerById };
 };
@@ -32,7 +36,8 @@ const useGetPlayerById = (playerId) => {
 const useCreatePlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const createPlayer = (body) => fetchData("POST", playerEndpoints.create, body);
+  const createPlayer = (body) =>
+    fetchData("POST", playerEndpoints.create, body);
 
   return { data, error, loading, createPlayer };
 };
@@ -40,7 +45,8 @@ const useCreatePlayer = () => {
 const useUpdatePlayer = (playerId) => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updatePlayer = (body) => fetchData("PATCH", playerEndpoints.update(playerId), body);
+  const updatePlayer = (body) =>
+    fetchData("PATCH", playerEndpoints.update(playerId), body);
 
   return { data, error, loading, updatePlayer };
 };
@@ -48,7 +54,8 @@ const useUpdatePlayer = (playerId) => {
 const useDeletePlayer = (playerId) => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deletePlayer = () => fetchData("DELETE", playerEndpoints.delete(playerId));
+  const deletePlayer = () =>
+    fetchData("DELETE", playerEndpoints.delete(playerId));
 
   return { data, error, loading, deletePlayer };
 };
@@ -56,7 +63,8 @@ const useDeletePlayer = (playerId) => {
 const useActivatePlayer = (playerId) => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const activatePlayer = () => fetchData("PUT", playerEndpoints.activate(playerId));
+  const activatePlayer = () =>
+    fetchData("PUT", playerEndpoints.activate(playerId));
 
   return { data, error, loading, activatePlayer };
 };
@@ -64,7 +72,8 @@ const useActivatePlayer = (playerId) => {
 const useSuspendPlayer = (playerId) => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const suspendPlayer = () => fetchData("PUT", playerEndpoints.suspend(playerId));
+  const suspendPlayer = () =>
+    fetchData("PUT", playerEndpoints.suspend(playerId));
 
   return { data, error, loading, suspendPlayer };
 };

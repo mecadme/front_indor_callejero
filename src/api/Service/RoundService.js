@@ -1,4 +1,4 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
 const ROUND_URL = "/rounds";
 
@@ -12,32 +12,71 @@ const roundEndpoints = {
   delete: (roundId) => `${ROUND_URL}/${roundId}`,
 };
 
-const getRounds = () => useAPI("private", roundEndpoints.getAll, "GET");
+const useGetRounds = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const getRoundById = (roundId) =>
-  useAPI("private", roundEndpoints.getById(roundId), "GET");
+  const getRounds = () => fetchData("GET", roundEndpoints.getAll);
 
-const getRoundsWithMatches = () =>
-  useAPI("public", roundEndpoints.getRoundsWithMatches, "GET");
+  return { data, error, loading, getRounds };
+};
 
-const getRoundsWithMatchesByRoundId = (roundId) =>
-  useAPI("private", roundEndpoints.getRoundsWithMatchesByRoundId(roundId), "GET");
+const useGetRoundById = (roundId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
 
-const createRound = (body) =>
-  useAPI("private", roundEndpoints.create, "POST", body);
+  const getRoundById = () => fetchData("GET", roundEndpoints.getById(roundId));
 
-const updateRound = (roundId, body) =>
-  useAPI("private", roundEndpoints.update(roundId), "PATCH", body);
+  return { data, error, loading, getRoundById };
+};
 
-const deleteRound = (roundId) =>
-  useAPI("private", roundEndpoints.delete(roundId), "DELETE");
+const useGetRoundsWithMatches = () => {
+  const { data, error, loading, fetchData } = useAPI("public");
+
+  const getRoundsWithMatches = () =>
+    fetchData("GET", roundEndpoints.getRoundsWithMatches);
+
+  return { data, error, loading, getRoundsWithMatches };
+};
+
+const useGetRoundsWithMatchesByRoundId = (roundId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const getRoundsWithMatchesByRoundId = () =>
+    fetchData("GET", roundEndpoints.getRoundsWithMatchesByRoundId(roundId));
+
+  return { data, error, loading, getRoundsWithMatchesByRoundId };
+};
+
+const useCreateRound = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const createRound = (body) => fetchData("POST", roundEndpoints.create, body);
+
+  return { data, error, loading, createRound };
+};
+
+const useUpdateRound = (roundId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updateRound = (body) =>
+    fetchData("PATCH", roundEndpoints.update(roundId), body);
+
+  return { data, error, loading, updateRound };
+};
+
+const useDeleteRound = (roundId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deleteRound = () => fetchData("DELETE", roundEndpoints.delete(roundId));
+
+  return { data, error, loading, deleteRound };
+};
 
 export {
-  getRounds,
-  getRoundById,
-  getRoundsWithMatches,
-  getRoundsWithMatchesByRoundId,
-  createRound,
-  updateRound,
-  deleteRound,
+  useGetRounds,
+  useGetRoundById,
+  useGetRoundsWithMatches,
+  useGetRoundsWithMatchesByRoundId,
+  useCreateRound,
+  useUpdateRound,
+  useDeleteRound,
 };

@@ -1,4 +1,4 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
 const SPONSOR_URL = "/sponsors";
 
@@ -12,35 +12,70 @@ const sponsorEndpoints = {
   getPhoto: (fileName) => `${SPONSOR_URL}/photo/${fileName}`,
 };
 
-const getSponsors = () => useAPI("public", sponsorEndpoints.getAll, "GET");
+const useGetSponsors = () => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const getSponsorById = (sponsorId) =>
-  useAPI("public", sponsorEndpoints.getById(sponsorId), "GET");
+  const getSponsors = () => fetchData("GET", sponsorEndpoints.getAll);
 
-const createSponsor = (body) =>
-  useAPI("private", sponsorEndpoints.create, "POST", body);
+  return { data, error, loading, getSponsors };
+};
 
-const updateSponsor = (sponsorId, body) =>
-  useAPI("private", sponsorEndpoints.update(sponsorId), "PATCH", body);
+const useGetSponsorById = (sponsorId) => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const deleteSponsor = (sponsorId) =>
-  useAPI("private", sponsorEndpoints.delete(sponsorId), "DELETE");
+  const getSponsorById = () => fetchData("GET", sponsorEndpoints.getById(sponsorId));
 
-const uploadSponsorPhoto = (sponsorId, file) =>
-  useAPI("private", sponsorEndpoints.uploadPhoto, "PUT", {
-    sponsorId,
-    sponsorPhoto: file,
-  });
+  return { data, error, loading, getSponsorById };
+};
 
-const getSponsorPhoto = (fileName) =>
-  useAPI("public", sponsorEndpoints.getPhoto(fileName), "GET");
+const useCreateSponsor = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const createSponsor = (body) => fetchData("POST", sponsorEndpoints.create, body);
+
+  return { data, error, loading, createSponsor };
+};
+
+const useUpdateSponsor = (sponsorId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updateSponsor = (body) =>
+    fetchData("PATCH", sponsorEndpoints.update(sponsorId), body);
+
+  return { data, error, loading, updateSponsor };
+};
+
+const useDeleteSponsor = (sponsorId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deleteSponsor = () => fetchData("DELETE", sponsorEndpoints.delete(sponsorId));
+
+  return { data, error, loading, deleteSponsor };
+};
+
+const useUploadSponsorPhoto = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const uploadSponsorPhoto = (sponsorId, file) =>
+    fetchData("PUT", sponsorEndpoints.uploadPhoto, { sponsorId, sponsorPhoto: file });
+
+  return { data, error, loading, uploadSponsorPhoto };
+};
+
+const useGetSponsorPhoto = (fileName) => {
+  const { data, error, loading, fetchData } = useAPI("public");
+
+  const getSponsorPhoto = () => fetchData("GET", sponsorEndpoints.getPhoto(fileName));
+
+  return { data, error, loading, getSponsorPhoto };
+};
 
 export {
-  getSponsors,
-  getSponsorById,
-  createSponsor,
-  updateSponsor,
-  deleteSponsor,
-  uploadSponsorPhoto,
-  getSponsorPhoto,
+  useGetSponsors,
+  useGetSponsorById,
+  useCreateSponsor,
+  useUpdateSponsor,
+  useDeleteSponsor,
+  useUploadSponsorPhoto,
+  useGetSponsorPhoto,
 };

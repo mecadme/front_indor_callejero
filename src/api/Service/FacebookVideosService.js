@@ -1,4 +1,4 @@
-import useAPI from "../../hooks/useApi";
+import useAPI from "../../hooks/useAPI";
 
 const FACEBOOK_VIDEO_URL = "/facebook_videos";
 
@@ -10,24 +10,54 @@ const facebookVideoEndpoints = {
   delete: (facebookVideoId) => `${FACEBOOK_VIDEO_URL}/${facebookVideoId}`,
 };
 
-const getFacebookVideos = () => useAPI("public", facebookVideoEndpoints.getAll, "GET");
+const useGetFacebookVideos = () => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const getFacebookVideoById = (facebookVideoId) =>
-  useAPI("public", facebookVideoEndpoints.getById(facebookVideoId), "GET");
+  const getFacebookVideos = () => fetchData("GET", facebookVideoEndpoints.getAll);
 
-const createFacebookVideo = (body) =>
-  useAPI("private", facebookVideoEndpoints.create, "POST", body);
+  return { data, error, loading, getFacebookVideos };
+};
 
-const updateFacebookVideo = (facebookVideoId, body) =>
-  useAPI("private", facebookVideoEndpoints.update(facebookVideoId), "PATCH", body);
+const useGetFacebookVideoById = (facebookVideoId) => {
+  const { data, error, loading, fetchData } = useAPI("public");
 
-const deleteFacebookVideo = (facebookVideoId) =>
-  useAPI("private", facebookVideoEndpoints.delete(facebookVideoId), "DELETE");
+  const getFacebookVideoById = () =>
+    fetchData("GET", facebookVideoEndpoints.getById(facebookVideoId));
+
+  return { data, error, loading, getFacebookVideoById };
+};
+
+const useCreateFacebookVideo = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const createFacebookVideo = (body) =>
+    fetchData("POST", facebookVideoEndpoints.create, body);
+
+  return { data, error, loading, createFacebookVideo };
+};
+
+const useUpdateFacebookVideo = (facebookVideoId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const updateFacebookVideo = (body) =>
+    fetchData("PATCH", facebookVideoEndpoints.update(facebookVideoId), body);
+
+  return { data, error, loading, updateFacebookVideo };
+};
+
+const useDeleteFacebookVideo = (facebookVideoId) => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const deleteFacebookVideo = () =>
+    fetchData("DELETE", facebookVideoEndpoints.delete(facebookVideoId));
+
+  return { data, error, loading, deleteFacebookVideo };
+};
 
 export {
-  getFacebookVideos,
-  getFacebookVideoById,
-  createFacebookVideo,
-  updateFacebookVideo,
-  deleteFacebookVideo,
+  useGetFacebookVideos,
+  useGetFacebookVideoById,
+  useCreateFacebookVideo,
+  useUpdateFacebookVideo,
+  useDeleteFacebookVideo,
 };
