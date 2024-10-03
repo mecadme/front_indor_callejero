@@ -297,7 +297,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   };
 
   const TEAM_KEY_VALUE = { key: "teamId", value: team.teamId };
-  const TEAM_UPLOAD_LOGO_URL = "teams/upload_logo";
+  const TEAM_UPLOAD_LOGO_URL = "teams/upload_photo";
 
   const filteredPlayers = playersWithoutTeam
     ? playersWithoutTeam.filter(
