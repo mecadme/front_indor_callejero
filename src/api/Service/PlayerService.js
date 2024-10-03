@@ -24,10 +24,10 @@ const useGetPlayers = () => {
   return { data, error, loading, getPlayers };
 };
 
-const useGetPlayerById = (playerId) => {
+const useGetPlayerById = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getPlayerById = () =>
+  const getPlayerById = (playerId) =>
     fetchData("GET", playerEndpoints.getById(playerId));
 
   return { data, error, loading, getPlayerById };
@@ -42,46 +42,47 @@ const useCreatePlayer = () => {
   return { data, error, loading, createPlayer };
 };
 
-const useUpdatePlayer = (playerId) => {
+const useUpdatePlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updatePlayer = (body) =>
+  const updatePlayer = (playerId, body) =>
     fetchData("PATCH", playerEndpoints.update(playerId), body);
 
   return { data, error, loading, updatePlayer };
 };
 
-const useDeletePlayer = (playerId) => {
+const useDeletePlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deletePlayer = () =>
+  const deletePlayer = (playerId) =>
     fetchData("DELETE", playerEndpoints.delete(playerId));
 
   return { data, error, loading, deletePlayer };
 };
 
-const useActivatePlayer = (playerId) => {
+const useActivatePlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const activatePlayer = () =>
+  const activatePlayer = (playerId) =>
     fetchData("PUT", playerEndpoints.activate(playerId));
 
   return { data, error, loading, activatePlayer };
 };
 
-const useSuspendPlayer = (playerId) => {
+const useSuspendPlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const suspendPlayer = () =>
+  const suspendPlayer = (playerId) =>
     fetchData("PUT", playerEndpoints.suspend(playerId));
 
   return { data, error, loading, suspendPlayer };
 };
 
-const useInjurePlayer = (playerId) => {
+const useInjurePlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const injurePlayer = () => fetchData("PUT", playerEndpoints.injure(playerId));
+  const injurePlayer = (playerId) =>
+    fetchData("PUT", playerEndpoints.injure(playerId));
 
   return { data, error, loading, injurePlayer };
 };

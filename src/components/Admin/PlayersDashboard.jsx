@@ -46,47 +46,41 @@ const PlayerDashboard = () => {
   const { updatePlayer } = useUpdatePlayer();
   const { deletePlayer } = useDeletePlayer();
 
-  // Obtener lista de jugadores al cargar el componente
   useEffect(() => {
     getPlayers();
   }, []);
 
-  // Sincronizar jugadores obtenidos con el estado local
   useEffect(() => {
     if (allPlayers) {
       setPlayers(allPlayers);
     }
   }, [allPlayers]);
 
-  // Actualizar paginación
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
   const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Crear nuevo jugador
   const handleCreatePlayer = async (newPlayer) => {
     await createPlayer(newPlayer);
-    await getPlayers(); // Asegurarse de que la lista se actualice
+    getPlayers();
     setActiveTab("list");
   };
 
-  // Eliminar jugador
   const handleDeletePlayer = async (playerId) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este jugador?")) {
       await deletePlayer(playerId);
       getPlayers();
+      setActiveTab("list");
     }
   };
 
-  // Seleccionar jugador para editar
   const handleEditClick = (player) => {
     setSelectedPlayer(player);
     setActiveTab("edit");
   };
 
-  // Cambiar término de búsqueda
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -97,7 +91,6 @@ const PlayerDashboard = () => {
       .includes(searchTerm.toLowerCase())
   );
 
-  // Renderizar paginación
   const renderPagination = () => {
     const totalPages = Math.ceil(players.length / playersPerPage);
     return (
@@ -166,42 +159,54 @@ const PlayerDashboard = () => {
 
       <Tab eventKey="edit" title="Editar Jugador">
         <h4>Buscar Jugador</h4>
+
         <InputGroup className="mb-3">
           <FormControl
             placeholder="Buscar por nombre..."
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setSelectedPlayer(null);
+            }}
           />
         </InputGroup>
 
-        {filteredPlayers.length > 0 ? (
-          <DropdownButton
-            id="dropdown-basic-button"
-            title={
-              selectedPlayer
-                ? `${selectedPlayer.firstName} ${selectedPlayer.lastName}`
-                : "Selecciona un jugador"
-            }
-          >
+        {searchTerm && filteredPlayers.length > 0 && (
+          <div className="player-suggestions">
             {filteredPlayers.map((player) => (
-              <Dropdown.Item
+              <div
                 key={player.playerId}
-                onClick={() => setSelectedPlayer(player)}
+                className="player-suggestion-item"
+                style={{
+                  padding: "8px",
+                  cursor: "pointer",
+                  borderBottom: "1px solid #ccc",
+                }}
+                onClick={() => {
+                  setSelectedPlayer(player);
+                  setSearchTerm(player.firstName + " " + player.lastName);
+                }}
               >
                 {player.firstName} {player.lastName}
-              </Dropdown.Item>
+              </div>
             ))}
-          </DropdownButton>
-        ) : (
+          </div>
+        )}
+
+        {searchTerm && filteredPlayers.length === 0 && (
           <p>No se encontraron jugadores.</p>
         )}
 
         {selectedPlayer ? (
           <PlayerForm
             player={selectedPlayer}
-            onSubmit={(updatedPlayer) =>
-              updatePlayer(selectedPlayer.playerId, updatedPlayer)
-            }
+            onSubmit={async (updatedPlayer) => {
+              await updatePlayer(selectedPlayer.playerId, updatedPlayer);
+              setSelectedPlayer(null);
+              setSearchTerm("");
+              getPlayers();
+              setActiveTab("list");
+            }}
             buttonText="Actualizar Jugador"
           />
         ) : (
@@ -259,8 +264,8 @@ const PlayerForm = ({ player = {}, onSubmit, buttonText }) => {
     onSubmit(formData);
   };
 
-  const PLAYER_KEY_VALUE = { key: "playerId", value: player.playerId };
-  const PLAYER_UPLOAD_PHOTO_URL = "players/uploadPhoto";
+  const PLAYER_KEY_VALUE = { key: "player_id", value: player.playerId };
+  const PLAYER_UPLOAD_PHOTO_URL = "players/upload_photo";
 
   return (
     <Form onSubmit={handleSubmit}>

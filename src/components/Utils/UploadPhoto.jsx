@@ -3,7 +3,8 @@ import { Form, Button, Col, Row, Image } from 'react-bootstrap';
 import useUploadPhoto from '../../hooks/useUploadPhoto';  // Importamos el hook
 
 const UploadPhoto = ({ entity, endpointUrl }) => {
-  const { uploadPhoto, loading, error, uploadSuccess } = useUploadPhoto(entity, endpointUrl); // Usamos el hook con la entidad
+  const { uploadPhoto, loading, error, uploadSuccess } = useUploadPhoto(entity, endpointUrl);
+  console.log(entity.value)
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -28,7 +29,7 @@ const UploadPhoto = ({ entity, endpointUrl }) => {
   };
 
   return (
-    <Form className="p-3 border rounded shadow-sm">
+    entity.value &&(<Form className="p-3 border rounded shadow-sm">
       <Form.Group controlId="formFile" className="mb-3">
         <Form.Label className="font-weight-bold">Sube una foto</Form.Label>
         <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
@@ -52,7 +53,7 @@ const UploadPhoto = ({ entity, endpointUrl }) => {
       <Button variant="primary" type="button" onClick={handleUpload} disabled={!selectedFile || loading}>
         {loading ? "Subiendo..." : "Subir foto"}
       </Button>
-    </Form>
+    </Form>) || <Row>Por favor crear primero la entidad para subir la foto</Row>
   );
 };
 
