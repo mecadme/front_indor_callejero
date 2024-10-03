@@ -5,6 +5,7 @@ const PLAYERS_URL = "/players";
 
 const playerEndpoints = {
   getAll: PLAYERS_URL,
+  getPlayersWithoutTeam: `${PLAYERS_URL}/withoutTeam`,
   getById: (playerId) => `${PLAYERS_URL}/${playerId}`,
   create: PLAYERS_URL,
   update: (playerId) => `${PLAYERS_URL}/${playerId}`,
@@ -22,6 +23,16 @@ const useGetPlayers = () => {
   }, [fetchData]);
 
   return { data, error, loading, getPlayers };
+};
+
+const useGetPlayerWithoutTeam = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const getPlayersWithoutTeam = useCallback(() => {
+    fetchData("GET", playerEndpoints.getPlayersWithoutTeam);
+  }, [fetchData]);
+
+  return { data, error, loading, getPlayersWithoutTeam };
 };
 
 const useGetPlayerById = () => {
@@ -89,6 +100,7 @@ const useInjurePlayer = () => {
 
 export {
   useGetPlayers,
+  useGetPlayerWithoutTeam,
   useGetPlayerById,
   useCreatePlayer,
   useUpdatePlayer,

@@ -108,6 +108,10 @@ const PlayerDashboard = () => {
     );
   };
 
+  const handleImageError = (e) => {
+    e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
+  };
+
   return (
     <Tabs
       activeKey={activeTab}
@@ -119,6 +123,7 @@ const PlayerDashboard = () => {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Foto</th>
               <th>Nombre</th>
               <th>Posición</th>
               <th>Acciones</th>
@@ -128,6 +133,22 @@ const PlayerDashboard = () => {
             {currentPlayers.map((player) => (
               <tr key={player.playerId}>
                 <td>{player.playerId}</td>
+                <td>
+                  <img
+                    src={player.photoUrl}
+                    alt={`${player.firstName} ${player.lastName}`}
+                    className="user-photo"
+                    aria-hidden="true"
+                    aria-label={`${player.firstName} ${player.lastName}`}
+                    title={`${player.firstName} ${player.lastName}`}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    width="40"
+                    height="40"
+                    onError={handleImageError}
+                  />
+                </td>
                 <td>
                   {player.firstName} {player.lastName}
                 </td>

@@ -1,5 +1,5 @@
 import useAPI from "../../hooks/useAPI";
-
+import { useCallback } from "react";
 const TEAMS_URL = "/teams";
 
 const teamEndpoints = {
@@ -17,15 +17,18 @@ const teamEndpoints = {
 const useGetTeams = () => {
   const { data, error, loading, fetchData } = useAPI("public");
 
-  const getTeams = () => fetchData("GET", teamEndpoints.getAll);
-
+  const getTeams = useCallback(() => {
+    fetchData("GET", teamEndpoints.getAll);
+  }, [fetchData]);
+  
   return { data, error, loading, getTeams };
 };
 
-const useGetTeamById = (teamId) => {
+const useGetTeamById = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getTeamById = () => fetchData("GET", teamEndpoints.getById(teamId));
+  const getTeamById = (teamId) =>
+    fetchData("GET", teamEndpoints.getById(teamId));
 
   return { data, error, loading, getTeamById };
 };
@@ -38,38 +41,22 @@ const useCreateTeam = () => {
   return { data, error, loading, createTeam };
 };
 
-const useUpdateTeam = (teamId) => {
+const useUpdateTeam = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateTeam = (body) =>
+  const updateTeam = (teamId, body) =>
     fetchData("PATCH", teamEndpoints.update(teamId), body);
 
   return { data, error, loading, updateTeam };
 };
 
-const useDeleteTeam = (teamId) => {
+const useDeleteTeam = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deleteTeam = () => fetchData("DELETE", teamEndpoints.delete(teamId));
+  const deleteTeam = (teamId) =>
+    fetchData("DELETE", teamEndpoints.delete(teamId));
 
   return { data, error, loading, deleteTeam };
-};
-
-const useUploadTeamPhoto = (teamId, file) => {
-  const { data, error, loading, fetchData } = useAPI("private");
-
-  const uploadTeamPhoto = () =>
-    fetchData("PUT", teamEndpoints.uploadPhoto, { teamId, file });
-
-  return { data, error, loading, uploadTeamPhoto };
-};
-
-const useGetTeamPhoto = (fileName) => {
-  const { data, error, loading, fetchData } = useAPI("public");
-
-  const getTeamPhoto = () => fetchData("GET", teamEndpoints.getPhoto(fileName));
-
-  return { data, error, loading, getTeamPhoto };
 };
 
 const useGetTeamStandings = () => {
@@ -95,8 +82,6 @@ export {
   useCreateTeam,
   useUpdateTeam,
   useDeleteTeam,
-  useUploadTeamPhoto,
-  useGetTeamPhoto,
   useGetTeamStandings,
   useGetStandingsByGroup,
 };
