@@ -239,7 +239,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   useEffect(() => {
     if (team && team.teamId !== formData.teamId) {
       setFormData({
-        name: team.name.toUpperCase() || "",
+        name: team.name || "",
         color: team.color || "",
         neighborhood: team.neighborhood || "",
         logoUrl: team.logoUrl || null,
@@ -282,16 +282,23 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name.length > 3) {
-      setErrorMessage("El nombre no puede tener más de 5 letras.");
+      setErrorMessage("El nombre no puede tener más de 3 letras.");
       return;
     }
-    onSubmit({ ...formData, players: selectedPlayers });
+
+    const formattedPlayers = selectedPlayers.map((playerId) => ({
+      playerId,
+    }));
+
+    onSubmit({
+      ...formData,
+      players: formattedPlayers, 
+    });
   };
 
   const TEAM_KEY_VALUE = { key: "teamId", value: team.teamId };
   const TEAM_UPLOAD_LOGO_URL = "teams/upload_logo";
 
-  // Filtrar jugadores por nombre y posición
   const filteredPlayers = playersWithoutTeam
     ? playersWithoutTeam.filter(
         (player) =>
@@ -303,7 +310,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        {/* Nombre del equipo */}
         <Form.Group>
           <Form.Label>Nombre del equipo</Form.Label>
           <Form.Control
@@ -428,5 +434,4 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
     </Container>
   );
 };
-
 export default TeamDashboard;
