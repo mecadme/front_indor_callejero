@@ -214,6 +214,7 @@ const TeamDashboard = () => {
 };
 
 const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
+  const isUpdating = Boolean(team.teamId); 
   const [formData, setFormData] = useState({
     name: team.name || "",
     color: team.color || "",
@@ -228,15 +229,14 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   const [selectedPlayers, setSelectedPlayers] = useState(formData.players);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { data: playersWithoutTeam, getPlayersWithoutTeam } =
-    useGetPlayerWithoutTeam();
+  const { data: playersWithoutTeam, getPlayersWithoutTeam } = useGetPlayerWithoutTeam();
 
   useEffect(() => {
-    getPlayersWithoutTeam(); // Cargar jugadores sin equipo
+    getPlayersWithoutTeam(); 
   }, []);
 
-  // Si el equipo cambia, actualizar los datos del formulario
   useEffect(() => {
+    
     if (team && team.teamId !== formData.teamId) {
       setFormData({
         name: team.name || "",
@@ -246,7 +246,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
         teamGroup: team.teamGroup || "",
         players: team.players || [],
       });
-      setSelectedPlayers(team.players || []);
+      setSelectedPlayers(team.players || []); 
     }
   }, [team]);
 
@@ -256,8 +256,8 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
       ...prevState,
       [name]: value,
     }));
-    if (name === "name" && value.length > 3) {
-      setErrorMessage("El nombre no puede tener más de 3 letras.");
+    if (name === "name" && value.length > 5) {
+      setErrorMessage("El nombre no puede tener más de 5 letras.");
     } else {
       setErrorMessage("");
     }
@@ -271,7 +271,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
     );
   };
 
-  // Manejar cambios en el archivo de logo
+  
   const handleFileChange = (logoUrl) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -281,15 +281,25 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.name.length > 3) {
-      setErrorMessage("El nombre no puede tener más de 3 letras.");
+
+    if (formData.name.length > 5) {
+      setErrorMessage("El nombre no puede tener más de 5 letras.");
       return;
     }
 
-    const formattedPlayers = selectedPlayers.map((playerId) => ({
-      playerId,
-    }));
+    
+    let formattedPlayers;
+    if (isUpdating) {
+      
+      formattedPlayers = selectedPlayers.map((player) =>
+        typeof player === "object" ? player : { playerId: player }
+      );
+    } else {
+      
+      formattedPlayers = selectedPlayers.map((playerId) => ({ playerId }));
+    }
 
+    
     onSubmit({
       ...formData,
       players: formattedPlayers, 
@@ -310,6 +320,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
+        
         <Form.Group>
           <Form.Label>Nombre del equipo</Form.Label>
           <Form.Control
@@ -324,7 +335,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           )}
         </Form.Group>
 
-        {/* Color del equipo */}
+        
         <Form.Group>
           <Form.Label>Color del equipo</Form.Label>
           <Form.Control
@@ -336,7 +347,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           />
         </Form.Group>
 
-        {/* Barrio del equipo */}
+        
         <Form.Group>
           <Form.Label>Barrio</Form.Label>
           <Form.Control
@@ -348,7 +359,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           />
         </Form.Group>
 
-        {/* Grupo del equipo */}
+        
         <Form.Group>
           <Form.Label>Grupo</Form.Label>
           <Form.Control
@@ -366,7 +377,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           </Form.Control>
         </Form.Group>
 
-        {/* Logo del equipo */}
+        
         <Form.Group>
           <Form.Label>Logo</Form.Label>
           <UploadPhoto
@@ -376,11 +387,11 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           />
         </Form.Group>
 
-        {/* Búsqueda y selección de jugadores */}
+        
         <Form.Group>
           <Form.Label>Selecciona jugadores</Form.Label>
 
-          {/* Filtro de búsqueda y posición */}
+          
           <Row>
             <Col>
               <InputGroup className="mb-3">
@@ -407,7 +418,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
             </Col>
           </Row>
 
-          {/* Listado de jugadores con checkboxes */}
+          
           {filteredPlayers.length > 0 ? (
             <div className="player-list">
               {filteredPlayers.map((player) => (
@@ -434,4 +445,5 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
     </Container>
   );
 };
+
 export default TeamDashboard;
