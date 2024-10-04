@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Form,
-  Tab,
-  Table,
-  Tabs
-} from "react-bootstrap";
+import { Button, Form, Tab, Table, Tabs } from "react-bootstrap";
 import {
   useCreateCurrentValue,
   useDeleteCurrentValue,
@@ -15,10 +9,10 @@ import {
 
 const CurrentValueDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
-  const [currentValue, setCurrentValue] = useState(null); // Solo un objeto
+  const [currentValue, setCurrentValue] = useState(null);
   const [selectedCurrentValue, setSelectedCurrentValue] = useState(null);
 
-  const { data: fetchedCurrentValue, getCurrentValue } = useGetCurrentValue(); // data es un objeto
+  const { data: fetchedCurrentValue, getCurrentValue } = useGetCurrentValue();
   const { createCurrentValue } = useCreateCurrentValue();
   const { updateCurrentValue } = useUpdateCurrentValue();
   const { deleteCurrentValue } = useDeleteCurrentValue();
@@ -29,11 +23,12 @@ const CurrentValueDashboard = () => {
 
   useEffect(() => {
     if (fetchedCurrentValue) {
-      setCurrentValue(fetchedCurrentValue); // Guardar el valor actual como objeto
+      setCurrentValue(fetchedCurrentValue);
     }
   }, [fetchedCurrentValue]);
 
   const handleCreateCurrentValue = async (newCurrentValue) => {
+    console.log("Datos para crear:", newCurrentValue);
     await createCurrentValue(newCurrentValue);
     getCurrentValue();
     setActiveTab("list");
@@ -50,7 +45,7 @@ const CurrentValueDashboard = () => {
   };
 
   const handleEditClick = () => {
-    setSelectedCurrentValue(currentValue); // Solo un objeto
+    setSelectedCurrentValue(currentValue);
     setActiveTab("edit");
   };
 
@@ -61,7 +56,6 @@ const CurrentValueDashboard = () => {
       className="mb-3"
     >
       <Tab eventKey="list" title="Valor Actual">
-        {/* Renderizar el valor actual si existe */}
         {currentValue ? (
           <Table striped bordered hover>
             <thead>
@@ -164,6 +158,13 @@ const CurrentValueForm = ({ currentValue = {}, onSubmit, buttonText }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.roundId || !formData.minBudget || !formData.roundDate) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+    console.log(formData);
+
     onSubmit(formData);
   };
 
