@@ -3,7 +3,7 @@ import useAPI from "../../hooks/useAPI";
 const WEEKLY_AWARD_URL = "/weekly-awards";
 
 const weeklyAwardEndpoints = {
-  getAll: WEEKLY_AWARD_URL,
+  getAll: `${WEEKLY_AWARD_URL}/allAwards`,
   create: WEEKLY_AWARD_URL,
   update: (weeklyAwardsId) => `${WEEKLY_AWARD_URL}/${weeklyAwardsId}`,
   delete: (weeklyAwardsId) => `${WEEKLY_AWARD_URL}?weeklyAwardsId=${weeklyAwardsId}`,
@@ -19,6 +19,15 @@ const useGetWeeklyAwardsByDate = (date) => {
   return { data, error, loading, getWeeklyAwardsByDate };
 };
 
+const useGetAllWeeklyAwards = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const getAllWeeklyAwards = () => 
+    fetchData("GET", weeklyAwardEndpoints.getAll);
+
+  return { data, error, loading, getAllWeeklyAwards };
+}
+
 const useCreateWeeklyAwards = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
@@ -28,19 +37,19 @@ const useCreateWeeklyAwards = () => {
   return { data, error, loading, createWeeklyAwards };
 };
 
-const useUpdateWeeklyAwards = (weeklyAwardsId) => {
+const useUpdateWeeklyAwards = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateWeeklyAwards = (body) => 
+  const updateWeeklyAwards = (weeklyAwardsId, body) => 
     fetchData("PUT", weeklyAwardEndpoints.update(weeklyAwardsId), body);
 
   return { data, error, loading, updateWeeklyAwards };
 };
 
-const useDeleteWeeklyAwards = (weeklyAwardsId) => {
+const useDeleteWeeklyAwards = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deleteWeeklyAwards = () => 
+  const deleteWeeklyAwards = (weeklyAwardsId) => 
     fetchData("DELETE", weeklyAwardEndpoints.delete(weeklyAwardsId));
 
   return { data, error, loading, deleteWeeklyAwards };
@@ -57,6 +66,7 @@ const useGetAwardInfo = (entityId, awardType) => {
 
 export {
   useGetWeeklyAwardsByDate,
+  useGetAllWeeklyAwards,
   useCreateWeeklyAwards,
   useUpdateWeeklyAwards,
   useDeleteWeeklyAwards,
