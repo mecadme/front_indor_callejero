@@ -20,10 +20,10 @@ const useGetSponsors = () => {
   return { data, error, loading, getSponsors };
 };
 
-const useGetSponsorById = (sponsorId) => {
+const useGetSponsorById = () => {
   const { data, error, loading, fetchData } = useAPI("public");
 
-  const getSponsorById = () => fetchData("GET", sponsorEndpoints.getById(sponsorId));
+  const getSponsorById = (sponsorId) => fetchData("GET", sponsorEndpoints.getById(sponsorId));
 
   return { data, error, loading, getSponsorById };
 };
@@ -36,46 +36,28 @@ const useCreateSponsor = () => {
   return { data, error, loading, createSponsor };
 };
 
-const useUpdateSponsor = (sponsorId) => {
+const useUpdateSponsor = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateSponsor = (body) =>
+  const updateSponsor = (sponsorId, body) =>
     fetchData("PATCH", sponsorEndpoints.update(sponsorId), body);
 
   return { data, error, loading, updateSponsor };
 };
 
-const useDeleteSponsor = (sponsorId) => {
+const useDeleteSponsor = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deleteSponsor = () => fetchData("DELETE", sponsorEndpoints.delete(sponsorId));
+  const deleteSponsor = (sponsorId) => fetchData("DELETE", sponsorEndpoints.delete(sponsorId));
 
   return { data, error, loading, deleteSponsor };
 };
 
-const useUploadSponsorPhoto = () => {
-  const { data, error, loading, fetchData } = useAPI("private");
-
-  const uploadSponsorPhoto = (sponsorId, file) =>
-    fetchData("PUT", sponsorEndpoints.uploadPhoto, { sponsorId, sponsorPhoto: file });
-
-  return { data, error, loading, uploadSponsorPhoto };
-};
-
-const useGetSponsorPhoto = (fileName) => {
-  const { data, error, loading, fetchData } = useAPI("public");
-
-  const getSponsorPhoto = () => fetchData("GET", sponsorEndpoints.getPhoto(fileName));
-
-  return { data, error, loading, getSponsorPhoto };
-};
 
 export {
   useGetSponsors,
   useGetSponsorById,
   useCreateSponsor,
   useUpdateSponsor,
-  useDeleteSponsor,
-  useUploadSponsorPhoto,
-  useGetSponsorPhoto,
+  useDeleteSponsor
 };
