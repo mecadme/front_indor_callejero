@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Form, Table, Tabs, Tab } from "react-bootstrap";
+import { Button, Container, Form, Table, Tabs, Tab, Pagination } from "react-bootstrap";
 import {
   useGetMatches,
   useCreateMatch,
@@ -20,6 +20,10 @@ const MatchDashboard = () => {
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [teams, setTeams] = useState([]);
+  
+  // Estados de paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Limitar a 5 partidos por página
 
   const { data: allMatches, getMatches } = useGetMatches();
   const { data: allTeams, getTeams } = useGetTeams();
@@ -36,6 +40,16 @@ const MatchDashboard = () => {
     if (allMatches) setMatches(allMatches);
     if (allTeams) setTeams(allTeams);
   }, [allMatches, allTeams]);
+
+  // Funciones de paginación
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentMatches = matches.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(matches.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleCreateMatch = async (newMatch) => {
     await createMatch(newMatch);
@@ -77,7 +91,7 @@ const MatchDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {matches.map((match) => (
+              {currentMatches.map((match) => (
                 <tr key={match.matchId}>
                   <td>{match.matchId}</td>
                   <td>{match.homeTeam.neighborhood}</td>
@@ -97,6 +111,21 @@ const MatchDashboard = () => {
               ))}
             </tbody>
           </Table>
+
+          {/* Componente de Paginación */}
+          {totalPages > 1 && (
+            <Pagination className="justify-content-center">
+              {[...Array(totalPages).keys()].map((page) => (
+                <Pagination.Item
+                  key={page + 1}
+                  active={page + 1 === currentPage}
+                  onClick={() => handlePageChange(page + 1)}
+                >
+                  {page + 1}
+                </Pagination.Item>
+              ))}
+            </Pagination>
+          )}
         </Tab>
 
         <Tab eventKey="create" title="Crear Partido">
@@ -232,6 +261,8 @@ const MatchForm = ({ match = {}, teams = [], onSubmit, buttonText }) => {
           onChange={handleChange}
         />
       </Form.Group>
+
+
 
       <Form.Group>
         <Form.Label>Fecha</Form.Label>

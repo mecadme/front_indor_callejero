@@ -8,7 +8,7 @@ import {
   Pagination,
   Tab,
   Table,
-  Tabs
+  Tabs,
 } from "react-bootstrap";
 import {
   useCreatePlayer,
@@ -34,7 +34,6 @@ const PlayerStatusEnum = {
 const handleImageError = (e) => {
   e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
 };
-
 
 const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
@@ -97,9 +96,12 @@ const PlayerDashboard = () => {
   const renderPagination = () => {
     const totalPages = Math.ceil(players.length / playersPerPage);
     return (
-      <Pagination>
+      <Pagination className="mt-3 justify-content-center">
         {[...Array(totalPages).keys()].map((page) => (
           <Pagination.Item
+            className={`mx-1 ${
+              page + 1 === currentPage ? "active" : ""
+            }`}
             key={page + 1}
             active={page + 1 === currentPage}
             onClick={() => paginate(page + 1)}
@@ -111,7 +113,6 @@ const PlayerDashboard = () => {
     );
   };
 
-  
   return (
     <Tabs
       activeKey={activeTab}
@@ -119,14 +120,14 @@ const PlayerDashboard = () => {
       className="mb-3"
     >
       <Tab eventKey="list" title="Lista de Jugadores">
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive className="players-table">
           <thead>
             <tr>
               <th>ID</th>
               <th>Foto</th>
               <th>Nombre</th>
               <th>Posición</th>
-              <th>Acciones</th>
+              <th style={{ width: "15%" }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -155,13 +156,17 @@ const PlayerDashboard = () => {
                 <td>{PlayerPositionEnum[player.position]}</td>
                 <td>
                   <Button
-                    variant="primary"
+                    size="sm"
+                    style={{ padding: "0" }}
+                    variant="outline-primary"
                     onClick={() => handleEditClick(player)}
                   >
                     Editar
                   </Button>
                   <Button
-                    variant="danger"
+                    size="sm"
+                    style={{ padding: "0" }}
+                    variant="outline-danger"
                     onClick={() => handleDeletePlayer(player.playerId)}
                   >
                     Eliminar
@@ -290,128 +295,131 @@ const PlayerForm = ({ player = {}, onSubmit, buttonText }) => {
   const PLAYER_UPLOAD_PHOTO_URL = "players/upload_photo";
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group>
-        <Form.Label>Nombre</Form.Label>
-        <Form.Control
-          type="text"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          placeholder="Ingresa el nombre del jugador"
-        />
-      </Form.Group>
+    <Container fluid className="m-0 p-0 d-flex justify-content-center">
+      <Form onSubmit={handleSubmit} className="player-form w-75 p-5">
+        <Form.Group>
+          <Form.Label>Nombre</Form.Label>
+          <Form.Control
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            placeholder="Ingresa el nombre del jugador"
+          />
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Apellido</Form.Label>
-        <Form.Control
-          type="text"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          placeholder="Ingresa el apellido del jugador"
-        />
-      </Form.Group>
+        <Form.Group>
+          <Form.Label>Apellido</Form.Label>
+          <Form.Control
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Ingresa el apellido del jugador"
+          />
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Número de camiseta</Form.Label>
-        <Form.Control
-          type="number"
-          name="jerseyNumber"
-          value={formData.jerseyNumber}
-          onChange={handleChange}
-          placeholder="Ingresa el número de camiseta"
-        />
-      </Form.Group>
+        <Form.Group>
+          <Form.Label>Número de camiseta</Form.Label>
+          <Form.Control
+            type="number"
+            name="jerseyNumber"
+            value={formData.jerseyNumber}
+            onChange={handleChange}
+            placeholder="Ingresa el número de camiseta"
+          />
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Edad</Form.Label>
-        <Form.Control
-          type="number"
-          name="age"
-          value={formData.age}
-          onChange={handleChange}
-          placeholder="Ingresa la edad del jugador"
-        />
-      </Form.Group>
+        <Form.Group>
+          <Form.Label>Edad</Form.Label>
+          <Form.Control
+            type="number"
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+            placeholder="Ingresa la edad del jugador"
+          />
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Altura (en metros)</Form.Label>
-        <Form.Control
-          type="number"
-          step="0.01"
-          name="height"
-          value={formData.height}
-          onChange={handleChange}
-          placeholder="Ingresa la altura en metros"
-        />
-      </Form.Group>
+        <Form.Group>
+          <Form.Label>Altura (en metros)</Form.Label>
+          <Form.Control
+            type="number"
+            step="0.01"
+            name="height"
+            value={formData.height}
+            onChange={handleChange}
+            placeholder="Ingresa la altura en metros"
+          />
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Posición</Form.Label>
-        <Form.Control
-          as="select"
-          name="position"
-          value={formData.position}
-          onChange={handleChange}
-        >
-          <option value="">Selecciona una posición</option>
-          {Object.entries(PlayerPositionEnum).map(([key, value]) => (
-            <option key={key} value={key}>
-              {value}
-            </option>
-          ))}
-        </Form.Control>
-      </Form.Group>
+        <Form.Group>
+          <Form.Label>Posición</Form.Label>
+          <Form.Control
+            as="select"
+            name="position"
+            value={formData.position}
+            onChange={handleChange}
+          >
+            <option value="">Selecciona una posición</option>
+            {Object.entries(PlayerPositionEnum).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Estatus</Form.Label>
-        <Form.Control
-          as="select"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-        >
-          <option value="">Selecciona un estatus</option>
-          {Object.entries(PlayerStatusEnum).map(([key, value]) => (
-            <option key={key} value={key}>
-              {value}
-            </option>
-          ))}
-        </Form.Control>
-      </Form.Group>
+        <Form.Group>
+          <Form.Label>Estatus</Form.Label>
+          <Form.Control
+            as="select"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+          >
+            <option value="">Selecciona un estatus</option>
+            {Object.entries(PlayerStatusEnum).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Foto</Form.Label>
-        {isUpdating && player?.photoUrl && (
+        <Form.Group>
+          <Form.Label>Foto</Form.Label>
+          {isUpdating && player?.photoUrl && (
             <Container className="d-flex justify-content-center">
-            <img
-              src={player.photoUrl}
-              alt={`${player.firstName} ${player.lastName}`}
-              className="user-photo"
-              aria-hidden="true"
-              aria-label={`${player.firstName} ${player.lastName}`}
-              title={`${player.firstName} ${player.lastName}`}
-              loading="lazy"
-              decoding="async"
-              referrerPolicy="no-referrer-when-downgrade"
-              width="400"
-              height="400"
-              onError={handleImageError}
-            /></Container>
+              <img
+                src={player.photoUrl}
+                alt={`${player.firstName} ${player.lastName}`}
+                className="user-photo"
+                aria-hidden="true"
+                aria-label={`${player.firstName} ${player.lastName}`}
+                title={`${player.firstName} ${player.lastName}`}
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer-when-downgrade"
+                width="400"
+                height="400"
+                onError={handleImageError}
+              />
+            </Container>
           )}
 
-        <UploadPhoto
-          entity={PLAYER_KEY_VALUE}
-          endpointUrl={PLAYER_UPLOAD_PHOTO_URL}
-          onFileChange={handleFileChange}
-        />
-      </Form.Group>
+          <UploadPhoto
+            entity={PLAYER_KEY_VALUE}
+            endpointUrl={PLAYER_UPLOAD_PHOTO_URL}
+            onFileChange={handleFileChange}
+          />
+        </Form.Group>
 
-      <Button variant="success" type="submit">
-        {buttonText}
-      </Button>
-    </Form>
+        <Button variant="success" type="submit">
+          {buttonText}
+        </Button>
+      </Form>
+    </Container>
   );
 };
 

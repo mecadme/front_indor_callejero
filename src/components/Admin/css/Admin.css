@@ -1,0 +1,20 @@
+.sidebar.expanded {
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar.collapsed {
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .dashboard-content {
+    transition: margin-left 0.3s ease;
+  }
+  
+  .dashboard-wrapper {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  

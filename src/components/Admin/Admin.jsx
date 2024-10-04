@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Navbar, Nav, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Navbar,
+  Nav,
+  Button,
+  Offcanvas,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PlayersDashboard from "./PlayersDashboard";
 import CurrentValueDashboard from "./CurrentValueDashboard";
@@ -12,12 +20,10 @@ import FacebookVideosDashboard from "./FacebookVideosDashboard";
 import WeeklyAwardsDashboard from "./WeeklyAwardsDashboard";
 
 const Admin = () => {
-  const [expanded, setExpanded] = useState(false);
-  const [activeDashboard, setActiveDashboard] = useState("dashboard1");
+  const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
+  const [activeDashboard, setActiveDashboard] = useState("currentValues"); // Dashboard activo
 
-  const toggleSidebar = () => {
-    setExpanded(!expanded);
-  };
+  const toggleSidebar = () => setShowSidebar(!showSidebar); // Función para alternar la barra lateral
 
   const renderDashboard = () => {
     switch (activeDashboard) {
@@ -46,56 +52,125 @@ const Admin = () => {
 
   return (
     <Container fluid>
-        <Row className="header">
-            <Button variant="primary">
-                <Link to="/">Volver a la página principal</Link>
-            </Button>
-        </Row>
+      {/* Header con botón para volver a la página principal */}
+      <Row className="header mb-4">
+        <Button variant="outline-primary">
+          <Link to="/" style={{ color: "white", textDecoration: "none" }}>
+            Volver a la página principal
+          </Link>
+        </Button>
+      </Row>
+
+      {/* Barra lateral desplegable con Offcanvas */}
+      <Offcanvas
+        show={showSidebar}
+        onHide={toggleSidebar}
+        placement="start"
+        className="bg-light"
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menú</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Nav
+            className="flex-column"
+            style={{ fontSize: "1.15rem", fontWeight: "bold" }}
+          >
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("currentValues");
+                toggleSidebar();
+              }}
+            >
+              Valores Actuales
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("player");
+                toggleSidebar();
+              }}
+            >
+              Jugador
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("team");
+                toggleSidebar();
+              }}
+            >
+              Equipo
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("match");
+                toggleSidebar();
+              }}
+            >
+              Partidos
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("round");
+                toggleSidebar();
+              }}
+            >
+              Jornadas
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("ethicsOfficer");
+                toggleSidebar();
+              }}
+            >
+              Oficiales de Ética
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("sponsor");
+                toggleSidebar();
+              }}
+            >
+              Patrocinadores
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("facebookVideos");
+                toggleSidebar();
+              }}
+            >
+              Videos de Facebook
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("weeklyAwards");
+                toggleSidebar();
+              }}
+            >
+              Premios Semanales
+            </Nav.Link>
+          </Nav>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      {/* Contenido principal */}
       <Row>
-        <Col xs={2} className={`sidebar ${expanded ? "expanded" : ""}`}>
-          <Navbar bg="light" expand="lg">
-            <Navbar.Toggle
-              aria-controls="basic-navbar-nav"
-              onClick={toggleSidebar}
-            />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="flex-column">
-                <Nav.Link onClick={() => setActiveDashboard("player")}>
-                  Administración de Jugador
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("team")}>
-                Administración de  Equipo
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("currentValues")}>
-                  Administración de Valores Actuales
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("ethicsOfficer")}>
-                  Administración de Oficiales de Ética
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("sponsor")}>
-                  Administración de Patrocinadores
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("round")}>
-                  Administración de Jornadas
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("match")}>
-                  Administración de Partidos
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("facebookVideos")}>
-                  Administración de Videos de Facebook
-                </Nav.Link>
-                <Nav.Link onClick={() => setActiveDashboard("weeklyAwards")}>
-                  Administración de Premios Semanales
-                </Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-        </Col>
-        <Col xs={10}>
-          <Button variant="primary" onClick={toggleSidebar}>
-            {expanded ? "Collapse" : "Expand"} Sidebar
+        <Col xs={1}>
+          <Button onClick={toggleSidebar} className="sidebar-toggle p-4 clean-btn justify-content-center"
+          aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button">
+            {showSidebar ?  "" : "☰"}
           </Button>
-          <div className="dashboard-content">{renderDashboard()}</div>
+        </Col>
+        <Col>
+          <div
+            className="dashboard-wrapper p-3"
+            style={{
+              backgroundColor: "#f8f9fa",
+              borderRadius: "10px",
+              boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+            }}
+          >
+            {renderDashboard()}
+          </div>
         </Col>
       </Row>
     </Container>

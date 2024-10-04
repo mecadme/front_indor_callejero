@@ -177,20 +177,21 @@ const WeeklyAwardForm = ({ award = {}, entities = [], awardType, setAwardType, o
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Verificar el tipo de premio para seleccionar el ID correcto (teamId, playerId o ethicsOfficerId)
+
+    // Preparar el payload con el ID correcto según el tipo de premio
     let awardPayload = {
-      awardType: formData.awardType,
+      entityId: formData.entityId, // Este será el valor de playerId, teamId o ethicsOfficerId
       date: formData.date,
+      awardType: formData.awardType, // PLAYER, TEAM, COACH
     };
 
-    if (formData.awardType === "PLAYER") {
-      awardPayload.playerId = formData.entityId; // Enviar playerId si es un jugador
-    } else if (formData.awardType === "TEAM") {
-      awardPayload.teamId = formData.entityId; // Enviar teamId si es un equipo
-    } else if (formData.awardType === "COACH") {
-      awardPayload.ethicsOfficerId = formData.entityId; // Enviar ethicsOfficerId si es un entrenador
+    // Validación de campo para evitar enviar un ID vacío o inválido
+    if (!formData.entityId) {
+      console.error("No se ha seleccionado una entidad válida.");
+      return; // Detenemos el envío si no hay entidad válida
     }
 
+    // Llamar al método onSubmit con el payload
     onSubmit(awardPayload);
   };
 
@@ -204,7 +205,7 @@ const WeeklyAwardForm = ({ award = {}, entities = [], awardType, setAwardType, o
           value={formData.awardType}
           onChange={(e) => {
             handleChange(e);
-            setAwardType(e.target.value); // Cambiar el tipo de premio para cargar entidades
+            setAwardType(e.target.value); // Actualiza el tipo de premio
           }}
         >
           {awardTypes.map((type) => (
@@ -224,21 +225,33 @@ const WeeklyAwardForm = ({ award = {}, entities = [], awardType, setAwardType, o
           onChange={handleChange}
         >
           <option value="">Selecciona una entidad</option>
-          {entities.map((entity) => (
-            <option key={entity.entityId} value={
-              awardType === "PLAYER"
-                ? entity.playerId
-                : awardType === "TEAM"
-                ? entity.teamId
-                : entity.ethicsOfficerId
-            }>
-              {awardType === "PLAYER"
-                ? `${entity.firstName} ${entity.lastName}`
-                : awardType === "TEAM"
-                ? entity.name
-                : entity.ethicsOfficer}
-            </option>
-          ))}
+          {entities.map((entity) => {
+            let entityId;
+            let entityLabel;
+
+            // Según el tipo de premio, seleccionar el ID y nombre apropiado
+            if (formData.awardType === "PLAYER") {
+              entityId = entity.playerId;
+              entityLabel = `${entity.firstName} ${entity.lastName}`;
+            } else if (formData.awardType === "TEAM") {
+              entityId = entity.teamId;
+              entityLabel = entity.name;
+            } else if (formData.awardType === "COACH") {
+              entityId = entity.ethicsOfficerId;
+              entityLabel = entity.ethicsOfficer;
+            }
+
+            // Mostrar solo si tiene un ID válido
+            if (entityId) {
+              return (
+                <option key={entityId} value={entityId}>
+                  {entityLabel}
+                </option>
+              );
+            } else {
+              return null; // No mostrar si no hay un ID
+            }
+          })}
         </Form.Control>
       </Form.Group>
 
@@ -258,5 +271,6 @@ const WeeklyAwardForm = ({ award = {}, entities = [], awardType, setAwardType, o
     </Form>
   );
 };
+
 
 export default WeeklyAwardsDashboard;
