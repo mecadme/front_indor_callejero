@@ -1,4 +1,5 @@
 import useAPI from "../../hooks/useAPI";
+import { useCallback } from "react";
 
 const MATCH_URL = "/matches";
 
@@ -23,15 +24,18 @@ const matchEndpoints = {
 const useGetMatches = () => {
   const { data, error, loading, fetchData } = useAPI("public");
 
-  const getMatches = () => fetchData("GET", matchEndpoints.getAll);
+  const getMatches = useCallback(() => {
+    fetchData("GET", matchEndpoints.getAll);
+  }, [fetchData]);
 
   return { data, error, loading, getMatches };
 };
 
-const useGetMatchById = (matchId) => {
+const useGetMatchById = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getMatchById = () => fetchData("GET", matchEndpoints.getById(matchId));
+  const getMatchById = (matchId) =>
+    fetchData("GET", matchEndpoints.getById(matchId));
 
   return { data, error, loading, getMatchById };
 };
@@ -44,95 +48,101 @@ const useCreateMatch = () => {
   return { data, error, loading, createMatch };
 };
 
-const useUpdateMatch = (matchId) => {
+const useUpdateMatch = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateMatch = (body) =>
+  const updateMatch = (matchId, body) =>
     fetchData("PATCH", matchEndpoints.update(matchId), body);
 
   return { data, error, loading, updateMatch };
 };
 
-const useDeleteMatch = (matchId) => {
+const useDeleteMatch = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deleteMatch = () => fetchData("DELETE", matchEndpoints.delete(matchId));
+  const deleteMatch = (matchId) =>
+    fetchData("DELETE", matchEndpoints.delete(matchId));
 
   return { data, error, loading, deleteMatch };
 };
 
-const useRegisterMatchEvent = (matchId) => {
+const useRegisterMatchEvent = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const registerMatchEvent = (body) =>
+  const registerMatchEvent = (matchId, body) =>
     fetchData("POST", matchEndpoints.registerEvent(matchId), body);
 
   return { data, error, loading, registerMatchEvent };
 };
 
-const useStartMatch = (matchId) => {
+const useStartMatch = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const startMatch = () => fetchData("POST", matchEndpoints.start(matchId));
+  const startMatch = (matchId) =>
+    fetchData("POST", matchEndpoints.start(matchId));
 
   return { data, error, loading, startMatch };
 };
 
-const usePauseMatch = (matchId) => {
+const usePauseMatch = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const pauseMatch = () => fetchData("POST", matchEndpoints.pause(matchId));
+  const pauseMatch = (matchId) =>
+    fetchData("POST", matchEndpoints.pause(matchId));
 
   return { data, error, loading, pauseMatch };
 };
 
-const useResumeMatch = (matchId) => {
+const useResumeMatch = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const resumeMatch = () => fetchData("POST", matchEndpoints.resume(matchId));
+  const resumeMatch = (matchId) =>
+    fetchData("POST", matchEndpoints.resume(matchId));
 
   return { data, error, loading, resumeMatch };
 };
 
-const useStopMatch = (matchId) => {
+const useStopMatch = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const stopMatch = () => fetchData("POST", matchEndpoints.stop(matchId));
+  const stopMatch = (matchId) =>
+    fetchData("POST", matchEndpoints.stop(matchId));
 
   return { data, error, loading, stopMatch };
 };
 
-const useGetRemainingTime = (matchId) => {
+const useGetRemainingTime = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getRemainingTime = () =>
+  const getRemainingTime = (matchId) =>
     fetchData("GET", matchEndpoints.getRemainingTime(matchId));
 
   return { data, error, loading, getRemainingTime };
 };
 
-const useSetLineUp = (matchId) => {
+const useSetLineUp = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const setLineUp = (body) =>
+  const setLineUp = (matchId, body) =>
     fetchData("POST", matchEndpoints.setLineUp(matchId), body);
 
   return { data, error, loading, setLineUp };
 };
 
-const useChangePlayer = (matchId) => {
+const useChangePlayer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const changePlayer = (body) =>
+  const changePlayer = (matchId, body) =>
     fetchData("PUT", matchEndpoints.changePlayer(matchId), body);
 
   return { data, error, loading, changePlayer };
 };
 
-const useGetLineUp = (matchId) => {
+const useGetLineUp = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getLineUp = () => fetchData("GET", matchEndpoints.getLineUp(matchId));
+  const getLineUp = (matchId) =>
+    fetchData("GET", matchEndpoints.getLineUp(matchId));
 
   return { data, error, loading, getLineUp };
 };

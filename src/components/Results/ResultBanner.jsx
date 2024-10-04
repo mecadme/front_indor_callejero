@@ -83,7 +83,9 @@ const ResultBanner = ({ events, matchDetails }) => {
   const phaseLabel =
     {
       PRELIMINARY: "FASE DE GRUPOS",
-      PLAYOFF: "Eliminatorias",
+      QUARTER_FINAL: "CUARTOS DE FINAL",
+      SEMI_FINAL: "SEMIFINALES",
+      FINAL: "FINAL",
     }[phase] || "Fase no disponible";
 
   const filteredEvents = events.filter(

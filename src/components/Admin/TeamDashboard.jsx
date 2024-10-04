@@ -68,7 +68,6 @@ const TeamDashboard = () => {
 
   const handleCreateTeam = async (newTeam) => {
     await createTeam(newTeam);
-    console.log(newTeam);
     getTeams();
     setActiveTab("list");
   };

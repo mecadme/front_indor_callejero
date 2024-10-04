@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  Col,
   Container,
   Form,
-  FormControl,
-  InputGroup,
-  Row,
   Tab,
   Table,
-  Tabs,
+  Tabs
 } from "react-bootstrap";
-import { useGetTeams } from "../../api/Service/TeamService"; // Para obtener los equipos
 import {
   useCreateEthicsOfficer,
   useDeleteEthicsOfficer,
   useGetEthicsOfficers,
   useUpdateEthicsOfficer,
 } from "../../api/Service/EthicsOfficerService";
+import { useGetTeams } from "../../api/Service/TeamService"; // Para obtener los equipos
 import UploadPhoto from "../Utils/UploadPhoto"; // Componente de subir foto
 
 const handleImageError = (e) => {
@@ -32,6 +28,8 @@ const EthicsOfficerDashboard = () => {
 
   const { data: allEthicsOfficers, getEthicsOfficers } = useGetEthicsOfficers();
   const { data: allTeams, getTeams } = useGetTeams();
+  console.log("Todos los oficiales:", allEthicsOfficers);
+  console.log("Todos los equipos:", allTeams);
   const { createEthicsOfficer } = useCreateEthicsOfficer();
   const { updateEthicsOfficer } = useUpdateEthicsOfficer();
   const { deleteEthicsOfficer } = useDeleteEthicsOfficer();
@@ -196,7 +194,7 @@ const EthicsOfficerForm = ({
 
     const ethicsOfficerPayload = {
       ...formData,
-      team: { teamId: formData.teamId }, // Enviar el teamId dentro del objeto team
+      team: { teamId: formData.teamId }, 
     };
 
     onSubmit(ethicsOfficerPayload);
