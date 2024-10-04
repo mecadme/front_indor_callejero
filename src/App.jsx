@@ -14,7 +14,7 @@ import ResultPredict from "./components/Header/ResultPredict.jsx";
 import StreetProject from "./components/Header/StreetProject.jsx";
 import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import Manager from "./components/Manager/Manager.jsx";
+import MatchManager from "./components/Manager/MatchManager.jsx";
 import Lounge from "./components/Manager/Lounge.jsx";
 import Matches from "./components/Matches/Matches.jsx";
 import PlayerPage from "./components/Players/PlayerPage.jsx";
@@ -74,7 +74,7 @@ function App() {
                 <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
               }
             >
-              <Route path="/managment/manager" element={<Manager />} />
+              <Route path="/managment/manager" element={<MatchManager />} />
             </Route>
 
             <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>

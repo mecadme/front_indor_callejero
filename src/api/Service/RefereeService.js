@@ -1,7 +1,7 @@
 import useAPI from "../../hooks/useAPI";
 import { useCallback } from "react";
 
-const REFEREES_URL = "/referees";
+const REFEREES_URL = "/referee";
 
 const refereeEndpoints = {
   getAll: REFEREES_URL,
@@ -10,6 +10,7 @@ const refereeEndpoints = {
   create: REFEREES_URL,
   update: (refereeId) => `${REFEREES_URL}/${refereeId}`,
   delete: (refereeId) => `${REFEREES_URL}/${refereeId}`,
+  
 };
 
 const useGetReferees = () => {
@@ -67,6 +68,15 @@ const useDeleteReferee = () => {
   return { data, error, loading, deleteReferee };
 };
 
+const useAddRefereeToMatch = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const addRefereeToMatch = (refereeId, matchId) =>
+    fetchData("PATCH", refereeEndpoints.addRefereeToMatch(refereeId, matchId));
+
+  return { data, error, loading, addRefereeToMatch };
+};
+
 export {
   useGetReferees,
   useGetRefereeByMatchId,
@@ -74,4 +84,5 @@ export {
   useCreateReferee,
   useUpdateReferee,
   useDeleteReferee,
+  useAddRefereeToMatch,
 };
