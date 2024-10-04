@@ -41,7 +41,7 @@ const Teams = () => {
 
 
           return (
-            <Col key={team.teamId} md={4} lg={12} className="mb-4">
+            <Col key={team.teamId} xs={6} md={4} lg={4} className="mb-4">
               <Card
                 className="team-card "
                 style={{

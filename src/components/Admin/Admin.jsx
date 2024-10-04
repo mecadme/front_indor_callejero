@@ -18,6 +18,7 @@ import RoundDashboard from "./RoundDashboard";
 import MatchDashboard from "./MatchDashboard";
 import FacebookVideosDashboard from "./FacebookVideosDashboard";
 import WeeklyAwardsDashboard from "./WeeklyAwardsDashboard";
+import RefereeDashboard from "./RefereeDashboard";
 
 const Admin = () => {
   const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
@@ -45,6 +46,8 @@ const Admin = () => {
         return <FacebookVideosDashboard />;
       case "weeklyAwards":
         return <WeeklyAwardsDashboard />;
+      case "referee":
+        return <RefereeDashboard />;
       default:
         return <CurrentValueDashboard />;
     }
@@ -107,6 +110,13 @@ const Admin = () => {
               }}
             >
               Partidos
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("referee");
+                toggleSidebar();
+              }}>
+              Arbitros
             </Nav.Link>
             <Nav.Link
               onClick={() => {

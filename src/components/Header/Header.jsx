@@ -107,8 +107,6 @@ const Header = () => {
   };
 
 
-
-
   return (
     <header className="header">
       <TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />
@@ -144,7 +142,7 @@ const Header = () => {
                   </Link>
                 </NavDropdown.Item>
                 <Link to="/comparisons/players" className="nav-link">
-                  Comparar Equipos
+                  Comparar Jugadores
                 </Link>
               </NavDropdown>
               <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>

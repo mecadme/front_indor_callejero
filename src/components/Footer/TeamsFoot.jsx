@@ -16,7 +16,7 @@ const TeamsFoot = ({ content, getAllTeams }) => {
       {content.map((team, index) => (
         <ListGroup.Item key={index} onClick={() => getAllTeams(team.teamId)}>
         <Link to={`/team/${team.teamId}`} className="nav-link">
-          {team.name}
+          {team.neighborhood}
         </Link>
       </ListGroup.Item>
       ))}

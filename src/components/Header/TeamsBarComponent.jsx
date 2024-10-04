@@ -1,5 +1,6 @@
 import React from "react";
 import "./css/TeamsBarComponent.css";
+import { Container } from "react-bootstrap";
 
 const TeamsBarComponent = ({ content, getAllTeams }) => {
   return (
