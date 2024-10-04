@@ -15,15 +15,16 @@ const ethicsOfficerEndpoints = {
 const useGetEthicsOfficers = () => {
   const { data, error, loading, fetchData } = useAPI("public");
 
-  const getEthicsOfficers = () => fetchData("GET", ethicsOfficerEndpoints.getAll);
+  const getEthicsOfficers = () =>
+    fetchData("GET", ethicsOfficerEndpoints.getAll);
 
   return { data, error, loading, getEthicsOfficers };
 };
 
-const useGetEthicsOfficerById = (ethicsOfficerId) => {
+const useGetEthicsOfficerById = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const getEthicsOfficerById = () =>
+  const getEthicsOfficerById = (ethicsOfficerId) =>
     fetchData("GET", ethicsOfficerEndpoints.getById(ethicsOfficerId));
 
   return { data, error, loading, getEthicsOfficerById };
@@ -38,40 +39,22 @@ const useCreateEthicsOfficer = () => {
   return { data, error, loading, createEthicsOfficer };
 };
 
-const useUpdateEthicsOfficer = (ethicsOfficerId) => {
+const useUpdateEthicsOfficer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateEthicsOfficer = (body) =>
+  const updateEthicsOfficer = (ethicsOfficerId, body) =>
     fetchData("PATCH", ethicsOfficerEndpoints.update(ethicsOfficerId), body);
 
   return { data, error, loading, updateEthicsOfficer };
 };
 
-const useDeleteEthicsOfficer = (ethicsOfficerId) => {
+const useDeleteEthicsOfficer = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deleteEthicsOfficer = () =>
+  const deleteEthicsOfficer = (ethicsOfficerId) =>
     fetchData("DELETE", ethicsOfficerEndpoints.delete(ethicsOfficerId));
 
   return { data, error, loading, deleteEthicsOfficer };
-};
-
-const useUploadEthicsOfficerPhoto = () => {
-  const { data, error, loading, fetchData } = useAPI("private");
-
-  const uploadEthicsOfficerPhoto = (ethicsOfficerId, file) =>
-    fetchData("PUT", ethicsOfficerEndpoints.uploadPhoto, { ethicsOfficerId, file });
-
-  return { data, error, loading, uploadEthicsOfficerPhoto };
-};
-
-const useGetEthicsOfficerPhoto = (fileName) => {
-  const { data, error, loading, fetchData } = useAPI("public");
-
-  const getEthicsOfficerPhoto = () =>
-    fetchData("GET", ethicsOfficerEndpoints.getPhoto(fileName));
-
-  return { data, error, loading, getEthicsOfficerPhoto };
 };
 
 export {
@@ -80,6 +63,4 @@ export {
   useCreateEthicsOfficer,
   useUpdateEthicsOfficer,
   useDeleteEthicsOfficer,
-  useUploadEthicsOfficerPhoto,
-  useGetEthicsOfficerPhoto,
 };

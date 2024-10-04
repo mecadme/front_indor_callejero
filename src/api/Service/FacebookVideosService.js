@@ -18,10 +18,10 @@ const useGetFacebookVideos = () => {
   return { data, error, loading, getFacebookVideos };
 };
 
-const useGetFacebookVideoById = (facebookVideoId) => {
+const useGetFacebookVideoById = () => {
   const { data, error, loading, fetchData } = useAPI("public");
 
-  const getFacebookVideoById = () =>
+  const getFacebookVideoById = (facebookVideoId) =>
     fetchData("GET", facebookVideoEndpoints.getById(facebookVideoId));
 
   return { data, error, loading, getFacebookVideoById };
@@ -36,19 +36,19 @@ const useCreateFacebookVideo = () => {
   return { data, error, loading, createFacebookVideo };
 };
 
-const useUpdateFacebookVideo = (facebookVideoId) => {
+const useUpdateFacebookVideo = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateFacebookVideo = (body) =>
+  const updateFacebookVideo = (facebookVideoId, body) =>
     fetchData("PATCH", facebookVideoEndpoints.update(facebookVideoId), body);
 
   return { data, error, loading, updateFacebookVideo };
 };
 
-const useDeleteFacebookVideo = (facebookVideoId) => {
+const useDeleteFacebookVideo = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const deleteFacebookVideo = () =>
+  const deleteFacebookVideo = (facebookVideoId) =>
     fetchData("DELETE", facebookVideoEndpoints.delete(facebookVideoId));
 
   return { data, error, loading, deleteFacebookVideo };
