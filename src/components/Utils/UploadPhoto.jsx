@@ -7,7 +7,6 @@ const UploadPhoto = ({ entity, endpointUrl }) => {
     entity,
     endpointUrl
   );
-  console.log(entity.value);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 

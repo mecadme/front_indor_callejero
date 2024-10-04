@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Tab,
-  Tabs,
-  Table,
   Button,
+  Container,
   Form,
-  Modal,
-  Pagination,
-  Dropdown,
-  DropdownButton,
-  InputGroup,
   FormControl,
+  InputGroup,
+  Pagination,
+  Tab,
+  Table,
+  Tabs
 } from "react-bootstrap";
-import UploadPhoto from "../Utils/UploadPhoto";
 import {
-  useGetPlayers,
   useCreatePlayer,
-  useUpdatePlayer,
   useDeletePlayer,
+  useGetPlayers,
+  useUpdatePlayer,
 } from "../../api/Service/PlayerService";
+import UploadPhoto from "../Utils/UploadPhoto";
 
 const PlayerPositionEnum = {
   GOALKEEPER: "Portero",
@@ -32,6 +30,11 @@ const PlayerStatusEnum = {
   DISABLED: "Lesionado",
   INACTIVE: "Suspendido",
 };
+
+const handleImageError = (e) => {
+  e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
+};
+
 
 const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
@@ -108,10 +111,7 @@ const PlayerDashboard = () => {
     );
   };
 
-  const handleImageError = (e) => {
-    e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
-  };
-
+  
   return (
     <Tabs
       activeKey={activeTab}
@@ -239,6 +239,7 @@ const PlayerDashboard = () => {
 };
 
 const PlayerForm = ({ player = {}, onSubmit, buttonText }) => {
+  const isUpdating = Boolean(player.playerId);
   const [formData, setFormData] = useState({
     firstName: player.firstName || "",
     lastName: player.lastName || "",
@@ -382,6 +383,24 @@ const PlayerForm = ({ player = {}, onSubmit, buttonText }) => {
 
       <Form.Group>
         <Form.Label>Foto</Form.Label>
+        {isUpdating && player?.photoUrl && (
+            <Container className="d-flex justify-content-center">
+            <img
+              src={player.photoUrl}
+              alt={`${player.firstName} ${player.lastName}`}
+              className="user-photo"
+              aria-hidden="true"
+              aria-label={`${player.firstName} ${player.lastName}`}
+              title={`${player.firstName} ${player.lastName}`}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer-when-downgrade"
+              width="400"
+              height="400"
+              onError={handleImageError}
+            /></Container>
+          )}
+
         <UploadPhoto
           entity={PLAYER_KEY_VALUE}
           endpointUrl={PLAYER_UPLOAD_PHOTO_URL}

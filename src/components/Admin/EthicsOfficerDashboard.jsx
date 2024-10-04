@@ -11,26 +11,30 @@ import {
   Table,
   Tabs,
 } from "react-bootstrap";
+import { useGetTeams } from "../../api/Service/TeamService"; // Para obtener los equipos
 import {
-  useGetEthicsOfficers,
   useCreateEthicsOfficer,
-  useUpdateEthicsOfficer,
   useDeleteEthicsOfficer,
+  useGetEthicsOfficers,
+  useUpdateEthicsOfficer,
 } from "../../api/Service/EthicsOfficerService";
-import { useGetTeams } from "../../api/Service/TeamService";
-import UploadPhoto from "../Utils/UploadPhoto";
+import UploadPhoto from "../Utils/UploadPhoto"; // Componente de subir foto
+
+const handleImageError = (e) => {
+  e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
+};
 
 const EthicsOfficerDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
-  const [officers, setOfficers] = useState([]);
-  const [selectedOfficer, setSelectedOfficer] = useState(null);
+  const [ethicsOfficers, setEthicsOfficers] = useState([]);
+  const [selectedEthicsOfficer, setSelectedEthicsOfficer] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: allOfficers, getEthicsOfficers } = useGetEthicsOfficers();
+  const { data: allEthicsOfficers, getEthicsOfficers } = useGetEthicsOfficers();
+  const { data: allTeams, getTeams } = useGetTeams();
   const { createEthicsOfficer } = useCreateEthicsOfficer();
   const { updateEthicsOfficer } = useUpdateEthicsOfficer();
   const { deleteEthicsOfficer } = useDeleteEthicsOfficer();
-  const { data: teams, getTeams } = useGetTeams();
 
   useEffect(() => {
     getEthicsOfficers();
@@ -38,37 +42,31 @@ const EthicsOfficerDashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (allOfficers) {
-      setOfficers(allOfficers);
+    if (allEthicsOfficers) {
+      setEthicsOfficers(allEthicsOfficers);
     }
-  }, [allOfficers]);
+  }, [allEthicsOfficers]);
 
-  const handleCreateOfficer = async (newOfficer) => {
-    await createEthicsOfficer(newOfficer);
+  const handleCreateEthicsOfficer = async (newEthicsOfficer) => {
+    await createEthicsOfficer(newEthicsOfficer);
     getEthicsOfficers();
     setActiveTab("list");
   };
 
-  const handleDeleteOfficer = async (officerId) => {
+  const handleEditClick = (ethicsOfficer) => {
+    setSelectedEthicsOfficer(ethicsOfficer);
+    setActiveTab("edit");
+  };
+
+  const handleDeleteClick = async (ethicsOfficerId) => {
     if (
-      window.confirm(
-        "¿Estás seguro de que deseas eliminar este oficial de ética?"
-      )
+      window.confirm("¿Estás seguro de que deseas eliminar este oficial ético?")
     ) {
-      await deleteEthicsOfficer(officerId);
+      await deleteEthicsOfficer(ethicsOfficerId);
       getEthicsOfficers();
       setActiveTab("list");
     }
   };
-
-  const handleEditClick = (officer) => {
-    setSelectedOfficer(officer);
-    setActiveTab("edit");
-  };
-
-  const filteredOfficers = officers.filter((officer) =>
-    `${officer.ethicsOfficer}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <Tabs
@@ -76,45 +74,52 @@ const EthicsOfficerDashboard = () => {
       onSelect={(tab) => setActiveTab(tab)}
       className="mb-3"
     >
-      <Tab eventKey="list" title="Lista de Oficiales de Ética">
+      <Tab eventKey="list" title="Lista de Oficiales Éticos">
         <Table striped bordered hover>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Foto</th>
               <th>Nombre</th>
+              <th>Bio</th>
               <th>Equipo</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {officers.map((officer) => (
-              <tr key={officer.ethicsOfficerId}>
-                <td>{officer.ethicsOfficerId}</td>
+            {ethicsOfficers.map((ethicsOfficer) => (
+              <tr key={ethicsOfficer.ethicsOfficerId}>
+                <td>{ethicsOfficer.ethicsOfficerId}</td>
                 <td>
                   <img
-                    src={officer.photoUrl}
-                    alt={`${officer.ethicsOfficer}`}
+                    src={ethicsOfficer.photoUrl}
+                    alt={`${ethicsOfficer.ethicsOfficer}`}
+                    className="user-photo"
+                    aria-hidden="true"
+                    aria-label={`${ethicsOfficer.ethicsOfficer}`}
+                    title={`${ethicsOfficer.ethicsOfficer}`}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer-when-downgrade"
                     width="40"
                     height="40"
-                    onError={(e) =>
-                      (e.target.src =
-                        "https://cdn-icons-png.flaticon.com/512/2102/2102633.png")
-                    }
+                    onError={handleImageError}
                   />
                 </td>
-                <td>{officer.ethicsOfficer}</td>
-                <td>{officer.team?.neighborhood}</td>
+                <td>{ethicsOfficer.ethicsOfficer}</td>
+                <td>{ethicsOfficer.bio}</td>
+                <td>{ethicsOfficer.team?.neighborhood || "Sin equipo"}</td>
                 <td>
                   <Button
                     variant="primary"
-                    onClick={() => handleEditClick(officer)}
+                    onClick={() => handleEditClick(ethicsOfficer)}
                   >
                     Editar
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => handleDeleteOfficer(officer.ethicsOfficerId)}
+                    onClick={() =>
+                      handleDeleteClick(ethicsOfficer.ethicsOfficerId)
+                    }
                   >
                     Eliminar
                   </Button>
@@ -125,73 +130,50 @@ const EthicsOfficerDashboard = () => {
         </Table>
       </Tab>
 
-      <Tab eventKey="create" title="Crear Oficial de Ética">
+      <Tab eventKey="create" title="Crear Oficial Ético">
         <EthicsOfficerForm
-          onSubmit={handleCreateOfficer}
-          teams={teams}
-          buttonText="Crear Oficial"
+          onSubmit={handleCreateEthicsOfficer}
+          teams={allTeams}
+          buttonText="Crear Oficial Ético"
         />
       </Tab>
 
-      <Tab eventKey="edit" title="Editar Oficial de Ética">
-        <h4>Buscar Oficial</h4>
-
-        <InputGroup className="mb-3">
-          <FormControl
-            placeholder="Buscar por nombre..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </InputGroup>
-
-        {searchTerm && filteredOfficers.length > 0 && (
-          <div className="officer-suggestions">
-            {filteredOfficers.map((officer) => (
-              <div
-                key={officer.ethicsOfficerId}
-                style={{
-                  padding: "8px",
-                  cursor: "pointer",
-                  borderBottom: "1px solid #ccc",
-                }}
-                onClick={() => setSelectedOfficer(officer)}
-              >
-                {officer.ethicsOfficer}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {selectedOfficer ? (
+      <Tab eventKey="edit" title="Editar Oficial Ético">
+        {selectedEthicsOfficer ? (
           <EthicsOfficerForm
-            officer={selectedOfficer}
-            teams={teams}
-            onSubmit={async (updatedOfficer) => {
+            ethicsOfficer={selectedEthicsOfficer}
+            teams={allTeams}
+            onSubmit={async (updatedEthicsOfficer) => {
               await updateEthicsOfficer(
-                selectedOfficer.ethicsOfficerId,
-                updatedOfficer
+                selectedEthicsOfficer.ethicsOfficerId,
+                updatedEthicsOfficer
               );
-              setSelectedOfficer(null);
-              setSearchTerm("");
+              setSelectedEthicsOfficer(null);
               getEthicsOfficers();
               setActiveTab("list");
             }}
-            buttonText="Actualizar Oficial"
+            buttonText="Actualizar Oficial Ético"
           />
         ) : (
-          <p>Selecciona un oficial para editar.</p>
+          <p>Selecciona un oficial ético para editar.</p>
         )}
       </Tab>
     </Tabs>
   );
 };
 
-const EthicsOfficerForm = ({ officer = {}, onSubmit, teams, buttonText }) => {
+const EthicsOfficerForm = ({
+  ethicsOfficer = {},
+  teams = [],
+  onSubmit,
+  buttonText,
+}) => {
+  const isUpdating = Boolean(ethicsOfficer.ethicsOfficerId);
   const [formData, setFormData] = useState({
-    ethicsOfficer: officer.ethicsOfficer || "",
-    bio: officer.bio || "",
-    photoUrl: officer.photoUrl || null,
-    teamId: officer.team?.teamId || "",
+    bio: ethicsOfficer.bio || "",
+    photoUrl: ethicsOfficer.photoUrl || "",
+    ethicsOfficer: ethicsOfficer.ethicsOfficer || "",
+    teamId: ethicsOfficer.team?.teamId || "", // Solo almacenar el teamId
   });
 
   const handleChange = (e) => {
@@ -211,32 +193,80 @@ const EthicsOfficerForm = ({ officer = {}, onSubmit, teams, buttonText }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    const ethicsOfficerPayload = {
+      ...formData,
+      team: { teamId: formData.teamId }, // Enviar el teamId dentro del objeto team
+    };
+
+    onSubmit(ethicsOfficerPayload);
   };
+
+  const ETHICS_OFFICER_KEY_VALUE = {
+    key: "ethics_officer_id",
+    value: ethicsOfficer.ethicsOfficerId,
+  };
+  const ETHICS_OFFICER_URL = "/ethics_officers/upload_photo";
 
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
-          <Form.Label>Nombre del Oficial</Form.Label>
+          <Form.Label>Nombre del Oficial Ético</Form.Label>
           <Form.Control
             type="text"
             name="ethicsOfficer"
             value={formData.ethicsOfficer}
             onChange={handleChange}
-            placeholder="Ingresa el nombre del oficial"
+            placeholder="Ingresa el nombre del oficial ético"
           />
         </Form.Group>
 
         <Form.Group>
-          <Form.Label>Biografía</Form.Label>
+          <Form.Label>Bio</Form.Label>
           <Form.Control
             as="textarea"
             name="bio"
             value={formData.bio}
             onChange={handleChange}
-            placeholder="Ingresa una breve biografía"
+            placeholder="Ingresa una breve bio"
           />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Foto</Form.Label>
+          {isUpdating && ethicsOfficer?.photoUrl && (
+            <Container className="d-flex justify-content-center">
+              <img
+                src={ethicsOfficer.photoUrl}
+                alt={`${ethicsOfficer.ethicsOfficer}`}
+                className="user-photo"
+                aria-hidden="true"
+                aria-label={`${ethicsOfficer.ethicsOfficer}`}
+                title={`${ethicsOfficer.ethicsOfficer}`}
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer-when-downgrade"
+                width="400"
+                height="400"
+                style={{
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  borderColor: "black",
+                  borderStyle: "solid",
+                  borderWidth: "0.5rem",
+                }}
+                onError={handleImageError}
+              />
+            </Container>
+          )}
+          <Container>
+            <UploadPhoto
+              entity={ETHICS_OFFICER_KEY_VALUE}
+              endpointUrl={ETHICS_OFFICER_URL}
+              onFileChange={handleFileChange}
+            />
+          </Container>
         </Form.Group>
 
         <Form.Group>
@@ -254,15 +284,6 @@ const EthicsOfficerForm = ({ officer = {}, onSubmit, teams, buttonText }) => {
               </option>
             ))}
           </Form.Control>
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label>Foto</Form.Label>
-          <UploadPhoto
-            entity={{ key: "ethicsOfficerId", value: officer.ethicsOfficerId }}
-            endpointUrl="/ethics_officers/upload_photo"
-            onFileChange={handleFileChange}
-          />
         </Form.Group>
 
         <Button variant="success" type="submit">

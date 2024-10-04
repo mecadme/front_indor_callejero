@@ -6,6 +6,7 @@ import {
   Form,
   FormControl,
   InputGroup,
+  ListGroup,
   Row,
   Tab,
   Table,
@@ -38,6 +39,9 @@ const PlayerPositionEnum = {
   DEFENDER: "Defensa",
   MIDFIELDER: "Mediocampo",
   ATTACKER: "Delantero",
+};
+const handleImageError = (e) => {
+  e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
 };
 
 const TeamDashboard = () => {
@@ -85,10 +89,6 @@ const TeamDashboard = () => {
   const filteredTeams = teams.filter((team) =>
     `${team.neighborhood}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleImageError = (e) => {
-    e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
-  };
 
   return (
     <Tabs
@@ -214,7 +214,7 @@ const TeamDashboard = () => {
 };
 
 const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
-  const isUpdating = Boolean(team.teamId); 
+  const isUpdating = Boolean(team.teamId);
   const [formData, setFormData] = useState({
     name: team.name || "",
     color: team.color || "",
@@ -229,14 +229,14 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   const [selectedPlayers, setSelectedPlayers] = useState(formData.players);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { data: playersWithoutTeam, getPlayersWithoutTeam } = useGetPlayerWithoutTeam();
+  const { data: playersWithoutTeam, getPlayersWithoutTeam } =
+    useGetPlayerWithoutTeam();
 
   useEffect(() => {
-    getPlayersWithoutTeam(); 
+    getPlayersWithoutTeam();
   }, []);
 
   useEffect(() => {
-    
     if (team && team.teamId !== formData.teamId) {
       setFormData({
         name: team.name || "",
@@ -246,7 +246,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
         teamGroup: team.teamGroup || "",
         players: team.players || [],
       });
-      setSelectedPlayers(team.players || []); 
+      setSelectedPlayers(team.players || []);
     }
   }, [team]);
 
@@ -271,7 +271,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
     );
   };
 
-  
   const handleFileChange = (logoUrl) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -287,22 +286,18 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
       return;
     }
 
-    
     let formattedPlayers;
     if (isUpdating) {
-      
       formattedPlayers = selectedPlayers.map((player) =>
         typeof player === "object" ? player : { playerId: player }
       );
     } else {
-      
       formattedPlayers = selectedPlayers.map((playerId) => ({ playerId }));
     }
 
-    
     onSubmit({
       ...formData,
-      players: formattedPlayers, 
+      players: formattedPlayers,
     });
   };
 
@@ -320,7 +315,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        
         <Form.Group>
           <Form.Label>Nombre del equipo</Form.Label>
           <Form.Control
@@ -335,7 +329,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           )}
         </Form.Group>
 
-        
         <Form.Group>
           <Form.Label>Color del equipo</Form.Label>
           <Form.Control
@@ -347,7 +340,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           />
         </Form.Group>
 
-        
         <Form.Group>
           <Form.Label>Barrio</Form.Label>
           <Form.Control
@@ -359,7 +351,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           />
         </Form.Group>
 
-        
         <Form.Group>
           <Form.Label>Grupo</Form.Label>
           <Form.Control
@@ -377,9 +368,33 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           </Form.Control>
         </Form.Group>
 
-        
         <Form.Group>
           <Form.Label>Logo</Form.Label>
+          {isUpdating && team?.logoUrl && (
+            <Container className="d-flex justify-content-center">
+              <img
+                src={team.logoUrl}
+                alt={`${team.neighborhood}`}
+                className="user-photo"
+                aria-hidden="true"
+                aria-label={`${team.name}`}
+                title={`${team.name}`}
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer-when-downgrade"
+                width="400"
+                height="400"
+                onError={handleImageError}
+                style={{
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  borderColor: "black",
+                  borderStyle: "solid",
+                  borderWidth: "0.5rem",
+                }}
+              />
+            </Container>
+          )}
           <UploadPhoto
             entity={TEAM_KEY_VALUE}
             endpointUrl={TEAM_UPLOAD_LOGO_URL}
@@ -387,11 +402,38 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
           />
         </Form.Group>
 
-        
         <Form.Group>
+          {isUpdating && team?.players && (
+            <>
+              <Form.Label>Jugadores</Form.Label>
+              <ListGroup className="players-list mb-3">
+                {team.players.map((player) => (
+                  <ListGroup.Item
+                    key={player.playerId}
+                    className="d-flex align-items-center"
+                    style={{
+                      gap: "0.75rem",
+                      padding: "0.25rem",
+                      margin: "0.25rem",
+
+                    }}
+                  >
+                    <div className="player-info">
+                      <span
+                        className="player-name"
+                        style={{ fontSize: "1rem" }}
+                      >
+                        {player.firstName}{" "}
+                        {player.lastName.toUpperCase()}
+                      </span>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </>
+          )}
           <Form.Label>Selecciona jugadores</Form.Label>
 
-          
           <Row>
             <Col>
               <InputGroup className="mb-3">
@@ -418,7 +460,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
             </Col>
           </Row>
 
-          
           {filteredPlayers.length > 0 ? (
             <div className="player-list">
               {filteredPlayers.map((player) => (

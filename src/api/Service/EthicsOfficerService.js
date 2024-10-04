@@ -13,7 +13,7 @@ const ethicsOfficerEndpoints = {
 };
 
 const useGetEthicsOfficers = () => {
-  const { data, error, loading, fetchData } = useAPI("public");
+  const { data, error, loading, fetchData } = useAPI("private");
 
   const getEthicsOfficers = () =>
     fetchData("GET", ethicsOfficerEndpoints.getAll);
