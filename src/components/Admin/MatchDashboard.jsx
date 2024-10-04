@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Table, Tab, Tabs } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Button, Container, Form, Table, Tabs, Tab } from "react-bootstrap";
 import {
   useGetMatches,
   useCreateMatch,
   useUpdateMatch,
   useDeleteMatch,
-} from "../../api/Service/MatchService";
-import { useGetTeams } from "../../api/Service/TeamService"; // Hook para obtener equipos
+} from "../../api/Service/MatchService"; 
+import { useGetTeams } from "../../api/Service/TeamService"; 
 
 const phases = [
   { value: "PRELIMINARY", label: "Grupos" },
@@ -19,38 +19,28 @@ const MatchDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [teams, setTeams] = useState([]);
 
   const { data: allMatches, getMatches } = useGetMatches();
   const { data: allTeams, getTeams } = useGetTeams();
-  console.log("Fetched Matches:", allMatches);
   const { createMatch } = useCreateMatch();
   const { updateMatch } = useUpdateMatch();
   const { deleteMatch } = useDeleteMatch();
-  console.log("Teams:", allTeams);
 
   useEffect(() => {
-    getMatches();
-    getTeams();
+    getMatches(); 
+    getTeams();   
   }, []);
-  console.log("Matches:", matches);
 
   useEffect(() => {
     if (allMatches) setMatches(allMatches);
-  }, [allMatches]);
-  console.log("Matches:", matches);
+    if (allTeams) setTeams(allTeams);
+  }, [allMatches, allTeams]);
 
   const handleCreateMatch = async (newMatch) => {
     await createMatch(newMatch);
-    getMatches();
+    getMatches(); 
     setActiveTab("list");
-  };
-
-  const handleDeleteMatch = async (matchId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este partido?")) {
-      await deleteMatch(matchId);
-      getMatches();
-      setActiveTab("list");
-    }
   };
 
   const handleEditClick = (match) => {
@@ -58,111 +48,96 @@ const MatchDashboard = () => {
     setActiveTab("edit");
   };
 
+  const handleDeleteClick = async (matchId) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este partido?")) {
+      await deleteMatch(matchId);
+      getMatches();
+    }
+  };
+
+  const getPhaseLabel = (phaseValue) => {
+    const phase = phases.find(p => p.value === phaseValue);
+    return phase ? phase.label : phaseValue;
+  };
+
   return (
-    <Tabs
-      activeKey={activeTab}
-      onSelect={(tab) => setActiveTab(tab)}
-      className="mb-3"
-    >
-      <Tab eventKey="list" title="Partidos">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Equipo Local</th>
-              <th>Equipo Visitante</th>
-              <th>Fase</th>
-              <th>Fecha</th>
-              <th>Lugar</th>
-              <th>Duración</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((match) => (
-              <tr key={match.matchId}>
-                <td>{match.matchId}</td>
-                <td>{match.homeTeam?.teamName}</td>
-                <td>{match.awayTeam?.teamName}</td>
-                <td>{phases.find((p) => p.value === match.phase)?.label}</td>
-                <td>{new Date(match.schedule.date).toLocaleDateString()}</td>
-                <td>{match.schedule.place}</td>
-                <td>{match.duration}</td>
-                <td>
-                  <Button
-                    variant="primary"
-                    onClick={() => handleEditClick(match)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDeleteMatch(match.matchId)}
-                  >
-                    Eliminar
-                  </Button>
-                </td>
+    <Container>
+      <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab)}>
+        <Tab eventKey="list" title="Lista de Partidos">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Local</th>
+                <th>Visitante</th>
+                <th>Fase</th>
+                <th>Duración</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Tab>
+            </thead>
+            <tbody>
+              {matches.map((match) => (
+                <tr key={match.matchId}>
+                  <td>{match.matchId}</td>
+                  <td>{match.homeTeam.neighborhood}</td>
+                  <td>{match.awayTeam.neighborhood}</td>
+                  <td>{getPhaseLabel(match.phase)}</td>
+                  <td>{match.duration}</td>
+                  <td>{new Date(match.schedule.date).toLocaleString()}</td>
+                  <td>
+                    <Button onClick={() => handleEditClick(match)}>
+                      Editar
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDeleteClick(match.matchId)}>
+                      Eliminar
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Tab>
 
-      <Tab eventKey="create" title="Crear Partido">
-        <MatchForm
-          onSubmit={handleCreateMatch}
-          teams={allTeams}
-          buttonText="Crear Partido"
-        />
-      </Tab>
-
-      <Tab eventKey="edit" title="Editar Partido">
-        {selectedMatch ? (
+        <Tab eventKey="create" title="Crear Partido">
           <MatchForm
-            match={selectedMatch}
-            teams={allTeams}
-            onSubmit={async (updatedMatch) => {
-              await updateMatch(selectedMatch.matchId, updatedMatch);
-              getMatches();
-              setSelectedMatch(null);
-              setActiveTab("list");
-            }}
-            buttonText="Actualizar Partido"
+            onSubmit={handleCreateMatch}
+            teams={teams}
+            buttonText="Crear Partido"
           />
-        ) : (
-          <p>Selecciona un partido para editar.</p>
-        )}
-      </Tab>
-    </Tabs>
+        </Tab>
+
+        <Tab eventKey="edit" title="Editar Partido">
+          {selectedMatch ? (
+            <MatchForm
+              match={selectedMatch}
+              onSubmit={async (updatedMatch) => {
+                await updateMatch(selectedMatch.matchId, updatedMatch);
+                setSelectedMatch(null);
+                getMatches();
+                setActiveTab("list");
+              }}
+              teams={teams}
+              buttonText="Actualizar Partido"
+            />
+          ) : (
+            <p>Selecciona un partido para editar.</p>
+          )}
+        </Tab>
+      </Tabs>
+    </Container>
   );
 };
 
-const MatchForm = ({ match = {}, teams = [], onSubmit, buttonText, }) => {
+const MatchForm = ({ match = {}, teams = [], onSubmit, buttonText }) => {
   const [formData, setFormData] = useState({
-    duration: match.duration || "",
+    homeTeamId: match.homeTeam?.teamId || "",
+    awayTeamId: match.awayTeam?.teamId || "",
     phase: match.phase || "PRELIMINARY",
-    homeTeam: match.homeTeam?.teamId || "",
-    awayTeam: match.awayTeam?.teamId || "",
-    schedule: {
-      date: match.schedule?.date?.split("T")[0] || "",
-      place: match.schedule?.place || "",
-    },
+    duration: match.duration || 40,
+    date: match.schedule?.date || "",
+    place: match.schedule?.place || "",
   });
-
-  useEffect(() => {
-    if (match && match.matchId !== formData.matchId) {
-      setFormData({
-        duration: match.duration || "",
-        phase: match.phase || "PRELIMINARY",
-        homeTeam: match.homeTeam?.teamId || "",
-        awayTeam: match.awayTeam?.teamId || "",
-        schedule: {
-          date: match.schedule?.date?.split("T")[0] || "",
-          place: match.schedule?.place || "",
-        },
-      });
-    }
-  }, [match]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -174,37 +149,62 @@ const MatchForm = ({ match = {}, teams = [], onSubmit, buttonText, }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (
-      !formData.duration ||
-      !formData.homeTeam ||
-      !formData.awayTeam ||
-      !formData.schedule.date ||
-      !formData.schedule.place
-    ) {
-      alert("Por favor, completa todos los campos.");
-      return;
-    }
-
-    if (formData.homeTeam === formData.awayTeam) {
+    if (formData.homeTeamId === formData.awayTeamId) {
       alert("El equipo local y visitante no pueden ser el mismo.");
       return;
     }
 
-    onSubmit(formData);
+    const matchPayload = {
+      duration: formData.duration,
+      phase: formData.phase,
+      homeTeam: { teamId: formData.homeTeamId },
+      awayTeam: { teamId: formData.awayTeamId },
+      schedule: {
+        date: formData.date,
+        place: formData.place,
+      },
+    };
+
+    onSubmit(matchPayload);
   };
+
+  const filteredAwayTeams = teams.filter((team) => team.teamId !== formData.homeTeamId);
+  const filteredHomeTeams = teams.filter((team) => team.teamId !== formData.awayTeamId);
 
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group>
-        <Form.Label>Duración (minutos)</Form.Label>
+        <Form.Label>Equipo Local</Form.Label>
         <Form.Control
-          type="number"
-          name="duration"
-          value={formData.duration}
+          as="select"
+          name="homeTeamId"
+          value={formData.homeTeamId}
           onChange={handleChange}
-          placeholder="Duración del partido"
-        />
+        >
+          <option value="">Selecciona un equipo</option>
+          {filteredHomeTeams.map((team) => (
+            <option key={team.teamId} value={team.teamId}>
+              {team.neighborhood}
+            </option>
+          ))}
+        </Form.Control>
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Equipo Visitante</Form.Label>
+        <Form.Control
+          as="select"
+          name="awayTeamId"
+          value={formData.awayTeamId}
+          onChange={handleChange}
+        >
+          <option value="">Selecciona un equipo</option>
+          {filteredAwayTeams.map((team) => (
+            <option key={team.teamId} value={team.teamId}>
+              {team.neighborhood}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
 
       <Form.Group>
@@ -224,59 +224,31 @@ const MatchForm = ({ match = {}, teams = [], onSubmit, buttonText, }) => {
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>Equipo Local</Form.Label>
+        <Form.Label>Duración (minutos)</Form.Label>
         <Form.Control
-          as="select"
-          name="homeTeam"
-          value={formData.homeTeam}
-          onChange={handleChange}
-        >
-          <option value="">Selecciona el equipo local</option>
-          {teams
-            .filter((team) => team.teamId !== formData.awayTeam)
-            .map((team) => (
-              <option key={team.teamId} value={team.teamId}>
-                {team.teamName}
-              </option>
-            ))}
-        </Form.Control>
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Equipo Visitante</Form.Label>
-        <Form.Control
-          as="select"
-          name="awayTeam"
-          value={formData.awayTeam}
-          onChange={handleChange}
-        >
-          <option value="">Selecciona el equipo visitante</option>
-          {teams
-            .filter((team) => team.teamId !== formData.homeTeam)
-            .map((team) => (
-              <option key={team.teamId} value={team.teamId}>
-                {team.teamName}
-              </option>
-            ))}
-        </Form.Control>
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Fecha del partido</Form.Label>
-        <Form.Control
-          type="date"
-          name="schedule.date"
-          value={formData.schedule.date}
+          type="number"
+          name="duration"
+          value={formData.duration}
           onChange={handleChange}
         />
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>Lugar del partido</Form.Label>
+        <Form.Label>Fecha</Form.Label>
+        <Form.Control
+          type="datetime-local"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+        />
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Lugar</Form.Label>
         <Form.Control
           type="text"
-          name="schedule.place"
-          value={formData.schedule.place}
+          name="place"
+          value={formData.place}
           onChange={handleChange}
           placeholder="Ingresa el lugar del partido"
         />
