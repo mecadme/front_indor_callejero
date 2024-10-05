@@ -12,6 +12,9 @@ import {
   useAddRefereeToMatch,
 } from "../../api/Service/RefereeService";
 
+import LiveMatchAdmin from "./LiveMatchAdmin";
+import LineUpManager from "./LineUpManager";
+
 const MatchManager = () => {
   const [currentTab, setCurrentTab] = useState("live");
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -32,7 +35,7 @@ const MatchManager = () => {
   // Fetch matches when component mounts
   useEffect(() => {
     getMatches();
-  }, [getMatches]);
+  }, []);
 
   // Handle Timer
   useEffect(() => {
@@ -78,48 +81,10 @@ const MatchManager = () => {
   const handleAddReferee = (refereeId) =>
     addRefereeToMatch(refereeId, selectedMatch.id);
 
-  const renderLineUp = (team, teamType) => {
-    return (
-      <div className="lineup-column">
-        <h3>{teamType === "home" ? "Home Team" : "Away Team"}</h3>
-        {team.map((player) => (
-          <div key={player.id} className="player-row">
-            <span>{player.name}</span>
-            <div className="player-actions">
-              <button onClick={() => handleRegisterEvent(player.id, "GOAL")}>
-                Gol
-              </button>
-              <button onClick={() => handleRegisterEvent(player.id, "ASSIST")}>
-                Asistencia
-              </button>
-              <button>
-                Tarjeta
-                <select
-                  onChange={(e) =>
-                    handleRegisterEvent(player.id, "CARD", e.target.value)
-                  }
-                >
-                  <option value="YELLOW">Amarilla</option>
-                  <option value="RED">Roja</option>
-                </select>
-              </button>
-              <button
-                onClick={() => openSubstitutionModal(teamType, player.id)}
-              >
-                Sustitución
-              </button>
-              <button onClick={() => handlePlayerInjury(player.id)}>
-                Lesionado
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  
 
   const openSubstitutionModal = (teamType, playerOut) => {
-    const playerIn = prompt("Selecciona jugador de cambio: "); // Ejemplo básico, en producción deberías usar un modal más sofisticado.
+    const playerIn = prompt("Selecciona jugador de cambio: ");
     handlePlayerSubstitution(teamType, playerOut, playerIn);
   };
 
@@ -141,11 +106,11 @@ const MatchManager = () => {
           <ul>
             {matches &&
               matches
-                .filter((match) => match.status === "notStarted")
+                .filter((match) => match.status === "NOT_STARTED")
                 .map((match) => (
                   <li key={match.id} onClick={() => setSelectedMatch(match)}>
                     {match.homeTeam.name} vs {match.awayTeam.name} -{" "}
-                    {match.date}
+                    {match.schedule.date}
                   </li>
                 ))}
           </ul>
@@ -156,22 +121,21 @@ const MatchManager = () => {
                 {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
               </h3>
               <p>Duración: {matchTimer} segundos restantes</p>
-              <button onClick={() => handleMatchStart(selectedMatch.id)}>
+              <button onClick={() => handleMatchStart(selectedMatch.matchId)}>
                 Iniciar
               </button>
-              <button onClick={() => handleMatchPause(selectedMatch.id)}>
+              <button onClick={() => handleMatchPause(selectedMatch.matchId)}>
                 Pausar
               </button>
-              <button onClick={() => handleMatchResume(selectedMatch.id)}>
+              <button onClick={() => handleMatchResume(selectedMatch.matchId)}>
                 Reanudar
               </button>
-              <button onClick={() => handleMatchStop(selectedMatch.id)}>
+              <button onClick={() => handleMatchStop(selectedMatch.matchId)}>
                 Detener
               </button>
 
               <div className="lineups">
-                {renderLineUp(homeTeamLineup, "home")}
-                {renderLineUp(awayTeamLineup, "away")}
+                <LineUpManager matchId={selectedMatch.matchId} homeTeam={selectedMatch.homeTeam}  awayTeam={selectedMatch.awayTeam}/>
               </div>
 
               <div className="referee-selection">
@@ -203,7 +167,7 @@ const MatchManager = () => {
             <tbody>
               {matches &&
                 matches
-                  .filter((match) => match.status === "finished")
+                  .filter((match) => match.status === "FINISHED")
                   .map((match) => (
                     <tr key={match.id}>
                       <td>{match.date}</td>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useStartMatch, usePauseMatch, useStopMatch } from "../../hooks/useAPI";
+import { useStartMatch, usePauseMatch, useStopMatch } from "../../api/Service/MatchService";
 import LineUpManager from "./LineUpManager";
 import Countdown from "react-countdown"; // Para el contador regresivo
 
@@ -8,9 +8,11 @@ const LiveMatchAdmin = ({ matches }) => {
   const { startMatch } = useStartMatch();
   const { pauseMatch } = usePauseMatch();
   const { stopMatch } = useStopMatch();
+  console.log(matches);
   
   // Filtrar los partidos de hoy que aún no han comenzado
-  const todayMatches = matches.filter(match => match.status === "notStarted");
+  // const todayMatches = matches.filter(match => match.status === "NOT_STARTED");
+  const todayMatches = matches;
 
   return (
     <div className="live-match-admin">
