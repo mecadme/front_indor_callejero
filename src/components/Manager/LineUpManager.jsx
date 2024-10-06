@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { Modal, Button, Dropdown, DropdownButton, Container } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import {
+  Modal,
+  Button,
+  Dropdown,
+  DropdownButton,
+  Container,
+} from "react-bootstrap";
 import {
   useSetLineUp,
   useRegisterMatchEvent,
@@ -10,16 +16,24 @@ import { useInjurePlayer } from "../../api/Service/PlayerService";
 const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
   const [homeLineUp, setHomeLineUp] = useState([]);
   const [awayLineUp, setAwayLineUp] = useState([]);
+  const [lineUpSubmitted, setLineUpSubmitted] = useState(false); // Estado para controlar si se ha enviado la alineación
   const [showModal, setShowModal] = useState(false);
   const [subPlayerId, setSubPlayerId] = useState(null);
   const [currentTeam, setCurrentTeam] = useState(null);
-  
+
   const { setLineUp } = useSetLineUp();
   const { registerMatchEvent } = useRegisterMatchEvent();
   const { changePlayer } = useChangePlayer();
   const { injurePlayer } = useInjurePlayer();
 
   const MAX_PLAYERS = 6;
+
+  // Resetear la alineación cuando el partido cambia
+  useEffect(() => {
+    setHomeLineUp([]);
+    setAwayLineUp([]);
+    setLineUpSubmitted(false); // Reiniciar el estado de enviado
+  }, [matchId]);
 
   const handleEvent = (playerId, eventType, cardName = null) => {
     const payload = {
@@ -65,60 +79,131 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     }
   };
 
+  // Remover jugador de la alineación
+  const removePlayerFromLineUp = (team, playerId) => {
+    if (team === "home") {
+      setHomeLineUp(homeLineUp.filter((player) => player.id !== playerId));
+    } else {
+      setAwayLineUp(awayLineUp.filter((player) => player.id !== playerId));
+    }
+  };
+
   // Enviar las alineaciones al backend
   const submitLineUp = () => {
-    if (homeLineUp.length > MAX_PLAYERS || awayLineUp.length > MAX_PLAYERS) {
-      alert("Cada equipo debe tener un máximo de 6 jugadores.");
+    if (
+      homeLineUp.length >= MAX_PLAYERS ||
+      awayLineUp.length >= MAX_PLAYERS
+    ) {
+      alert("Cada equipo debe tener máximo 6 jugadores.");
       return;
     }
-    
+
     const payload = {
-      homePlayers: homeLineUp.map(player => ({ playerId: player.id })),
-      awayPlayers: awayLineUp.map(player => ({ playerId: player.id })),
+      homePlayers: homeLineUp.map((player) => ({ playerId: player.id })),
+      awayPlayers: awayLineUp.map((player) => ({ playerId: player.id })),
     };
 
     setLineUp(matchId, payload)
-      .then(() => alert("Alineación enviada correctamente"))
-      .catch(err => alert("Error al enviar la alineación"));
+      .then(() => {
+        alert("Alineación enviada correctamente");
+        setLineUpSubmitted(true); // Cambiar estado a alineación enviada
+      })
+      .catch((err) => alert("Error al enviar la alineación"));
   };
 
-  const renderPlayerActions = (player, team) => (
-    <Container className={`d-flex ${team === "home" ? "justify-content-start" : "justify-content-end"}`}>
-      <Button variant="primary" size="sm" onClick={() => handleEvent(player.id, "GOAL")}>
-        Gol
-      </Button>
-      <Button variant="secondary" size="sm" onClick={() => handleEvent(player.id, "ASSIST")}>
-        Asistencia
-      </Button>
-      <DropdownButton
-        variant="warning"
-        title="Tarjeta"
-        size="sm"
-        className="mx-1"
+  // Renderizar las acciones solo si la alineación fue enviada
+  const renderPlayerActions = (player, team) =>
+    lineUpSubmitted && (
+      <Container
+        className={`d-flex ${
+          team === "home" ? "justify-content-start" : "justify-content-end"
+        }`}
       >
-        <Dropdown.Item onClick={() => handleEvent(player.id, "CARD", "YELLOW")}>
-          Amarilla
-        </Dropdown.Item>
-        <Dropdown.Item onClick={() => handleEvent(player.id, "CARD", "RED")}>
-          Roja
-        </Dropdown.Item>
-      </DropdownButton>
-      <Button
-        variant="info"
-        size="sm"
-        onClick={() => handleSubstitution(team, player.id)}
-      >
-        Sustitución
-      </Button>
-      <Button
-        variant="danger"
-        size="sm"
-        onClick={() => handleInjury(team, player.id)}
-      >
-        Lesión
-      </Button>
-    </Container>
-  );
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => handleEvent(player.id, "GOAL")}
+        >
+          Gol
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => handleEvent(player.id, "ASSIST")}
+        >
+          Asistencia
+        </Button>
+        <DropdownButton
+          variant="warning"
+          title="Tarjeta"
+          size="sm"
+          className="mx-1"
+        >
+          <Dropdown.Item
+            onClick={() => handleEvent(player.id, "CARD", "YELLOW")}
+          >
+            Amarilla
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => handleEvent(player.id, "CARD", "RED")}>
+            Roja
+          </Dropdown.Item>
+        </DropdownButton>
+        <Button
+          variant="info"
+          size="sm"
+          onClick={() => handleSubstitution(team, player.id)}
+        >
+          Sustitución
+        </Button>
+        <Button
+          variant="danger"
+          size="sm"
+          onClick={() => handleInjury(team, player.id)}
+        >
+          Lesión
+        </Button>
+      </Container>
+    );
+
+  const renderAvailablePlayers = (team, players, lineUp) =>
+    players
+      .filter((p) => p.status === "ACTIVE")
+      .map((player) => (
+        <div
+          key={player.id}
+          className="player d-flex align-items-center justify-content-between"
+        >
+          <img
+            src={player.photoUrl}
+            alt={player.name}
+            className="player-photo mr-3"
+            style={{ width: "3.5rem", height: "3.5rem" }}
+          />
+          <div>
+            
+              {player.firstName} {player.lastName}
+            
+            <p>{player.position}</p>
+          </div>
+          {lineUp.find((p) => p.id === player.id) ? (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => removePlayerFromLineUp(team, player.id)}
+            >
+              Remover
+            </Button>
+          ) : (
+            <Button
+              variant="success"
+              size="sm"
+              onClick={() => addPlayerToLineUp(team, player)}
+            >
+              Añadir
+            </Button>
+          )}
+        </div>
+      ));
 
   return (
     <Container className="container line-up-manager">
@@ -126,31 +211,51 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
         {/* Equipo Local */}
         <div className="col-md-6">
           <h3 className="text-center">Equipo Local - {homeTeam.name}</h3>
+          <h5>Alineación:</h5>
           {homeLineUp.map((player) => (
             <div key={player.id} className="player d-flex align-items-center">
-              <img src={player.photoUrl} alt={player.name} className="player-photo mr-3" />
+              <img
+                src={player.photoUrl}
+                alt={player.name}
+                className="player-photo mr-3"
+                style={{ width: "3.5rem", height: "3.5rem" }}
+              />
               <div>
-                <strong>{player.firstName} {player.lastName}</strong>
+                <strong>
+                  {player.firstName} {player.lastName}
+                </strong>
                 <p>{player.position}</p>
               </div>
               {renderPlayerActions(player, "home")}
             </div>
           ))}
+          <h5>Jugadores Disponibles:</h5>
+          {renderAvailablePlayers("home", homeTeam.players, homeLineUp)}
         </div>
 
         {/* Equipo Visitante */}
         <div className="col-md-6">
           <h3 className="text-center">Equipo Visitante - {awayTeam.name}</h3>
+          <h5>Alineación:</h5>
           {awayLineUp.map((player) => (
             <div key={player.id} className="player d-flex align-items-center">
               {renderPlayerActions(player, "away")}
               <div className="ml-3">
-                <strong>{player.firstName} {player.lastName}</strong>
+                <strong>
+                  {player.firstName} {player.lastName}
+                </strong>
                 <p>{player.position}</p>
               </div>
-              <img src={player.photoUrl} alt={player.name} className="player-photo ml-3" />
+              <img
+                src={player.photoUrl}
+                alt={player.name}
+                className="player-photo ml-3"
+                style={{ width: "3.5rem", height: "3.5rem" }}
+              />
             </div>
           ))}
+          <h5>Jugadores Disponibles:</h5>
+          {renderAvailablePlayers("away", awayTeam.players, awayLineUp)}
         </div>
       </div>
 

@@ -7,37 +7,35 @@ import {
   useStopMatch,
   useSetLineUp,
   useRegisterMatchEvent,
-  useChangePlayer,} from "../../api/Service/MatchService";
-import {
-  useAddRefereeToMatch,
-} from "../../api/Service/RefereeService";
-
-import LiveMatchAdmin from "./LiveMatchAdmin";
+  useChangePlayer,
+} from "../../api/Service/MatchService";
+import { useAddRefereeToMatch } from "../../api/Service/RefereeService";
 import LineUpManager from "./LineUpManager";
+import Button from 'react-bootstrap/Button';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import Card from 'react-bootstrap/Card';
+import Table from 'react-bootstrap/Table';
 
 const MatchManager = () => {
-  const [currentTab, setCurrentTab] = useState("live");
+  const [viewMode, setViewMode] = useState("live");
   const [selectedMatch, setSelectedMatch] = useState(null);
-  const [homeTeamLineup, setHomeTeamLineup] = useState([]);
-  const [awayTeamLineup, setAwayTeamLineup] = useState([]);
-  const [referee, setReferee] = useState(null);
+  const [showCanvas, setShowCanvas] = useState(false);
   const [matchTimer, setMatchTimer] = useState(0);
+  const [currentTab, setCurrentTab] = useState('list'); // Tab to manage List vs Admin tabs
+
   const { data: matches, getMatches } = useGetMatches();
   const { startMatch } = useStartMatch();
   const { pauseMatch } = usePauseMatch();
   const { resumeMatch } = useResumeMatch();
   const { stopMatch } = useStopMatch();
-  const { setLineUp } = useSetLineUp();
-  const { registerMatchEvent } = useRegisterMatchEvent();
-  const { changePlayer } = useChangePlayer();
   const { addRefereeToMatch } = useAddRefereeToMatch();
 
-  // Fetch matches when component mounts
   useEffect(() => {
     getMatches();
   }, []);
 
-  // Handle Timer
   useEffect(() => {
     let timer;
     if (matchTimer > 0) {
@@ -48,7 +46,7 @@ const MatchManager = () => {
 
   const handleMatchStart = (matchId) => {
     startMatch(matchId);
-    setMatchTimer(selectedMatch.duration * 60); // Set timer based on match duration in minutes
+    setMatchTimer(selectedMatch.duration * 60);
   };
 
   const handleMatchPause = (matchId) => pauseMatch(matchId);
@@ -57,146 +55,120 @@ const MatchManager = () => {
 
   const handleMatchStop = (matchId) => stopMatch(matchId);
 
-  const handleLineupChange = (teamType, playerId) => {
-    if (teamType === "home") {
-      setHomeTeamLineup((prev) => [...prev, playerId]);
-    } else {
-      setAwayTeamLineup((prev) => [...prev, playerId]);
-    }
-  };
+  const handleShowCanvas = () => setShowCanvas(true);
+  const handleCloseCanvas = () => setShowCanvas(false);
 
-  const handlePlayerSubstitution = (teamType, playerOut, playerIn) => {
-    changePlayer(selectedMatch.id, { playerOut, playerIn });
-  };
-
-  const handleRegisterEvent = (playerId, eventType, cardName = null) => {
-    const eventPayload = {
-      playerId,
-      eventType,
-      cardName,
-    };
-    registerMatchEvent(selectedMatch.id, eventPayload);
-  };
-
-  const handleAddReferee = (refereeId) =>
-    addRefereeToMatch(refereeId, selectedMatch.id);
-
-  
-
-  const openSubstitutionModal = (teamType, playerOut) => {
-    const playerIn = prompt("Selecciona jugador de cambio: ");
-    handlePlayerSubstitution(teamType, playerOut, playerIn);
+  const handleSelectMatch = (match) => {
+    setSelectedMatch(match);
+    setCurrentTab('admin');
   };
 
   return (
-    <div className="match-manager">
-      <button onClick={() => (window.location.href = "/")}>Home</button>
-      <div className="tabs">
-        <button onClick={() => setCurrentTab("live")}>
-          Administrar Partido en Vivo
-        </button>
-        <button onClick={() => setCurrentTab("finished")}>
-          Partidos Finalizados
-        </button>
-      </div>
+    <div className="container">
+      {/* Button to open Offcanvas */}
+      <Button variant="primary" onClick={handleShowCanvas}>
+        Seleccionar Vista
+      </Button>
 
-      {currentTab === "live" && (
-        <div className="live-match">
-          <h2>Partidos de Hoy</h2>
-          <ul>
-            {matches &&
-              matches
-                .filter((match) => match.status === "NOT_STARTED")
-                .map((match) => (
-                  <li key={match.id} onClick={() => setSelectedMatch(match)}>
-                    {match.homeTeam.name} vs {match.awayTeam.name} -{" "}
-                    {match.schedule.date}
-                  </li>
-                ))}
-          </ul>
+      {/* Offcanvas to switch between "Live" and "Finished" matches */}
+      <Offcanvas show={showCanvas} onHide={handleCloseCanvas}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Seleccionar Vista</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Button variant="success" className="w-100 mb-2" onClick={() => { setViewMode("live"); handleCloseCanvas(); }}>
+            Partidos en Vivo
+          </Button>
+          <Button variant="secondary" className="w-100" onClick={() => { setViewMode("finished"); handleCloseCanvas(); }}>
+            Partidos Finalizados
+          </Button>
+        </Offcanvas.Body>
+      </Offcanvas>
 
-          {selectedMatch && (
-            <div>
-              <h3>
-                {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
-              </h3>
-              <p>Duración: {matchTimer} segundos restantes</p>
-              <button onClick={() => handleMatchStart(selectedMatch.matchId)}>
-                Iniciar
-              </button>
-              <button onClick={() => handleMatchPause(selectedMatch.matchId)}>
-                Pausar
-              </button>
-              <button onClick={() => handleMatchResume(selectedMatch.matchId)}>
-                Reanudar
-              </button>
-              <button onClick={() => handleMatchStop(selectedMatch.matchId)}>
-                Detener
-              </button>
+      {/* Tabs for List and Admin view */}
+      <Tabs activeKey={currentTab} onSelect={(k) => setCurrentTab(k)} className="mt-3">
+        <Tab eventKey="list" title="Lista de Partidos">
+          <div className="mt-4">
+            {viewMode === "live" ? (
+              <>
+                <h2>Partidos en Vivo</h2>
+                <ul className="list-group">
+                  {matches && matches.filter((match) => match.status === "NOT_STARTED").map((match) => (
+                    <li key={match.id} className="list-group-item">
+                      <Button variant="link" onClick={() => handleSelectMatch(match)}>
+                        {match.homeTeam.name} vs {match.awayTeam.name} - {match.schedule.date}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <>
+                <h2>Partidos Finalizados</h2>
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Equipo Local</th>
+                      <th>Equipo Visitante</th>
+                      <th>Resultado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matches && matches.filter((match) => match.status === "FINISHED").map((match) => (
+                      <tr key={match.id}>
+                        <td>{match.date}</td>
+                        <td>{match.homeTeam.name}</td>
+                        <td>{match.awayTeam.name}</td>
+                        <td>{match.homeTeamGoals} - {match.awayTeamGoals}</td>
+                        <td>
+                          <Button variant="info" onClick={() => handleSelectMatch(match)}>
+                            Ver Detalles
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </>
+            )}
+          </div>
+        </Tab>
 
-              <div className="lineups">
-                <LineUpManager matchId={selectedMatch.matchId} homeTeam={selectedMatch.homeTeam}  awayTeam={selectedMatch.awayTeam}/>
-              </div>
+        <Tab eventKey="admin" title="Administrar Partido" disabled={!selectedMatch}>
+          {selectedMatch ? (
+            <div className="mt-4">
+              <Card>
+                <Card.Header>
+                  <h3>{selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}</h3>
+                </Card.Header>
+                <Card.Body>
+                  <p>Duración: {matchTimer} segundos restantes</p>
+                  <Button variant="success" onClick={() => handleMatchStart(selectedMatch.id)}>Iniciar</Button>{' '}
+                  <Button variant="warning" onClick={() => handleMatchPause(selectedMatch.id)}>Pausar</Button>{' '}
+                  <Button variant="primary" onClick={() => handleMatchResume(selectedMatch.id)}>Reanudar</Button>{' '}
+                  <Button variant="danger" onClick={() => handleMatchStop(selectedMatch.id)}>Detener</Button>
+                </Card.Body>
+              </Card>
 
-              <div className="referee-selection">
-                <label>Selecciona Árbitro:</label>
-                <select onChange={(e) => handleAddReferee(e.target.value)}>
+              {/* LineUp Manager Component */}
+              <LineUpManager matchId={selectedMatch.id} homeTeam={selectedMatch.homeTeam} awayTeam={selectedMatch.awayTeam} />
+
+              <div className="mt-3">
+                <h5>Selecciona Árbitro</h5>
+                <select className="form-select" onChange={(e) => addRefereeToMatch(e.target.value, selectedMatch.id)}>
                   <option value="1">Árbitro 1</option>
                   <option value="2">Árbitro 2</option>
-                  {/* Los valores y opciones vendrían de tu API */}
+                  {/* Cargar árbitros desde la API */}
                 </select>
               </div>
             </div>
+          ) : (
+            <p className="mt-4">Por favor, selecciona un partido de la lista para administrar.</p>
           )}
-        </div>
-      )}
-
-      {currentTab === "finished" && (
-        <div className="finished-matches">
-          <h2>Partidos Finalizados</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Equipo Local</th>
-                <th>Equipo Visitante</th>
-                <th>Resultado</th>
-                <th>Eventos</th>
-              </tr>
-            </thead>
-            <tbody>
-              {matches &&
-                matches
-                  .filter((match) => match.status === "FINISHED")
-                  .map((match) => (
-                    <tr key={match.id}>
-                      <td>{match.date}</td>
-                      <td>{match.homeTeam.name}</td>
-                      <td>{match.awayTeam.name}</td>
-                      <td>
-                        {match.homeTeamGoals} - {match.awayTeamGoals}
-                      </td>
-                      <td>
-                        <button onClick={() => setSelectedMatch(match)}>
-                          Agregar Eventos
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-            </tbody>
-          </table>
-
-          {selectedMatch && (
-            <div className="post-match-events">
-              <h3>
-                Agregar Eventos para {selectedMatch.homeTeam.name} vs{" "}
-                {selectedMatch.awayTeam.name}
-              </h3>
-              {/* Aquí podrías agregar los eventos como Porterías Imbatidas, Duelos Aéreos, etc. */}
-            </div>
-          )}
-        </div>
-      )}
+        </Tab>
+      </Tabs>
     </div>
   );
 };
