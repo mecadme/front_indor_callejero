@@ -94,7 +94,7 @@ const MatchManager = () => {
                 <h2>Partidos en Vivo</h2>
                 <ul className="list-group">
                   {matches && matches.filter((match) => match.status === "NOT_STARTED").map((match) => (
-                    <li key={match.id} className="list-group-item">
+                    <li key={match.matchId} className="list-group-item">
                       <Button variant="link" onClick={() => handleSelectMatch(match)}>
                         {match.homeTeam.name} vs {match.awayTeam.name} - {match.schedule.date}
                       </Button>
@@ -117,7 +117,7 @@ const MatchManager = () => {
                   </thead>
                   <tbody>
                     {matches && matches.filter((match) => match.status === "FINISHED").map((match) => (
-                      <tr key={match.id}>
+                      <tr key={match.matchId}>
                         <td>{match.date}</td>
                         <td>{match.homeTeam.name}</td>
                         <td>{match.awayTeam.name}</td>
@@ -145,19 +145,19 @@ const MatchManager = () => {
                 </Card.Header>
                 <Card.Body>
                   <p>Duración: {matchTimer} segundos restantes</p>
-                  <Button variant="success" onClick={() => handleMatchStart(selectedMatch.id)}>Iniciar</Button>{' '}
-                  <Button variant="warning" onClick={() => handleMatchPause(selectedMatch.id)}>Pausar</Button>{' '}
-                  <Button variant="primary" onClick={() => handleMatchResume(selectedMatch.id)}>Reanudar</Button>{' '}
-                  <Button variant="danger" onClick={() => handleMatchStop(selectedMatch.id)}>Detener</Button>
+                  <Button variant="success" onClick={() => handleMatchStart(selectedMatch.matchId)}>Iniciar</Button>{' '}
+                  <Button variant="warning" onClick={() => handleMatchPause(selectedMatch.matchId)}>Pausar</Button>{' '}
+                  <Button variant="primary" onClick={() => handleMatchResume(selectedMatch.matchId)}>Reanudar</Button>{' '}
+                  <Button variant="danger" onClick={() => handleMatchStop(selectedMatch.matchId)}>Detener</Button>
                 </Card.Body>
               </Card>
 
               {/* LineUp Manager Component */}
-              <LineUpManager matchId={selectedMatch.id} homeTeam={selectedMatch.homeTeam} awayTeam={selectedMatch.awayTeam} />
+              <LineUpManager matchId={selectedMatch.matchId} homeTeam={selectedMatch.homeTeam} awayTeam={selectedMatch.awayTeam} />
 
               <div className="mt-3">
                 <h5>Selecciona Árbitro</h5>
-                <select className="form-select" onChange={(e) => addRefereeToMatch(e.target.value, selectedMatch.id)}>
+                <select className="form-select" onChange={(e) => addRefereeToMatch(e.target.value, selectedMatch.matchId)}>
                   <option value="1">Árbitro 1</option>
                   <option value="2">Árbitro 2</option>
                   {/* Cargar árbitros desde la API */}
