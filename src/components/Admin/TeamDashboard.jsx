@@ -414,7 +414,6 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
                       gap: "0.75rem",
                       padding: "0.25rem",
                       margin: "0.25rem",
-
                     }}
                   >
                     <div className="player-info">
@@ -422,8 +421,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
                         className="player-name"
                         style={{ fontSize: "1rem" }}
                       >
-                        {player.firstName}{" "}
-                        {player.lastName.toUpperCase()}
+                        {player.firstName} {player.lastName} - {player.position}	
                       </span>
                     </div>
                   </ListGroup.Item>
@@ -465,9 +463,7 @@ const TeamForm = ({ team = {}, onSubmit, buttonText }) => {
                 <Form.Check
                   key={player.playerId}
                   type="checkbox"
-                  label={`${player.firstName} ${player.lastName} - ${
-                    PlayerPositionEnum[player.position]
-                  }`}
+                  label={`${player.firstName} ${player.lastName} - ${player.position}`}
                   checked={selectedPlayers.includes(player.playerId)}
                   onChange={() => handlePlayerSelect(player.playerId)}
                 />
