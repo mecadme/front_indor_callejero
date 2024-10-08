@@ -5,7 +5,7 @@ const CURRENT_VALUE_URL = "/currentValue";
 const currentValueEndpoints = {
   get: (currentValueId) => `${CURRENT_VALUE_URL}`,
   create: CURRENT_VALUE_URL,
-  update: (currentValueId) => `${CURRENT_VALUE_URL}/${currentValueId}`,
+  update: CURRENT_VALUE_URL,
   delete: (currentValueId) => `${CURRENT_VALUE_URL}/${currentValueId}`,
 };
 
@@ -30,8 +30,8 @@ const useCreateCurrentValue = () => {
 const useUpdateCurrentValue = () => {
   const { data, error, loading, fetchData } = useAPI("private");
 
-  const updateCurrentValue = (currentValueId, body) =>
-    fetchData("PUT", currentValueEndpoints.update(currentValueId), body);
+  const updateCurrentValue = ( body) =>
+    fetchData("PUT", currentValueEndpoints.update, body);
 
   return { data, error, loading, updateCurrentValue };
 };

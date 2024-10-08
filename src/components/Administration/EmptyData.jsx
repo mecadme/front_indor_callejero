@@ -11,13 +11,12 @@ const EmptyData = ({ message }) => {
         variant="info"
         style={{
           fontSize: "1.25rem",
-          width: "90%",
-          maxWidth: "90%",
-          maxHeight: "75%",
+          width: "80%",
+          height: "60%",
           padding: "1.5rem",
           position: "absolute",
           top: "50%",
-          transform: "translateY(-50%)",
+          transform: "translateY(-35%)",
         }}
       >
         <h3>¡Anima a tu barrio!</h3>
