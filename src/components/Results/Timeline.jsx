@@ -108,7 +108,7 @@ const Timeline = ({ events, matchDetails }) => {
         </Col>
         <Col xs={10} className="text-center position-relative">
           <hr className="timeline-separator" />
-          <span className="timeline-time">MT</span>
+          <span className="timeline-time mt-3">MT</span>
           <div className="timeline-divider"></div>
         </Col>
         <Col xs={1} className="end-label">
