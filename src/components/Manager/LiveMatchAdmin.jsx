@@ -17,6 +17,8 @@ import Countdown from "react-countdown";
 
 const LiveMatchAdmin = ({ matches }) => {
   const [matchTimer, setMatchTimer] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [currentTab, setCurrentTab] = useState("list");
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { startMatch } = useStartMatch();
@@ -32,34 +34,40 @@ const LiveMatchAdmin = ({ matches }) => {
 
   const handleMatchStart = (matchId) => {
     startMatch(matchId);
-    // Set the timer to the match duration in milliseconds (e.g., 90 minutes = 90 * 60 * 1000 ms)
     if (selectedMatch) {
-      setMatchTimer(Date.now() + selectedMatch.duration * 60 * 1000); // Convert duration to milliseconds
+      const endTime = Date.now() + selectedMatch.duration * 60 * 1000;
+      setMatchTimer(endTime);
+      setIsPaused(false);
     }
   };
 
-  const handleMatchPause = (matchId) => pauseMatch(matchId);
-  const handleMatchResume = (matchId) => resumeMatch(matchId);
+  const handleMatchPause = (matchId) => {
+    pauseMatch(matchId);
+    if (matchTimer) {
+      setTimeRemaining(matchTimer - Date.now());
+      setIsPaused(true);
+    }
+  };
+
+  const handleMatchResume = (matchId) => {
+    resumeMatch(matchId);
+    if (isPaused && timeRemaining) {
+      const newEndTime = Date.now() + timeRemaining;
+      setMatchTimer(newEndTime);
+      setIsPaused(false);
+    }
+  };
 
   const handleMatchStop = async (matchId) => {
     try {
       await stopMatch(matchId);
-
-      resetPlayersStatus(selectedMatch.homeTeam.players);
-      resetPlayersStatus(selectedMatch.awayTeam.players);
-
-      setSelectedMatch(null); // Optionally reset the selected match
+      setMatchTimer(0);
+      setTimeRemaining(0);
+      setIsPaused(false);
+      setSelectedMatch(null);
     } catch (error) {
       console.error("Error stopping the match:", error);
     }
-  };
-
-  const resetPlayersStatus = (players) => {
-    players.forEach((player) => {
-      if (player.status === "STARTER") {
-        updatePlayer(player.playerId, { status: "ACTIVE" }); // Set status back to ACTIVE
-      }
-    });
   };
 
   const handleSelectMatch = (match) => {
@@ -72,9 +80,11 @@ const LiveMatchAdmin = ({ matches }) => {
       return <span>Partido Finalizado</span>;
     } else {
       return (
-        <span>
-          Tiempo Restante: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-        </span>
+        <div className="timer text-center my-3">
+          <span>
+            Tiempo Restante: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+          </span>
+        </div>
       );
     }
   };
@@ -99,7 +109,10 @@ const LiveMatchAdmin = ({ matches }) => {
                       onClick={() => handleSelectMatch(match)}
                     >
                       {match.homeTeam.name} vs {match.awayTeam.name} -{" "}
-                      {format(new Date(match.schedule.date), "dd MMM yy, HH:mm")}
+                      {format(
+                        new Date(match.schedule.date),
+                        "dd MMM yy, HH:mm"
+                      )}
                     </Button>
                   </li>
                 ))}
@@ -120,15 +133,14 @@ const LiveMatchAdmin = ({ matches }) => {
                 </h3>
               </Card.Header>
               <Card.Body>
-                {matchTimer > 0 ? (
-                  <Countdown
-                    date={matchTimer}
-                    renderer={renderer}
-                  />
+                {matchTimer > 0 && !isPaused ? (
+                  <Countdown date={matchTimer} renderer={renderer} />
                 ) : (
-                  <p>Duración: El temporizador no está en marcha.</p>
+                  <div className="timer text-center my-3">
+                    <span>El temporizador está detenido.</span>
+                  </div>
                 )}
-                <ButtonGroup aria-label="match-control-buttons" size="lg">
+                <ButtonGroup aria-label="match-control-buttons" size="lg" className="mb-3 w-50 d-flex justify-content-center mx-auto">
                   <Button
                     variant="success"
                     onClick={() => handleMatchStart(selectedMatch.matchId)}

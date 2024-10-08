@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Offcanvas } from "react-bootstrap";
+import { Button, Offcanvas, Row, Col } from "react-bootstrap";
 
 const ViewSelector = ({ viewMode, setViewMode }) => {
   const [showCanvas, setShowCanvas] = useState(false);
@@ -8,14 +8,17 @@ const ViewSelector = ({ viewMode, setViewMode }) => {
   const handleCloseCanvas = () => setShowCanvas(false);
 
   return (
-    <>
+    <Row>
+      <Col xs={1}>
       <Button variant="primary" onClick={handleShowCanvas}>
-        Seleccionar Vista
+      ☰
       </Button>
+      </Col>
+      <Col>
 
       <Offcanvas show={showCanvas} onHide={handleCloseCanvas}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Seleccionar Vista</Offcanvas.Title>
+          <Offcanvas.Title>Partidos</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Button
@@ -40,7 +43,9 @@ const ViewSelector = ({ viewMode, setViewMode }) => {
           </Button>
         </Offcanvas.Body>
       </Offcanvas>
-    </>
+
+      </Col>
+    </Row>
   );
 };
 

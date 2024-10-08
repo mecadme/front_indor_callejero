@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import { useGetMatches } from "../../api/Service/MatchService";
-import ViewSelector from "./ViewSelector";
-import LiveMatchAdmin from "./LiveMatchAdmin";
 import FinishedMatchAdmin from "./FinishedMatchAdmin";
+import LiveMatchAdmin from "./LiveMatchAdmin";
+import ViewSelector from "./ViewSelector";
+import HomeButton from "../Utils/HomeButton";
 
 const MatchManager = () => {
   const [viewMode, setViewMode] = useState("live");
@@ -16,7 +18,10 @@ const MatchManager = () => {
 
 
   return (
-    <div className="container">
+    <Container className="container">
+
+      <HomeButton />
+      
       <ViewSelector viewMode={viewMode} setViewMode={setViewMode} />
 
       {viewMode === "live" && (
@@ -25,7 +30,7 @@ const MatchManager = () => {
         />
       )}
       {viewMode === "finished" && <FinishedMatchAdmin />}
-    </div>
+    </Container>
   );
 };
 

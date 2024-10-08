@@ -4,6 +4,8 @@ import {
   Button,
   Dropdown,
   DropdownButton,
+  Col,
+  Row,
   Container,
   ButtonGroup,
 } from "react-bootstrap";
@@ -32,6 +34,14 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
   const { changePlayer } = useChangePlayer();
   const { injurePlayer } = useInjurePlayer();
   const { updatePlayer } = useUpdatePlayer();
+  const goalIcon = "https://cdn-icons-png.flaticon.com/512/5043/5043542.png";
+  const assistIcon = "https://cdn-icons-png.flaticon.com/512/6664/6664856.png";
+  const yellowCardIcon =
+    "https://cdn-icons-png.flaticon.com/512/3363/3363491.png";
+  const redCardIcon = "https://cdn-icons-png.flaticon.com/512/451/451718.png";
+  const substitutionIcon =
+    "https://cdn-icons-png.flaticon.com/512/2716/2716280.png";
+  const injuryIcon = "https://cdn-icons-png.flaticon.com/512/9962/9962365.png";
 
   const MAX_PLAYERS = 6;
 
@@ -149,9 +159,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
       )}
       {lineUpSubmitted && (
         <Container
-          className={`d-flex ${
-            team === "home" ? "justify-content-start" : "justify-content-end"
-          }`}
+          className={`d-flex justify-content-center align-items-center`}
         >
           <ButtonGroup aria-label="player-actions" size="sm" className="mr-2">
             <Button
@@ -230,7 +238,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
             src={player.photoUrl}
             alt={player.name}
             className="player-photo mr-3"
-            style={{ width: "3.5rem", height: "3.5rem" }}
+            style={{ width: "2.5rem", height: "2.5rem" }}
           />
           <div>
             {player.firstName} {player.lastName}
@@ -247,31 +255,35 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
       ));
 
   return (
-    <Container className="container line-up-manager">
-      <div className="row">
+    <Container fluid className="container line-up-manager">
+      <Row className="row">
         {/* Equipo Local */}
-        <div className="col-md-6">
+        <Col className="col-md-6">
           <h3 className="text-center">Equipo Local - {homeTeam.name}</h3>
           <h5>Alineación:</h5>
           {homeLineUp.map((player) => (
-            <div
+            <Container
               key={player.playerId}
               className="player d-flex align-items-center"
             >
-              <img
-                src={player.photoUrl}
-                alt={player.name}
-                className="player-photo mr-3"
-                style={{ width: "3.5rem", height: "3.5rem" }}
-              />
-              <div>
-                <strong>
-                  {player.firstName} {player.lastName}
-                </strong>
-                <p>{player.position}</p>
-              </div>
+              <Row className="ml-3 d-flex justify-content-center align-items-center">
+                <Col className="d-flex align-items-center">
+                  <img
+                    src={player.photoUrl}
+                    alt={player.name}
+                    className="player-photo mr-3"
+                    style={{ width: "2.5rem", height: "2.5rem" }}
+                  />
+                </Col>
+                <Col>
+                  <strong>
+                    {player.firstName} {player.lastName}
+                  </strong>
+                  <p>{player.position}</p>
+                </Col>
               {renderPlayerActions(player, "home")}
-            </div>
+              </Row>
+            </Container>
           ))}
           {!lineUpSubmitted && (
             <>
@@ -279,31 +291,35 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
               {renderAvailablePlayers("home", homeTeam.players, homeLineUp)}
             </>
           )}
-        </div>
+        </Col>
 
         {/* Equipo Visitante */}
-        <div className="col-md-6">
+        <Col className="col-md-6">
           <h3 className="text-center">Equipo Visitante - {awayTeam.name}</h3>
           <h5>Alineación:</h5>
           {awayLineUp.map((player) => (
-            <div
+            <Container
               key={player.playerId}
               className="player d-flex align-items-center"
             >
-              {renderPlayerActions(player, "away")}
-              <div className="ml-3">
-                <strong>
-                  {player.firstName} {player.lastName}
-                </strong>
-                <p>{player.position}</p>
-              </div>
-              <img
-                src={player.photoUrl}
-                alt={player.name}
-                className="player-photo ml-3"
-                style={{ width: "3.5rem", height: "3.5rem" }}
-              />
-            </div>
+              <Row className="ml-3 align-items-center">
+                <Col className="d-flex align-items-center">
+                  <img
+                    src={player.photoUrl}
+                    alt={player.name}
+                    className="player-photo ml-3"
+                    style={{ width: "2.5rem", height: "2.5rem" }}
+                  />
+                </Col>
+                <Col>
+                  <strong>
+                    {player.firstName} {player.lastName}
+                  </strong>
+                  <p>{player.position}</p>
+                </Col>
+                {renderPlayerActions(player, "away")}
+              </Row>
+            </Container>
           ))}
           {!lineUpSubmitted && (
             <>
@@ -311,8 +327,8 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
               {renderAvailablePlayers("away", awayTeam.players, awayLineUp)}
             </>
           )}
-        </div>
-      </div>
+        </Col>
+      </Row>
 
       {/* Botón para enviar la alineación */}
       {!lineUpSubmitted && (

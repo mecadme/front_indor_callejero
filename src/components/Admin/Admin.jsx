@@ -19,6 +19,7 @@ import MatchDashboard from "./MatchDashboard";
 import FacebookVideosDashboard from "./FacebookVideosDashboard";
 import WeeklyAwardsDashboard from "./WeeklyAwardsDashboard";
 import RefereeDashboard from "./RefereeDashboard";
+import HomeButton from "../Utils/HomeButton";
 
 const Admin = () => {
   const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
@@ -54,17 +55,10 @@ const Admin = () => {
   };
 
   return (
-    <Container fluid>
-      {/* Header con botón para volver a la página principal */}
-      <Row className="header mb-4">
-        <Button variant="outline-primary">
-          <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-            Volver a la página principal
-          </Link>
-        </Button>
-      </Row>
+    <Container fluid className="p-0 m-0 min-vh-100 bg-light">
+     
+        <HomeButton />
 
-      {/* Barra lateral desplegable con Offcanvas */}
       <Offcanvas
         show={showSidebar}
         onHide={toggleSidebar}
@@ -115,7 +109,8 @@ const Admin = () => {
               onClick={() => {
                 setActiveDashboard("referee");
                 toggleSidebar();
-              }}>
+              }}
+            >
               Arbitros
             </Nav.Link>
             <Nav.Link
@@ -162,12 +157,17 @@ const Admin = () => {
         </Offcanvas.Body>
       </Offcanvas>
 
-      {/* Contenido principal */}
       <Row>
         <Col xs={1}>
-          <Button onClick={toggleSidebar} className="sidebar-toggle p-4 clean-btn justify-content-center"
-          aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button">
-            {showSidebar ?  "" : "☰"}
+          <Button
+            onClick={toggleSidebar}
+            className="sidebar-toggle p-4 clean-btn justify-content-center"
+            aria-label="Toggle navigation bar"
+            aria-expanded="false"
+            class="navbar__toggle clean-btn"
+            type="button"
+          >
+            {showSidebar ? "" : "☰"}
           </Button>
         </Col>
         <Col>
