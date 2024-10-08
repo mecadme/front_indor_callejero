@@ -7,10 +7,12 @@ import {
   Spinner,
   Card,
   Alert,
+  Badge,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import Loading from "../Utils/Loading";
 
 const Standings = () => {
   const [groups, setGroups] = useState({});
@@ -44,12 +46,7 @@ const Standings = () => {
   }, []);
 
   if (loading) {
-    return (
-      <Container className="text-center mt-5">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-3">Cargando tablas...</p>
-      </Container>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -69,31 +66,31 @@ const Standings = () => {
 
   return (
     <Container className="standings mt-4">
-      <h2
+      <h3
         className="text-center mb-4"
         onClick={() => handleTableClick()}
         style={{ cursor: "pointer" }}
       >
-        Tablas de Posiciones
-      </h2>
+        TABLAS
+      </h3>
       {Object.keys(groups).map((groupName, index) => (
         <Card key={index} className="mb-4 shadow">
           <Card.Header className="bg-primary text-white text-center">
-            <h4>{groupName}</h4>
+            <h4>{groupName.toUpperCase()}</h4>
           </Card.Header>
-          <Card.Body>
-            <ListGroup variant="flush">
+          <Card.Body className="p-0 m-0">
+            <ListGroup variant="flush" className="text-center p-0 m-0">
               {groups[groupName].map((team, teamIndex) => (
                 <ListGroup.Item
                   key={teamIndex}
-                  className="d-flex justify-content-between align-items-center"
+                  className="d-flex justify-content-between align-items-center p-0 m-0"
                   onClick={() => handleTeamClick(team.teamId)}
                   style={{ backgroundColor: team.color, cursor: "pointer" }}
                 >
-                  <span>{team.teamName}</span>
-                  <span className="badge bg-secondary rounded-pill">
+                  <h2 className="mb-0">{team.teamName}</h2>
+                  <Badge className="points">
                     {team.points} puntos
-                  </span>
+                  </Badge>
                 </ListGroup.Item>
               ))}
             </ListGroup>

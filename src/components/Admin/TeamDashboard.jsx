@@ -22,23 +22,23 @@ import {
 import UploadPhoto from "../Utils/UploadPhoto";
 
 const TeamGroupEnum = {
-  A1: "Grupo A",
-  A2: "Grupo A",
-  A3: "Grupo A",
-  A4: "Grupo A",
-  A5: "Grupo A",
-  B1: "Grupo B",
-  B2: "Grupo B",
-  B3: "Grupo B",
-  B4: "Grupo B",
-  B5: "Grupo B",
+  A1: "GRUPO A",
+  A2: "GRUPO A",
+  A3: "GRUPO A",
+  A4: "GRUPO A",
+  A5: "GRUPO A",
+  B1: "GRUPO B",
+  B2: "GRUPO B",
+  B3: "GRUPO B",
+  B4: "GRUPO B",
+  B5: "GRUPO B",
 };
 
 const PlayerPositionEnum = {
-  GOALKEEPER: "Portero",
-  DEFENDER: "Defensa",
-  MIDFIELDER: "Mediocampo",
-  ATTACKER: "Delantero",
+  GOALKEEPER: "PORTERO",
+  DEFENDER: "DEFENSA",
+  MIDFIELDER: "MEDIOCAMPO",
+  ATTACKER: "DELANTERO",
 };
 const handleImageError = (e) => {
   e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
