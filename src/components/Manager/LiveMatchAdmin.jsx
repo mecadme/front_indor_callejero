@@ -11,17 +11,28 @@ import {
   useStartMatch,
   usePauseMatch,
   useStopMatch,
+  useResumeMatch,
 } from "../../api/Service/MatchService";
 import { format } from "date-fns";
+import { useUpdatePlayer } from "../../api/Service/PlayerService";
 import Countdown from "react-countdown";
 
-const LiveMatchAdmin = ({ matches, selectedMatch, onSelectMatch }) => {
+const LiveMatchAdmin = ({ matches }) => {
   const [matchTimer, setMatchTimer] = useState(0);
   const [currentTab, setCurrentTab] = useState("list");
-  const [setSelectedMatch] = useState(null);
+  const [selectedMatch, setSelectedMatch] = useState(null);
   const { startMatch } = useStartMatch();
   const { pauseMatch } = usePauseMatch();
   const { stopMatch } = useStopMatch();
+  const { resumeMatch } = useResumeMatch();
+  const { updatePlayer } = useUpdatePlayer();
+
+  const startIcon = "https://cdn-icons-png.flaticon.com/512/9581/9581128.png";
+  const pauseIcon = "https://cdn-icons-png.flaticon.com/512/2920/2920686.png";
+  const resumeIcon = "https://cdn-icons-png.flaticon.com/512/9581/9581132.png";
+  const stopIcon = "https://cdn-icons-png.flaticon.com/512/4029/4029077.png";
+
+  
 
   const handleMatchStart = (matchId) => {
     startMatch(matchId);
@@ -53,7 +64,11 @@ const LiveMatchAdmin = ({ matches, selectedMatch, onSelectMatch }) => {
       }
     });
   };
-  const handleSelectMatch = onSelectMatch();
+
+  const handleSelectMatch = (match) => {
+    setSelectedMatch(match);
+    setCurrentTab("admin");
+  };
 
   return (
     <Tabs
