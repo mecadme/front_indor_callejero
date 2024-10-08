@@ -32,14 +32,6 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
   const { changePlayer } = useChangePlayer();
   const { injurePlayer } = useInjurePlayer();
   const { updatePlayer } = useUpdatePlayer();
-  const goalIcon = "https://cdn-icons-png.flaticon.com/512/5043/5043542.png";
-  const assistIcon = "https://cdn-icons-png.flaticon.com/512/6664/6664856.png";
-  const yellowCardIcon =
-    "https://cdn-icons-png.flaticon.com/512/3363/3363491.png";
-  const redCardIcon = "https://cdn-icons-png.flaticon.com/512/451/451718.png";
-  const substitutionIcon =
-    "https://cdn-icons-png.flaticon.com/512/2716/2716280.png";
-  const injuryIcon = "https://cdn-icons-png.flaticon.com/512/9962/9962365.png";
 
   const MAX_PLAYERS = 6;
 
