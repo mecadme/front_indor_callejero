@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import LineUpManager from "./LineUpManager";
 import Button from "react-bootstrap/Button";
-import Offcanvas from "react-bootstrap/Offcanvas";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Card from "react-bootstrap/Card";
-import Table from "react-bootstrap/Table";
 import { ButtonGroup } from "react-bootstrap";
 import {
   useStartMatch,
@@ -32,22 +30,21 @@ const LiveMatchAdmin = ({ matches }) => {
   const resumeIcon = "https://cdn-icons-png.flaticon.com/512/9581/9581132.png";
   const stopIcon = "https://cdn-icons-png.flaticon.com/512/4029/4029077.png";
 
-  
-
   const handleMatchStart = (matchId) => {
     startMatch(matchId);
-    setMatchTimer(selectedMatch.duration * 60);
+    // Set the timer to the match duration in milliseconds (e.g., 90 minutes = 90 * 60 * 1000 ms)
+    if (selectedMatch) {
+      setMatchTimer(Date.now() + selectedMatch.duration * 60 * 1000); // Convert duration to milliseconds
+    }
   };
 
   const handleMatchPause = (matchId) => pauseMatch(matchId);
-
   const handleMatchResume = (matchId) => resumeMatch(matchId);
 
   const handleMatchStop = async (matchId) => {
     try {
       await stopMatch(matchId);
 
-      // Reset the status of all players in both teams
       resetPlayersStatus(selectedMatch.homeTeam.players);
       resetPlayersStatus(selectedMatch.awayTeam.players);
 
@@ -70,6 +67,18 @@ const LiveMatchAdmin = ({ matches }) => {
     setCurrentTab("admin");
   };
 
+  const renderer = ({ minutes, seconds, completed }) => {
+    if (completed) {
+      return <span>Partido Finalizado</span>;
+    } else {
+      return (
+        <span>
+          Tiempo Restante: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+        </span>
+      );
+    }
+  };
+
   return (
     <Tabs
       activeKey={currentTab}
@@ -78,28 +87,23 @@ const LiveMatchAdmin = ({ matches }) => {
     >
       <Tab eventKey="list" title="Lista de Partidos">
         <div className="mt-4">
-          <>
-            <h2>Partidos en Vivo</h2>
-            <ul className="list-group">
-              {matches &&
-                matches
-                  .filter((match) => match.status === "NOT_STARTED")
-                  .map((match) => (
-                    <li key={match.matchId} className="list-group-item">
-                      <Button
-                        variant="outline-primary"
-                        onClick={() => handleSelectMatch(match)}
-                      >
-                        {match.homeTeam.name} vs {match.awayTeam.name} -{" "}
-                        {format(
-                          new Date(match.schedule.date),
-                          "dd MMM yy, HH:mm"
-                        )}
-                      </Button>
-                    </li>
-                  ))}
-            </ul>
-          </>
+          <h2>Partidos en Vivo</h2>
+          <ul className="list-group">
+            {matches &&
+              matches
+                .filter((match) => match.status === "NOT_STARTED")
+                .map((match) => (
+                  <li key={match.matchId} className="list-group-item">
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => handleSelectMatch(match)}
+                    >
+                      {match.homeTeam.name} vs {match.awayTeam.name} -{" "}
+                      {format(new Date(match.schedule.date), "dd MMM yy, HH:mm")}
+                    </Button>
+                  </li>
+                ))}
+          </ul>
         </div>
       </Tab>
       <Tab
@@ -116,7 +120,14 @@ const LiveMatchAdmin = ({ matches }) => {
                 </h3>
               </Card.Header>
               <Card.Body>
-                <p>Duración: {matchTimer} segundos restantes</p>
+                {matchTimer > 0 ? (
+                  <Countdown
+                    date={matchTimer}
+                    renderer={renderer}
+                  />
+                ) : (
+                  <p>Duración: El temporizador no está en marcha.</p>
+                )}
                 <ButtonGroup aria-label="match-control-buttons" size="lg">
                   <Button
                     variant="success"
@@ -166,7 +177,6 @@ const LiveMatchAdmin = ({ matches }) => {
               </Card.Body>
             </Card>
 
-            {/* LineUp Manager Component */}
             <LineUpManager
               matchId={selectedMatch.matchId}
               homeTeam={selectedMatch.homeTeam}
