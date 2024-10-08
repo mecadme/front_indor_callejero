@@ -17,6 +17,8 @@ import {
   useUpdatePlayer,
 } from "../../api/Service/PlayerService";
 
+import "./css/LineUpManager.css";
+
 const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
   const [homeLineUp, setHomeLineUp] = useState([]);
   const [awayLineUp, setAwayLineUp] = useState([]);
@@ -30,10 +32,17 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
   const { changePlayer } = useChangePlayer();
   const { injurePlayer } = useInjurePlayer();
   const { updatePlayer } = useUpdatePlayer();
+  const goalIcon = "https://cdn-icons-png.flaticon.com/512/5043/5043542.png";
+  const assistIcon = "https://cdn-icons-png.flaticon.com/512/6664/6664856.png";
+  const yellowCardIcon =
+    "https://cdn-icons-png.flaticon.com/512/3363/3363491.png";
+  const redCardIcon = "https://cdn-icons-png.flaticon.com/512/451/451718.png";
+  const substitutionIcon =
+    "https://cdn-icons-png.flaticon.com/512/2716/2716280.png";
+  const injuryIcon = "https://cdn-icons-png.flaticon.com/512/9962/9962365.png";
 
   const MAX_PLAYERS = 6;
 
-  // Resetear la alineación cuando el partido cambia
   useEffect(() => {
     setHomeLineUp([]);
     setAwayLineUp([]);
@@ -51,36 +60,31 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
 
   const handleSubstitution = (team, playerId) => {
     setCurrentTeam(team);
-    setSubPlayerId(playerId); // Jugador que será sustituido
+    setSubPlayerId(playerId);
     setShowModal(true);
   };
 
   const confirmSubstitution = (newPlayerId) => {
     const outPlayerId = subPlayerId;
     const teamId = currentTeam === "home" ? homeTeam.teamId : awayTeam.teamId;
+    const newPlayer = (
+      currentTeam === "home" ? homeTeam.players : awayTeam.players
+    ).find((player) => player.playerId === newPlayerId);
 
-    // Realizar la sustitución en el backend
     changePlayer(matchId, { outPlayerId, inPlayerId: newPlayerId, teamId });
+    updatePlayer(newPlayerId, { status: "STARTER" });
 
-    // Actualizar el estado de los jugadores
-    updatePlayer(newPlayerId, { status: "STARTER" }); // Jugador que entra pasa a ser titular
-
-    // Actualizar la alineación en el frontend
     if (currentTeam === "home") {
-      setHomeLineUp(
-        homeLineUp.map((player) =>
-          player.playerId === outPlayerId
-            ? { ...player, playerId: newPlayerId }
-            : player
-        )
+      setHomeLineUp((prevLineUp) =>
+        prevLineUp
+          .filter((player) => player.playerId !== outPlayerId)
+          .concat(newPlayer)
       );
     } else {
-      setAwayLineUp(
-        awayLineUp.map((player) =>
-          player.playerId === outPlayerId
-            ? { ...player, playerId: newPlayerId }
-            : player
-        )
+      setAwayLineUp((prevLineUp) =>
+        prevLineUp
+          .filter((player) => player.playerId !== outPlayerId)
+          .concat(newPlayer)
       );
     }
 
@@ -126,7 +130,6 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     updatePlayer(playerId, { status: "ACTIVE" });
   };
 
-  // Enviar las alineaciones al backend
   const submitLineUp = () => {
     const payload = {
       homePlayers: homeLineUp.map((player) => ({ playerId: player.playerId })),
@@ -136,17 +139,16 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     setLineUp(matchId, payload)
       .then(() => {
         alert("Alineación enviada correctamente");
-        setLineUpSubmitted(true); // Cambiar estado a alineación enviada
+        setLineUpSubmitted(true);
       })
       .catch((err) => alert("Error al enviar la alineación"));
   };
 
-  // Renderizar las acciones solo si la alineación fue enviada
   const renderPlayerActions = (player, team) => (
     <>
       {!lineUpSubmitted && (
         <Button
-          variant="danger"
+          variant="outline-danger"
           size="sm"
           onClick={() => removePlayerFromLineUp(team, player.playerId)}
         >
@@ -161,18 +163,18 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
         >
           <ButtonGroup aria-label="player-actions" size="sm" className="mr-2">
             <Button
-              variant="primary"
+              variant="outline-primary"
               size="sm"
               onClick={() => handleEvent(player.playerId, "goal")}
             >
-              Gol
+              <img src={goalIcon} alt="goal-icon" className="icon-size" />
             </Button>
             <Button
-              variant="secondary"
+              variant="outline-secondary"
               size="sm"
               onClick={() => handleEvent(player.playerId, "assist")}
             >
-              Asistencia
+              <img src={assistIcon} alt="assist-icon" className="icon-size" />
             </Button>
             <DropdownButton
               as={ButtonGroup}
@@ -183,27 +185,39 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
               <Dropdown.Item
                 onClick={() => handleEvent(player.playerId, "card", "YELLOW")}
               >
-                Amarilla
+                <img
+                  src={yellowCardIcon}
+                  alt="yellow-card-icon"
+                  className="icon-size"
+                />
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => handleEvent(player.playerId, "card", "RED")}
               >
-                Roja
+                <img
+                  src={redCardIcon}
+                  alt="red-card-icon"
+                  className="icon-size"
+                />
               </Dropdown.Item>
             </DropdownButton>
             <Button
-              variant="info"
+              variant="outline-info"
               size="sm"
               onClick={() => handleSubstitution(team, player.playerId)}
             >
-              Sustitución
+              <img
+                src={substitutionIcon}
+                alt="sub-icon"
+                className="icon-size"
+              />
             </Button>
             <Button
-              variant="danger"
+              variant="outline-danger"
               size="sm"
               onClick={() => handleInjury(team, player.playerId)}
             >
-              Lesión
+              <img src={injuryIcon} alt="injury-icon" className="icon-size" />
             </Button>
           </ButtonGroup>
         </Container>
@@ -211,11 +225,10 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     </>
   );
 
-  // Mostrar solo jugadores que están activos y no han sido seleccionados
   const renderAvailablePlayers = (team, players, lineUp) =>
     players
-      .filter((p) => p.status === "ACTIVE") // Mostrar solo jugadores activos
-      .filter((p) => !lineUp.some((l) => l.playerId === p.playerId)) // Excluir jugadores que ya están en la alineación
+      .filter((p) => p.status === "ACTIVE")
+      .filter((p) => !lineUp.some((l) => l.playerId === p.playerId))
       .map((player) => (
         <div
           key={player.playerId}
@@ -232,7 +245,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
             <p>{player.position}</p>
           </div>
           <Button
-            variant="success"
+            variant="outline-success"
             size="sm"
             onClick={() => addPlayerToLineUp(team, player)}
           >
@@ -329,8 +342,9 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
             .filter(
               (p) =>
                 p.status === "ACTIVE" &&
-                !homeLineUp.some((l) => l.playerId === p.playerId)
-            ) // Jugadores activos que no estén en la alineación
+                !homeLineUp.some((l) => l.playerId === p.playerId) &&
+                !awayLineUp.some((l) => l.playerId === p.playerId)
+            )
             .map((player) => (
               <Button
                 key={player.playerId}

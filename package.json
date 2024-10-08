@@ -16,6 +16,7 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "chroma-js": "^3.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "front_indor_callejero": "file:",
     "jwt-decode": "^4.0.0",

@@ -84,7 +84,7 @@ const Timeline = ({ events, matchDetails }) => {
 
             return (
               <div
-                key={key} // Nueva clave única
+                key={key} 
                 className="timeline-col"
                 style={{
                   left: `${(event.minute / 40) * 90}%`,
