@@ -5,9 +5,11 @@ import { Card, Row, Col, Container } from 'react-bootstrap';
 import EmptyData from '../Administration/EmptyData';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import { useNavigate } from "react-router-dom";
 
 const Matches = () => {
   const { matches, isLoading, error } = useFetchMatches();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <div>Cargando partidos...</div>;
@@ -25,6 +27,10 @@ const Matches = () => {
     </Container>)
   }
 
+  const handleMatchClick = (matchId, homeTeam, awayTeam) => {
+    navigate(`/result/${matchId}`);
+  };
+
   return (
     <Container fluid>
       <Header />
@@ -32,7 +38,16 @@ const Matches = () => {
       <h2 className="text-center mb-4">Partidos</h2>
       <Row>
         {matches.map((match) => (
-          <Col key={match.matchId} md={6} className="mb-4">
+          <Col key={match.matchId} md={6} className="mb-4"
+          onClick={() => handleMatchClick(match.matchId)}
+          style={{ cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+
+           }}
+          >
             <Card>
               <Card.Header className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
@@ -65,7 +80,7 @@ const Matches = () => {
                     <h6>Jugadores del {match.homeTeam.name}</h6>
                     <ul className="list-unstyled">
                       {match.homeTeam.players.map((player) => (
-                        <li key={player.playerId}>
+                        <li key={player.playerId} className="d-flex align-items-center my-2">
                           <img
                             src={player.photoUrl}
                             alt={player.firstName}
@@ -73,7 +88,7 @@ const Matches = () => {
                             height="30"
                             className="mr-2"
                           />
-                          {player.firstName} {player.lastName} - {player.position} ({player.status})
+                          {player.firstName} {player.lastName}
                         </li>
                       ))}
                     </ul>
@@ -82,7 +97,7 @@ const Matches = () => {
                     <h6>Jugadores del {match.awayTeam.name}</h6>
                     <ul className="list-unstyled">
                       {match.awayTeam.players.map((player) => (
-                        <li key={player.playerId}>
+                        <li key={player.playerId} className="d-flex align-items-center my-2">
                           <img
                             src={player.photoUrl}
                             alt={player.firstName}
@@ -90,7 +105,7 @@ const Matches = () => {
                             height="30"
                             className="mr-2"
                           />
-                          {player.firstName} {player.lastName} - {player.position} ({player.status})
+                          {player.firstName} {player.lastName}
                         </li>
                       ))}
                     </ul>

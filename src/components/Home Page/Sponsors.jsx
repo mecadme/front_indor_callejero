@@ -1,9 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import useSponsors from "../../hooks/useSponsors";
+import { useNavigate } from "react-router-dom";
 
 const Sponsors = ({ maxContributions }) => {
   const { sponsors, isLoading, error } = useSponsors();
+  const navigate = useNavigate(); // Hook para redirigir
 
   if (isLoading) {
     return (
@@ -22,6 +24,12 @@ const Sponsors = ({ maxContributions }) => {
     );
   }
 
+  const handleSponsorClick = (sponsor) => {
+    console.log(sponsor);
+    const url = sponsor.sponsorPageUrl || "https://www.facebook.com/IndorCallejeroAzogues";
+    window.open(url, "_blank"); 
+  };
+
   return (
     <footer className="footer">
       <Container fluid>
@@ -36,7 +44,7 @@ const Sponsors = ({ maxContributions }) => {
                     md={4}
                     lg={2}
                     className="mb-4"
-                    onClick={() => handleTeamClick()}
+                    onClick={() => handleSponsorClick(sponsor)}
                     style={{ cursor: "pointer" }}
                   >
                     <img

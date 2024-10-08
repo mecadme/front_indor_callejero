@@ -17,7 +17,7 @@ const PlayerCard = ({ player }) => {
   return (
     <Col key={player.playerId} className="mb-4">
       <Card
-        style={{ width: "18rem", alignItems: "center" }}
+        style={{ width: "18rem", alignItems: "center", cursor: "pointer" }}
         onClick={() => handlePlayerClick(player.playerId)}
       >
         <Card.Img

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import useFetchTeams from "../../hooks/useFetchTeams";
@@ -6,13 +6,21 @@ import EmptyData from "../Administration/EmptyData";
 import StyleUtils from "../Utils/StyleUtils";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
 
 const grayZigZagSvg = zigZagSvg("#b6bdc0", "#D3D3D3");
 
 const Teams = () => {
+  const [selectedTeam, setSelectedTeam] = useState(null);
   const { teams, isLoading, error } = useFetchTeams();
+  const navigate = useNavigate();
+
+  const handleTeamSelection = (teamId) => {
+    setSelectedTeam(teamId);
+    navigate(`/team/${teamId}`);
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -44,6 +52,7 @@ const Teams = () => {
             <Col key={team.teamId} xs={6} md={4} lg={4} className="mb-4">
               <Card
                 className="team-card "
+                onClick={() => handleTeamSelection(team.teamId)}
                 style={{
                   backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
                     grayZigZagSvg
@@ -52,6 +61,7 @@ const Teams = () => {
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
                   transition: "background-image 0.2s ease, color 0.2s ease",
+                  cursor: "pointer",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.querySelector("a").style.color = hoverTextColor;
