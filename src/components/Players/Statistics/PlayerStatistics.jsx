@@ -14,6 +14,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
 import Loading from "../../Utils/Loading";
 import StyleUtils from "../../Utils/StyleUtils";
+import PlayerSearch from "./PlayerSearch"; 
 import "./css/PlayerStatistics.css";
 
 const PlayerStatistics = ({
@@ -26,7 +27,8 @@ const PlayerStatistics = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const playersPerPage = 6; // Variable is constant, no need for useState
+  const [filteredPlayers, setFilteredPlayers] = useState([]); 
+  const playersPerPage = 6;
   const axiosPrivate = useAxiosPrivate();
   const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
   const navigate = useNavigate();
@@ -38,6 +40,7 @@ const PlayerStatistics = ({
           `/player-statistics/${eventType}`
         );
         setPlayers(response.data);
+        setFilteredPlayers(response.data); 
       } catch {
         setError("Error al cargar los datos");
       } finally {
@@ -47,15 +50,23 @@ const PlayerStatistics = ({
     fetchPlayerStatistics();
   }, [eventType, axiosPrivate]);
 
-  const indexOfLastPlayer = currentPage * playersPerPage;
-  const currentPlayers = players.slice(
-    indexOfLastPlayer - playersPerPage,
-    indexOfLastPlayer
-  );
-
   const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
   const handlePlayerClick = (playerId) => navigate(`/player/${playerId}`);
   const handleTeamSelection = (teamId) => navigate(`/team/${teamId}`);
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPlayers(players); 
+    } else {
+      const filtered = players.filter((player) =>
+        `${player.firstName} ${player.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+      setFilteredPlayers(filtered);
+      setCurrentPage(1); 
+    }
+  };
 
   if (loading) return <Loading />;
   if (error)
@@ -72,14 +83,22 @@ const PlayerStatistics = ({
       />
     );
 
+  const indexOfLastPlayer = currentPage * playersPerPage;
+  const currentPlayers = filteredPlayers.slice(
+    indexOfLastPlayer - playersPerPage,
+    indexOfLastPlayer
+  );
+
   const displayedPlayers = limit
     ? currentPlayers.slice(0, limit)
     : currentPlayers;
-  const totalPages = Math.ceil(players.length / playersPerPage);
+  const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
 
   return (
     <Container fluid className="player-statistics-container">
       <Container className="mt-4 m-0 p-0 text-center">
+        <PlayerSearch onSearch={handleSearch} />
+
         <Col
           xs={12}
           md={10}
