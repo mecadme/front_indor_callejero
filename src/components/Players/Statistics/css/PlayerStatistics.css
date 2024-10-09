@@ -1,0 +1,134 @@
+.statistics-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    padding: 0;
+}
+
+.player-statistics-container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Player Card */
+.statistics-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 11);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.statistics-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Team Logo Image */
+.img-fluid {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.img-fluid:hover {
+  transform: scale(1.1);
+}
+
+/* Player Name and Count */
+.player-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.event-count {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Badge for Best Player */
+.best-player-container {
+  position: relative;
+  
+  margin-bottom: 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.best-player-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.best-player-badge {
+  color: black;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  padding: 5px 10px;
+  font-weight: 500;
+}
+
+/* Pagination Styles */
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.custom-pagination-item {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 50%;
+  margin: 0 5px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.custom-pagination-item.active {
+  background-color: #3e78bc;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.custom-pagination-item:hover {
+  background-color: #f1f1f1;
+  transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .img-fluid {
+    margin-bottom: 15px;
+  }
+
+  .event-count {
+    font-size: 2.5rem;
+  }
+
+  .player-name {
+    font-size: 1.25rem;
+  }
+}

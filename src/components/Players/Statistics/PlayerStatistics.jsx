@@ -9,9 +9,12 @@ import {
   Row,
   Pagination,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
 import Loading from "../../Utils/Loading";
+import StyleUtils from "../../Utils/StyleUtils";
+import "./css/PlayerStatistics.css";
 
 const PlayerStatistics = ({
   eventType,
@@ -22,135 +25,166 @@ const PlayerStatistics = ({
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1); // Pagination state
-  const [playersPerPage] = useState(6); // Players per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const playersPerPage = 6; // Variable is constant, no need for useState
   const axiosPrivate = useAxiosPrivate();
-
-  const PLAYER_STATISTICS_URL = `/player-statistics/${eventType}`;
+  const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axiosPrivate
-      .get(PLAYER_STATISTICS_URL)
-      .then((response) => {
+    const fetchPlayerStatistics = async () => {
+      try {
+        const response = await axiosPrivate.get(
+          `/player-statistics/${eventType}`
+        );
         setPlayers(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
+      } catch {
         setError("Error al cargar los datos");
+      } finally {
         setLoading(false);
-      });
-  }, [eventType]);
+      }
+    };
+    fetchPlayerStatistics();
+  }, [eventType, axiosPrivate]);
 
-  // Pagination: calculate current players to display
   const indexOfLastPlayer = currentPage * playersPerPage;
-  const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
-  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
+  const currentPlayers = players.slice(
+    indexOfLastPlayer - playersPerPage,
+    indexOfLastPlayer
+  );
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePlayerClick = (playerId) => navigate(`/player/${playerId}`);
+  const handleTeamSelection = (teamId) => navigate(`/team/${teamId}`);
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
+  if (loading) return <Loading />;
+  if (error)
     return (
       <Alert variant="danger" className="text-center">
         {error}
       </Alert>
     );
-  }
-
-  if (players.length === 0) {
-    return <EmptyData message={`No hay datos de ${name} para mostrar`} />;
-  }
+  if (players.length === 0)
+    return (
+      <EmptyData
+        message={`No hay datos de ${name} para mostrar`}
+        translateY={55}
+      />
+    );
 
   const displayedPlayers = limit
     ? currentPlayers.slice(0, limit)
     : currentPlayers;
-
-  // Generate pagination items
   const totalPages = Math.ceil(players.length / playersPerPage);
-  const paginationItems = [];
-  for (let i = 1; i <= totalPages; i++) {
-    paginationItems.push(
-      <Pagination.Item
-        key={i}
-        active={i === currentPage}
-        onClick={() => paginate(i)}
-      >
-        {i}
-      </Pagination.Item>
-    );
-  }
 
   return (
-    <Container fluid>
-      <Container className="mt-4">
-        {showPagination && (
-          <Row className="mt-3 justify-content-center">
-            <Pagination>{paginationItems}</Pagination>
-          </Row>
-        )}
-        <Col>
-          {displayedPlayers.map((player, index) => (
-            <Row
-              key={player.playerId}
-              className="shadow-sm rounded mb-4"
-              style={{
-                backgroundColor: player.teamColor,
-                padding: "1rem",
-                margin: "0",
-                borderRadius: "10px",
-              }}
-            >
-              <Row className="align-items-center">
-                <Col xs={4} className="text-center">
-                  <Image
-                    src={player.teamLogoUrl}
-                    alt="Team Logo"
-                    style={{
-                      width: "4rem",
-                      height: "4rem",
-                    }}
-                    className="img-fluid"
-                  />
-                </Col>
-                <Col xs={6} className="d-flex flex-column align-items-start">
-                  {index === 0 && currentPage === 1 && (
-                    <Container>
-                      <Image
-                        src={player.photoUrl}
-                        alt="Mejor jugador"
-                        style={{
-                          width: "2.5rem",
-                          height: "2.5rem",
-                          marginTop: "10px",
-                        }}
-                      />
-                      <br />
-                      <Badge bg="warning" className="mb-2">
-                        Mejor Jugador
-                      </Badge>
-                    </Container>
-                  )}
-                  <div style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                    {player.firstName} {player.lastName}
-                  </div>
-                </Col>
-                <Col xs={2} className="text-center">
-                  <div
-                    style={{
-                      fontSize: "3rem",
-                      fontWeight: "bold",
-                      color: "#343a40",
-                    }}
+    <Container fluid className="player-statistics-container">
+      <Container className="mt-4 m-0 p-0 text-center">
+        <Col
+          xs={12}
+          md={10}
+          lg={8}
+          className="m-0 p-0 mx-auto"
+          style={{ margin: "auto" }}
+        >
+          {showPagination && (
+            <Row className="mt-3 justify-content-center">
+              <Pagination className="custom-pagination">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <Pagination.Item
+                    key={i + 1}
+                    active={i + 1 === currentPage}
+                    onClick={() => handlePageClick(i + 1)}
+                    className="custom-pagination-item"
                   >
-                    {player.eventCount || 0}
-                  </div>
-                </Col>
-              </Row>
+                    {i + 1}
+                  </Pagination.Item>
+                ))}
+              </Pagination>
             </Row>
-          ))}
+          )}
+
+          {displayedPlayers.map((player, index) => {
+            const lighterColor = lightenColor(player.teamColor, 40);
+            const textColor = getTextColor(lighterColor);
+            const zigZagBackground = zigZagSvg(player.teamColor, lighterColor);
+            const match = player.teamLogoUrl.match(/_(\d+)\./);
+            const teamId = match ? match[1] : 1;
+
+            return (
+              <Row
+                key={player.playerId}
+                className="shadow-sm rounded mb-4 statistics-card"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
+                    zigZagBackground
+                  )}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  color: textColor,
+                  cursor: "pointer",
+                }}
+              >
+                <Row className="align-items-center text-center">
+                  <Col xs={4} className="text-center">
+                    <Image
+                      src={player.teamLogoUrl}
+                      alt="Team Logo"
+                      style={{
+                        width: "5rem",
+                        height: "5rem",
+                        objectFit: "contain",
+                      }}
+                      onClick={() => handleTeamSelection(teamId)}
+                      className="img-fluid"
+                    />
+                  </Col>
+                  <Col
+                    xs={5}
+                    className="d-flex flex-column justify-content-center p-2"
+                    onClick={() => handlePlayerClick(player.playerId)}
+                  >
+                    {index === 0 && currentPage === 1 && (
+                      <Container className="best-player-container mb-2">
+                        <Badge bg="warning" className="best-player-badge mt-2">
+                          Mejor Jugador
+                        </Badge>{" "}
+                        <Image
+                          src={player.photoUrl}
+                          alt="Mejor jugador"
+                          style={{
+                            width: "3rem",
+                            height: "3rem",
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                          }}
+                          className="best-player-image"
+                        />
+                      </Container>
+                    )}
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "1.5rem",
+                        color: textColor,
+                      }}
+                    >
+                      {player.firstName} {player.lastName}
+                    </div>
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="text-center"
+                    style={{ color: textColor }}
+                  >
+                    <div style={{ fontSize: "3.5rem", fontWeight: "bold" }}>
+                      {player.eventCount || 0}
+                    </div>
+                  </Col>
+                </Row>
+              </Row>
+            );
+          })}
         </Col>
       </Container>
     </Container>

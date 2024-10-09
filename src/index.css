@@ -3,15 +3,17 @@
   padding: 0;
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
-  font-variant: small-caps;
+  
 }
 
 html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  width: 100%;
+  width: 99vw;
+  text-transform: uppercase;
 }
+
 
 
 a {
@@ -29,7 +31,7 @@ a:hover {
 }
 
 
-h1 {
+h2 {
   color: #F5EDF4;
   margin-bottom: 1rem;
   font-size: 24px;

@@ -96,7 +96,8 @@ const PlayerStatisticsOverview = () => {
               <h4>🟨🟥 TARJETAS</h4>
             </Card.Header>
             <Card.Body>
-              <Cards limit={2} />
+              <Cards limit={2} 
+              showPagination = {false} />
             </Card.Body>
             <Card.Footer className="text-center">
               <Button

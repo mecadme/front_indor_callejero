@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, Container } from "react-bootstrap";
 
-const EmptyData = ({ message }) => {
+const EmptyData = ({ message, translateY = 5 }) => {
   return (
     <Container
       className="d-flex flex-column align-items-center justify-content-center"
@@ -16,7 +16,7 @@ const EmptyData = ({ message }) => {
           padding: "1.5rem",
           position: "absolute",
           top: "50%",
-          transform: "translateY(-35%)",
+          transform: `translateY(-${translateY}%)`,
         }}
       >
         <h3>¡Anima a tu barrio!</h3>

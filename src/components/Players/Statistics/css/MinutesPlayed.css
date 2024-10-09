@@ -1,0 +1,24 @@
+
+.minutes-played-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    padding: 0;
+}
+
+.banner-row{
+    text-align: center;
+    width: 100vw;
+    height: 8rem;
+    margin: 0 0 2rem 0;
+    background-color: #33173C;
+}
+
+.banner-row h2{
+    font-size: 6.5rem;
+    color: #F5EDF4;
+    font-weight: bold;
+    padding: auto;
+}

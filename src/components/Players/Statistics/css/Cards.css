@@ -1,0 +1,84 @@
+.cards-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  padding: 0;
+}
+
+.cards-player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: auto;
+}
+
+.cards-container {
+  padding-bottom: 2rem;
+}
+
+.cards-heading {
+  font-size: 2.8rem;
+  color: #343a40;
+  margin-bottom: 1rem;
+}
+
+.player-card-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.player-card-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.player-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.player-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cards-no-data {
+  font-style: italic;
+}
+
+.cards-empty-img {
+  width: 200px;
+  margin-top: 1rem;
+}
+
+.king-card-container {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.king-card-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.king-card-badge {
+    margin-bottom: 10px;
+  color: #f5edf4;
+  font-size: 1rem;
+  padding: 5px 10px;
+  font-weight: 500;
+}
