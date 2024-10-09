@@ -14,8 +14,8 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
 import Loading from "../../Utils/Loading";
 import StyleUtils from "../../Utils/StyleUtils";
-
 import { useNavigate } from "react-router-dom";
+import PlayerSearch from "./PlayerSearch"; // Importar el componente de búsqueda
 
 const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
 
@@ -28,6 +28,7 @@ const PlayerCard = ({ player, index, currentPage }) => {
   const handleTeamSelection = (teamId) => navigate(`/team/${teamId}`);
   const match = player.teamLogoUrl.match(/_(\d+)\./);
   const teamId = match ? match[1] : 1;
+
   return (
     <Row
       key={player.playerId}
@@ -99,10 +100,11 @@ const PlayerCard = ({ player, index, currentPage }) => {
 
 const MinutesPlayed = ({ limit, showPagination = true }) => {
   const [players, setPlayers] = useState([]);
+  const [filteredPlayers, setFilteredPlayers] = useState([]); // Almacena jugadores filtrados
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [playersPerPage] = useState(6);
+  const playersPerPage = 6;
   const axiosPrivate = useAxiosPrivate();
 
   const MINUTES_URL = "player-statistics/minutesPlayed";
@@ -114,6 +116,7 @@ const MinutesPlayed = ({ limit, showPagination = true }) => {
       .get(MINUTES_URL)
       .then((response) => {
         setPlayers(response.data);
+        setFilteredPlayers(response.data); // Inicialmente todos los jugadores
         setLoading(false);
       })
       .catch((error) => {
@@ -126,9 +129,27 @@ const MinutesPlayed = ({ limit, showPagination = true }) => {
     fetchPlayers();
   }, [axiosPrivate]);
 
+  // Filtrar jugadores por nombre
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPlayers(players); // Mostrar todos si no hay búsqueda
+    } else {
+      const filtered = players.filter((player) =>
+        `${player.firstName} ${player.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+      setFilteredPlayers(filtered);
+      setCurrentPage(1); // Resetear a la primera página
+    }
+  };
+
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
-  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
+  const currentPlayers = filteredPlayers.slice(
+    indexOfFirstPlayer,
+    indexOfLastPlayer
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -156,25 +177,20 @@ const MinutesPlayed = ({ limit, showPagination = true }) => {
     );
   }
 
-  const totalPages = Math.ceil(players.length / playersPerPage);
-
-  const displayedPlayers = limit
-    ? currentPlayers.slice(0, limit)
-    : currentPlayers;
-
-  const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
+  const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
 
   return (
     <Container className="mt-4 ">
       <Col xs={12} md={10} lg={8} className="mx-auto">
         {showPagination && (
           <Row className="mt-3 justify-content-center">
+            <PlayerSearch onSearch={handleSearch} />
             <Pagination className="custom-pagination">
               {Array.from({ length: totalPages }, (_, i) => (
                 <Pagination.Item
                   key={i + 1}
                   active={i + 1 === currentPage}
-                  onClick={() => handlePageClick(i + 1)}
+                  onClick={() => paginate(i + 1)}
                   className="custom-pagination-item"
                 >
                   {i + 1}
@@ -183,7 +199,7 @@ const MinutesPlayed = ({ limit, showPagination = true }) => {
             </Pagination>
           </Row>
         )}
-        {displayedPlayers.map((player, index) => (
+        {currentPlayers.map((player, index) => (
           <PlayerCard
             key={player.playerId}
             player={player}

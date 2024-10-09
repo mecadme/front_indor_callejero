@@ -14,7 +14,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
 import Loading from "../../Utils/Loading";
 import StyleUtils from "../../Utils/StyleUtils";
-import PlayerSearch from "./PlayerSearch"; 
+import PlayerSearch from "./PlayerSearch"; // Importar el componente de búsqueda
 import "./css/PlayerStatistics.css";
 
 const PlayerStatistics = ({
@@ -27,7 +27,7 @@ const PlayerStatistics = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredPlayers, setFilteredPlayers] = useState([]); 
+  const [filteredPlayers, setFilteredPlayers] = useState([]); // Almacenará los jugadores filtrados por búsqueda
   const playersPerPage = 6;
   const axiosPrivate = useAxiosPrivate();
   const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
@@ -40,7 +40,7 @@ const PlayerStatistics = ({
           `/player-statistics/${eventType}`
         );
         setPlayers(response.data);
-        setFilteredPlayers(response.data); 
+        setFilteredPlayers(response.data);
       } catch {
         setError("Error al cargar los datos");
       } finally {
@@ -56,7 +56,7 @@ const PlayerStatistics = ({
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
-      setFilteredPlayers(players); 
+      setFilteredPlayers(players);
     } else {
       const filtered = players.filter((player) =>
         `${player.firstName} ${player.lastName}`
@@ -64,7 +64,7 @@ const PlayerStatistics = ({
           .includes(searchTerm.toLowerCase())
       );
       setFilteredPlayers(filtered);
-      setCurrentPage(1); 
+      setCurrentPage(1);
     }
   };
 
@@ -97,8 +97,11 @@ const PlayerStatistics = ({
   return (
     <Container fluid className="player-statistics-container">
       <Container className="mt-4 m-0 p-0 text-center">
-        <PlayerSearch onSearch={handleSearch} />
-
+        {showPagination && (
+          <Row>
+            <PlayerSearch onSearch={handleSearch} />
+          </Row>
+        )}
         <Col
           xs={12}
           md={10}

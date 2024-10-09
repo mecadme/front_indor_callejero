@@ -12,8 +12,8 @@ const FullStatistics = () => {
   return (
     <Container fluid>
       <Header />
-      <Container className="statistics-container">
-      <Row className="banner-row  mb-2">
+      <Container className="statistics-container p-0">
+      <Row className="banner-row">
         <h2 className="text-center">
           {location.state?.name || "Estadísticas"}
         </h2>

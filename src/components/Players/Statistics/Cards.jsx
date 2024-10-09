@@ -14,6 +14,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
 import Loading from "../../Utils/Loading";
 import StyleUtils from "../../Utils/StyleUtils";
+import PlayerSearch from "./PlayerSearch";
 import "./css/Cards.css";
 
 const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
@@ -22,8 +23,9 @@ const Cards = ({ limit, showPagination = true }) => {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1); // For pagination
-  const [playersPerPage] = useState(6); // Items per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredPlayers, setFilteredPlayers] = useState([]);
+  const playersPerPage = 6;
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -34,6 +36,7 @@ const Cards = ({ limit, showPagination = true }) => {
       .get(CARDS_URL)
       .then((response) => {
         setPlayers(response.data);
+        setFilteredPlayers(response.data);
         setLoading(false);
       })
       .catch(() => {
@@ -42,10 +45,26 @@ const Cards = ({ limit, showPagination = true }) => {
       });
   }, [axiosPrivate]);
 
-  // Calculate current players for pagination
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPlayers(players);
+    } else {
+      const filtered = players.filter((player) =>
+        `${player.firstName} ${player.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+      setFilteredPlayers(filtered);
+      setCurrentPage(1);
+    }
+  };
+
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
-  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
+  const currentPlayers = filteredPlayers.slice(
+    indexOfFirstPlayer,
+    indexOfLastPlayer
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -77,7 +96,6 @@ const Cards = ({ limit, showPagination = true }) => {
     );
   }
 
-  // Componente para renderizar cada tarjeta de jugador
   const PlayerCard = ({ player, index, cardType, currentPage }) => {
     const lighterColor = lightenColor(player.teamColor, 40);
     const textColor = getTextColor(lighterColor);
@@ -161,14 +179,13 @@ const Cards = ({ limit, showPagination = true }) => {
     );
   };
 
-  // Pagination setup
-  const totalPages = Math.ceil(players.length / playersPerPage);
+  const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
 
   return (
     <Container className="mt-1 cards-container">
-      {/* Pagination */}
       {showPagination && (
         <Row className="mt-3 justify-content-center">
+          <PlayerSearch onSearch={handleSearch} />
           <Pagination className="custom-pagination">
             {Array.from({ length: totalPages }, (_, i) => (
               <Pagination.Item
@@ -184,7 +201,6 @@ const Cards = ({ limit, showPagination = true }) => {
         </Row>
       )}
       <Row>
-        {/* Column for Yellow Cards */}
         <Col xs={12} md={6}>
           <h3 className="text-center cards-heading">Amarillas</h3>
           {yellowCards.length === 0 ? (
@@ -204,7 +220,6 @@ const Cards = ({ limit, showPagination = true }) => {
           )}
         </Col>
 
-        {/* Column for Red Cards */}
         <Col xs={12} md={6}>
           <h3 className="text-center cards-heading">Rojas</h3>
           {redCards.length === 0 ? (
