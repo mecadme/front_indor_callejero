@@ -31,8 +31,8 @@ const StyleUtils = () => {
     return `
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
           <defs>
-            <pattern id="zigzag" patternUnits="userSpaceOnUse" width="100" height="200" patternTransform="scale(10)">
-            <path d="M10,-20 L0,20 " stroke="${color}" stroke-width="200" fill="none"/>
+            <pattern id="zigzag" patternUnits="userSpaceOnUse" width="200" height="200" patternTransform="scale(10)">
+            <path d="M10,-20 L0,20 " stroke="${color}" stroke-width="400" fill="none"/>
             <path d="M10,0 L5,10 M10,20 L1,25 " stroke="${lightColor}" stroke-width="100" fill="${lightColor}"/>
             </pattern>
           </defs>

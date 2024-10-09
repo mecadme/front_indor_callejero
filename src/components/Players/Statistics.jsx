@@ -50,6 +50,7 @@ const PlayerStatisticsOverview = () => {
                   eventType={category.eventType}
                   name={category.name}
                   limit={3}
+                  showPagination = {false} 
                 />
               </Card.Body>
               <Card.Footer className="text-center">
@@ -73,7 +74,7 @@ const PlayerStatisticsOverview = () => {
               <h4>⏱ MINUTOS JUGADOS</h4>
             </Card.Header>
             <Card.Body>
-              <MinutesPlayed limit={3} />
+              <MinutesPlayed limit={3} showPagination = {false} />
             </Card.Body>
             <Card.Footer className="text-center">
               <Button

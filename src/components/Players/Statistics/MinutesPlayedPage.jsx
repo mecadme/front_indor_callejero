@@ -10,9 +10,9 @@ const MinutesPlayedPage = () => {
   return (
     <Container fluid>
       <Header />
-      <Container className="mt-5">
+      <Container className="mt-5 d-flex flex-column justify-content-center aling-items-center text-center">
         <h2 className="text-center">
-          {location.state?.name || "Estadísticas"}
+          Minutos Jugados
         </h2>
         <MinutesPlayed />
       </Container>
