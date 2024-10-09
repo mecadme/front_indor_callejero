@@ -31,10 +31,9 @@ const StyleUtils = () => {
     return `
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
           <defs>
-            <pattern id="zigzag" patternUnits="userSpaceOnUse" width="20" height="120" patternTransform="scale(5)">
-              <path d="M10,-10 L0,40 " stroke="${lightColor}" stroke-width="20" fill="none"/>
-              <path d="M20,0 L5,100 Z " stroke="${color}" stroke-width="15" fill="none"/>
-              
+            <pattern id="zigzag" patternUnits="userSpaceOnUse" width="100" height="200" patternTransform="scale(10)">
+            <path d="M10,-20 L0,20 " stroke="${color}" stroke-width="200" fill="none"/>
+            <path d="M10,0 L5,10 M10,20 L1,25 " stroke="${lightColor}" stroke-width="100" fill="${lightColor}"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#zigzag)" />

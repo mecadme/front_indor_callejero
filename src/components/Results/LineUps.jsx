@@ -47,7 +47,7 @@ const LineUps = ({ matchDetails }) => {
 
   const Circle = ({ color }) => (
     <svg width="50" height="50">
-      <circle cx="25" cy="25" r="8" fill={color} />
+      <circle cx="15" cy="15" r="7" fill={color} />
     </svg>
   );
 
@@ -76,7 +76,7 @@ const LineUps = ({ matchDetails }) => {
                 {player.jerseyNumber}{" "}
               </span>
 
-              <span className="player-name" style={{ fontSize: "1rem" }}>
+              <span className="player-name" style={{ fontSize: "1.25rem" }}>
                 {player.firstName.toUpperCase()} {player.lastName.toUpperCase()}
               </span>
               {position === "right" && <Circle color={color} />}

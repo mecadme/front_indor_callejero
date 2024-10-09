@@ -17,7 +17,7 @@ const FinishedMatchAdmin = () => {
   if (loadingResults) return <Loading />;
   if (errorResults) return <p className="alert alert-danger">Error al cargar los partidos: {errorResults.message}</p>;
 
-  // Mapea los resultados para estructurar los datos del partido
+  
   const finishedMatches = results?.map((result) => ({
     ...result.match,
     homeTeamGoals: result.goalsHomeTeam,
@@ -25,8 +25,8 @@ const FinishedMatchAdmin = () => {
   })) || [];
 
   const handleEventClick = (matchId) => {
-    setSelectedMatchId(matchId); // Actualiza el ID del partido seleccionado
-    setActiveTab("events"); // Cambia a la pestaña de eventos
+    setSelectedMatchId(matchId); 
+    setActiveTab("events"); 
   };
 
   return (
@@ -74,7 +74,6 @@ const FinishedMatchAdmin = () => {
           {selectedMatchId ? (
             <div className="mt-4">
               <h3>Eventos del Partido</h3>
-              {/* Asegúrate de que MatchEvents reciba el matchId correcto */}
               <MatchEvents matchId={selectedMatchId} />
             </div>
           ) : (
