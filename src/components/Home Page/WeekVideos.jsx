@@ -83,7 +83,6 @@ const WeekVideos = () => {
                   title={video.videoTitle}
                   style={{ border: "none", cursor: "pointer" }}
                   allowFullScreen
-                  allow-modals
                   onClick={() => handleShowModal(video)}
                 />
                 <Carousel.Caption className="custom-caption">

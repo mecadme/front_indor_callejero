@@ -8,6 +8,6 @@
 }
 
 .event-link{
-    background-color: #3E78BC;
-    color: #F5EDF4;
+    background-color: #3E78BC !important;
+    color: #F5EDF4 !important;
 }

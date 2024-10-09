@@ -14,7 +14,7 @@ const Matches = () => {
     loading: isLoading,
     error,
     getMatches,
-  } = useGetMatches(); // matches inicializado como array vacío
+  } = useGetMatches();
   const [filteredMatches, setFilteredMatches] = useState([]);
   const [searchDate, setSearchDate] = useState("");
   const [teamFilter, setTeamFilter] = useState("");
@@ -29,23 +29,15 @@ const Matches = () => {
 
   useEffect(() => {
     if (Array.isArray(matches)) {
-      const sortedMatches = [...matches].sort(
-        (a, b) => new Date(b.schedule.date) - new Date(a.schedule.date)
-      );
-      setFilteredMatches(sortedMatches);
+      const reversedMatches = [...matches].reverse(); // Invierte el array
+      setFilteredMatches(reversedMatches);
     }
   }, [matches]);
 
   useEffect(() => {
     if (Array.isArray(matches)) {
       let filtered = [...matches];
-      if (searchDate) {
-        filtered = filtered.filter(
-          (match) =>
-            new Date(match.schedule.date).toLocaleDateString() ===
-            new Date(searchDate).toLocaleDateString()
-        );
-      }
+      
       if (teamFilter) {
         filtered = filtered.filter(
           (match) =>
@@ -53,9 +45,9 @@ const Matches = () => {
             match.awayTeam.name.includes(teamFilter)
         );
       }
-      setFilteredMatches(filtered);
+      setFilteredMatches(filtered.reverse());
     }
-  }, [searchDate, teamFilter, matches]);
+  }, [teamFilter, matches]);
 
   const handleMatchClick = (matchId) => {
     navigate(`/result/${matchId}`);
@@ -95,7 +87,6 @@ const Matches = () => {
         <h2 className="text-center mb-4">Partidos</h2>
 
         <Row className="mb-4">
-          
           <Col md={4}>
             <Form.Group controlId="filterByTeam">
               <Form.Label>Filtrar por equipo</Form.Label>
@@ -122,9 +113,18 @@ const Matches = () => {
             </Form.Group>
           </Col>
         </Row>
+        <Pagination>
+          {[...Array(Math.ceil(filteredMatches.length / matchesPerPage))].map(
+            (_, idx) => (
+              <Pagination.Item key={idx + 1} onClick={() => paginate(idx + 1)}>
+                {idx + 1}
+              </Pagination.Item>
+            )
+          )}
+        </Pagination>
 
         <Row>
-        {currentMatches.map((match) => (
+          {currentMatches.map((match) => (
             <Col
               key={match.matchId}
               md={6}
