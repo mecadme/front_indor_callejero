@@ -13,6 +13,7 @@ import TeamsFoot from "./TeamsFoot";
 
 import useFetchTeams from "../../hooks/useFetchTeams";
 import useFetchRounds from "../../hooks/useFetchRounds";
+import"./css/Footer.css";
 
 const Footer = () => {
   // Define el estado y la función para actualizarlo correctamente
@@ -27,31 +28,31 @@ const Footer = () => {
   };
 
   return (
-      <Container fluid className="mt-5">
-        <Row>
+      <Container fluid className="footer mt-5">
+        <Row className="sponsors-row pt-3 m-0">
           <Sponsors maxContributions={100} />
         </Row>
 
-        <Row>
-          <Col>
+        <Row className="footer-row pt-3 m-0" >
+          <Col xs={2} md={2} lg={2}>
             <TeamsFoot content={teams} getAllTeams={getAllTeams} />
           </Col>
-          <Col>
+          <Col xs={2} md={2} lg={2}>
             <ScheduleFoot />
           </Col>
-          <Col>
+          <Col xs={2} md={2} lg={2}>
             <StandingsFoot />
           </Col>
-          <Col>
+          <Col xs={2} md={2} lg={2}>
             <StatisticsFoot />
           </Col>
        
-          <Col>
+          <Col xs={2} md={2} lg={2}>
             <ComparasonsFoot />
           </Col>
         </Row>
 
-        <Row>
+        <Row className="powerBy-row m-0">
           <PoweredBy />
         </Row>
       </Container>

@@ -1,6 +1,7 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "./css/StatisticsFoot.css";
 
 const StatisticsFoot = () => {
   const eventNames = {
@@ -18,12 +19,12 @@ const StatisticsFoot = () => {
   };
 
   return (
-    <ListGroup>
+    <ListGroup className="statistics-foot">
       <Link to="/statistics" className="nav-link">
         <h5>Estadísticas</h5>
       </Link>
       {Object.keys(eventNames).map((eventType) => (
-        <ListGroup.Item key={eventType}>
+        <ListGroup.Item key={eventType} className="event-link p-0 m-0">
           <Link
             to={`/${eventType}`}
             className="nav-link"

@@ -5,50 +5,31 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   width: 100%;
 }
-html {
-  font-size: 18px;
-  color: #f5edf4;
-}
+
 
 a {
   padding: 0.5rem;
-  color: #100f10;
+  color: #F5EDF4;
   text-decoration: none;
 }
 
 a:visited {
-  color: #100f0f;
+  color: #F5EDF4;
 }
 a:hover {
-  transform: scale(1.05);
+  transform: scale(1.15);
   text-decoration: none;
-  color: #501717;
-  transition: color 0.2s;
 }
 
-body {
-  min-height: 100vh;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.App {
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100%;
-}
 
 h1 {
-  color: #f5edf4;
+  color: #F5EDF4;
   margin-bottom: 1rem;
   font-size: 24px;
   text-align: center;

@@ -1,0 +1,13 @@
+.statistics-foot{
+    background-color: #3E78BC;
+    color: #F5EDF4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.event-link{
+    background-color: #3E78BC;
+    color: #F5EDF4;
+}
