@@ -4,6 +4,7 @@ import PlayerStatistics from "./PlayerStatistics"; // Reutiliza el componente de
 import { Container, Row } from "react-bootstrap";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
+import PageBanner from "../../Utils/PageBanner";
 
 const FullStatistics = () => {
   const { eventType } = useParams();
@@ -13,11 +14,7 @@ const FullStatistics = () => {
     <Container fluid>
       <Header />
       <Container className="statistics-container p-0">
-      <Row className="banner-row">
-        <h2 className="text-center">
-          {location.state?.name || "Estadísticas"}
-        </h2>
-      </Row>
+        <PageBanner title={location.state?.name} />
         <PlayerStatistics eventType={eventType} name={location.state?.name} />
       </Container>
       <Footer />

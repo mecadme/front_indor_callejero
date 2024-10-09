@@ -6,8 +6,8 @@ import {
   Col,
   Container,
   Image,
-  Row,
   Pagination,
+  Row,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";

@@ -3,18 +3,15 @@ import { Container, Row } from "react-bootstrap";
 import Footer from "../../Footer/Footer";
 import Header from "../../Header/Header";
 import Cards from "./Cards";
+import PageBanner from "../../Utils/PageBanner";
 
 const CardsPage = () => {
   return (
     <Container fluid>
       <Header />
-      <Container className="cards-page-container">
-        <Row className="banner-row  mb-2">
-        <h2 className="text-center">
-          Tarjetas
-        </h2>
-        </Row>
-        
+      <Container className="cards-page-container p-0">
+        <PageBanner title="Tarjetas" />
+       
         <Cards />
       </Container>
       <Footer />

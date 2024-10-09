@@ -13,6 +13,15 @@ html, body {
   width: 99vw;
   text-transform: uppercase;
 }
+.banner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  padding: 0;
+}
+
 
 
 

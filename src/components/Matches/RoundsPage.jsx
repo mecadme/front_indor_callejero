@@ -1,17 +1,19 @@
 import React from "react";
-import Rounds from "../Home Page/Rounds";
 import { Container } from "react-bootstrap";
 import useFetchRounds from "../../hooks/useFetchRounds";
-import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
+import Rounds from "../Home Page/Rounds";
+import PageBanner from "../Utils/PageBanner";
 
 const RoundsPage = () => {
   const { RoundsData, loading, error } = useFetchRounds();
   return (
-    <Container fluid>
+    <Container fluid className="p-0">
       <Header />
-      <Container className="mt-5">
-        <h2 className="text-center mb-2">Todas las jornadas</h2>
+      <Container className="banner-container">
+        <PageBanner title={"Jornadas"}/>
+       </Container> <Container>
         <Rounds RoundsData={RoundsData} />
       </Container>
       <Footer />

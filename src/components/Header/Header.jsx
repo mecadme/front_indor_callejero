@@ -3,7 +3,7 @@ import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/indor_callejero_logo.png";
 import TeamsBarComponent from "./TeamsBarComponent";
-import { jwtDecode } from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode";
 import Loading from "../Utils/Loading";
 import useFetchTeams from "../../hooks/useFetchTeams";
 import useFetchUser from "../../hooks/useFetchUser";
@@ -47,7 +47,8 @@ const Header = () => {
 
   const renderUserInfo = () => {
     if (userIsLoading) return <Loading />;
-    if (userError) return <div className="error-message">Error: {userError}</div>;
+    if (userError)
+      return <div className="error-message">Error: {userError}</div>;
     if (!user) return null;
 
     return (
@@ -87,7 +88,9 @@ const Header = () => {
   }
 
   if (teamsError || userError) {
-    return <div className="error-message">Error: {teamsError || userError}</div>;
+    return (
+      <div className="error-message">Error: {teamsError || userError}</div>
+    );
   }
 
   return (
@@ -103,31 +106,45 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-            <Nav.Item>
-  <Link to="/street_project" className="nav-link" aria-label="Proyecto Callejero">
-    Proyecto Callejero
-  </Link>
-</Nav.Item>
-<Nav.Item>
-  <Link to="/all_you_need_to_know" className="nav-link" aria-label="Todo lo que debes saber">
-    Todo lo que debes saber
-  </Link>
-</Nav.Item>
-<Nav.Item>
-  <Link to="/historical_events" className="nav-link" aria-label="Palmarés Históricos">
-    Palmarés Históricos
-  </Link>
-</Nav.Item>
+              <Nav.Item>
+                <Link
+                  to="/street_project"
+                  className="nav-link"
+                  aria-label="Proyecto Callejero"
+                >
+                  Proyecto Callejero
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Link
+                  to="/all_you_need_to_know"
+                  className="nav-link"
+                  aria-label="Todo lo que debes saber"
+                >
+                  Todo lo que debes saber
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Link
+                  to="/historical_events"
+                  className="nav-link"
+                  aria-label="Palmarés Históricos"
+                >
+                  Palmarés Históricos
+                </Link>
+              </Nav.Item>
               <NavDropdown title="Comparaciones" id="basic-nav-dropdown">
                 <NavDropdown.Item>
                   <Link to="/comparisons/teams" className="nav-link">
                     Comparar Equipos
                   </Link>
                 </NavDropdown.Item>
-                <Link to="/comparisons/players" className="nav-link">
-                  Comparar Jugadores
-                </Link>
               </NavDropdown>
+                <NavDropdown.Item>
+                  <Link to="/comparisons/players" className="nav-link">
+                    Comparar Jugadores
+                  </Link>
+                </NavDropdown.Item>
               <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
                 <NavDropdown title="Administración" id="basic-nav-dropdown">
                   <RoleBased allowedRoles={["ROLE_ADMIN"]}>
@@ -155,7 +172,9 @@ const Header = () => {
               </Nav.Link>
             </Nav>
             <Nav.Item className="nav-login">
-              {user ? renderUserInfo() : (
+              {user ? (
+                renderUserInfo()
+              ) : (
                 <Button
                   variant="outline-light"
                   onClick={() => navigate("/login")}

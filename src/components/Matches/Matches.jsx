@@ -17,6 +17,7 @@ import Header from "../Header/Header";
 import Loading from "../Utils/Loading";
 import StyleUtils from "../Utils/StyleUtils";
 import "./css/Matches.css";
+import PageBanner from "../Utils/PageBanner";
 
 const Matches = () => {
   const {
@@ -167,7 +168,10 @@ const Matches = () => {
         {players
           .filter((player) => player.status === "STARTER") // Filtrar jugadores cuyo estado es STARTER
           .map((player) => (
-            <li key={player.playerId} className="d-flex align-items-center my-0">
+            <li
+              key={player.playerId}
+              className="d-flex align-items-center my-0"
+            >
               {side === "home" ? (
                 <Row className="w-100 m-1">
                   <Col md={4}>
@@ -204,7 +208,7 @@ const Matches = () => {
       </ul>
     </Col>
   );
-  
+
   if (isLoading) {
     return <Loading />;
   }
@@ -232,10 +236,10 @@ const Matches = () => {
   return (
     <Container fluid className="mt-2 matches">
       <Header />
-      <Container className="mt-5">
-        <h2 className="text-center mb-4">Partidos</h2>
+      <Container className="banner-container">
+        <PageBanner title={"Partidos"} />
 
-        <Row className="mb-4">
+        <Row className="my-4">
           <Col md={12}>
             <Form.Group controlId="filterByTeam">
               <Form.Label>Filtrar por equipo</Form.Label>
@@ -262,28 +266,19 @@ const Matches = () => {
           </Col>
         </Row>
 
-        <Pagination className="justify-content-center mb-4">
-          <Pagination.Prev
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-          />
+        <Pagination className="custom-pagination">
           {[...Array(Math.ceil(filteredMatches.length / matchesPerPage))].map(
             (_, idx) => (
               <Pagination.Item
                 key={idx + 1}
                 active={idx + 1 === currentPage}
                 onClick={() => paginate(idx + 1)}
+                className="custom-pagination-item"
               >
                 {idx + 1}
               </Pagination.Item>
             )
           )}
-          <Pagination.Next
-            onClick={() => paginate(currentPage + 1)}
-            disabled={
-              currentPage === Math.ceil(filteredMatches.length / matchesPerPage)
-            }
-          />
         </Pagination>
 
         <Row>
@@ -341,7 +336,11 @@ const Matches = () => {
                 </Card.Body>
                 <Card.Footer className="text-muted text-center">
                   <p>
-                    <img src={icons.duration} alt="clock-icon" className="icon-size" />
+                    <img
+                      src={icons.duration}
+                      alt="clock-icon"
+                      className="icon-size"
+                    />
                     {match.duration} min
                   </p>
                   <p>
