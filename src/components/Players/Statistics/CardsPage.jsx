@@ -1,9 +1,7 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
-import PlayerStatistics from "./PlayerStatistics"; // Reutiliza el componente de estadísticas
 import { Container, Row } from "react-bootstrap";
-import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
+import Header from "../../Header/Header";
 import Cards from "./Cards";
 
 const CardsPage = () => {
