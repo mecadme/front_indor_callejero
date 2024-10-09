@@ -1,0 +1,13 @@
+.standings-foot{
+    background-color: #3E78BC;
+    color: #F5EDF4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.group-link{
+    background-color: #3E78BC !important;
+    color: #F5EDF4;
+}

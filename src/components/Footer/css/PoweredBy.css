@@ -1,0 +1,18 @@
+.powered-by {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #3e78bc;
+  color: #f5edf4;
+  padding: 0.5rem 0;
+  width: 100vw;
+}
+
+.ipsum-logo {
+  width: 10rem;
+  filter: grayscale(100) brightness(39);
+}
+
+.nelasmi-logo {
+  width: 30rem;
+}

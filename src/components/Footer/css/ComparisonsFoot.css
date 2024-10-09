@@ -1,0 +1,17 @@
+.comparisons-foot{
+    background-color: #3E78BC;
+    color: #F5EDF4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.comparisons-teams-link{
+    background-color: #3E78BC !important;
+    color: #F5EDF4;
+}
+.comparisons-players-link{
+    background-color: #3E78BC !important;
+    color: #F5EDF4;
+}

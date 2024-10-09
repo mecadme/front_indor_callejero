@@ -1,113 +1,94 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
+  font-variant: small-caps;
 }
 
-html {
-  font-family: "Montserrat", sans-serif;
-  font-size: 18px; 
-  color: #F5EDF4;
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
 }
+
 
 a {
   padding: 0.5rem;
-  color: #efbe63;
+  color: #F5EDF4;
   text-decoration: none;
 }
 
 a:visited {
-  color: #efbe63;
+  color: #F5EDF4;
 }
 a:hover {
+  transform: scale(1.15);
   text-decoration: none;
-  color: #ffffff;
-  transition: color 0.2s;
 }
 
-body {
-  min-height: 100vh;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.App {
-  width: 30rem; 
-  padding: 1rem;
-}
-
-section {
-  width: 100%;
-  background-color: #3e79bcba; 
-  border-radius: 0.5rem; 
-  box-shadow: 0 4px 20px #3e79bc70; 
-  padding: 2rem; 
-  display: flex;
-  flex-direction: column;
-}
 
 h1 {
-  color: #33173C;
-  margin-bottom: 1rem; 
-  font-size: 24px; 
-  text-align: center; 
+  color: #F5EDF4;
+  margin-bottom: 1rem;
+  font-size: 24px;
+  text-align: center;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
+  gap: 1.5rem;
 }
 
 .input-group {
   display: flex;
-  align-items: center; 
-  gap: 1rem; 
+  align-items: center;
+  gap: 1rem;
 }
 
 label {
-  font-weight: bold; 
-  flex: 1; 
+  font-weight: bold;
+  flex: 1;
 }
 
 input[type="text"],
 input[type="password"],
 button {
   width: 100%;
-  font-size: 18px; 
-  padding: 0.75rem; 
-  border: 1px solid #ccc; 
+  font-size: 18px;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
   border-radius: 0.5rem;
-  background-color: #3e79bc9c; 
-  color: #fff; 
-  transition: border 0.3s; 
+  background-color: #3e79bc9c;
+  color: #fff;
+  transition: border 0.3s;
 }
 
 input:focus,
 button:focus {
-  border: 1px solid #3e79bcfd; 
-  outline: none; 
+  border: 1px solid #3e79bcfd;
+  outline: none;
 }
 
 button {
-  background-color: #3e79bc; 
-  color: #fff; 
-  cursor: pointer; 
-  padding: 0.75rem; 
-  border: none; 
+  background-color: #3e79bc;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.75rem;
+  border: none;
   border-radius: 0.5rem;
-  transition: background-color 0.3s; 
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
 
 button:disabled {
-  background-color: #6c757d; 
-  cursor: not-allowed; 
+  background-color: #6c757d;
+  cursor: not-allowed;
 }
 
 .instructions {
@@ -116,8 +97,8 @@ button:disabled {
   color: #fff;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  width: 15rem; 
-  overflow: hidden; 
+  width: 15rem;
+  overflow: hidden;
   transition: opacity 0.3s;
 }
 
@@ -141,22 +122,21 @@ button:disabled {
 }
 
 .errmsg {
-  background-color: #3e6cbc7c; 
+  background-color: #3e6cbc7c;
   color: #ff2121d2;
   font-weight: bold;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
-  border-radius: 0.5rem; 
+  border-radius: 0.5rem;
 }
 
 .line {
   display: inline-block;
-  margin-top: 1rem; 
+  margin-top: 1rem;
 }
 
 .linkContainer {
   margin-top: 1rem;
-   
 }
 
 .showPwd:hover {
@@ -165,7 +145,7 @@ button:disabled {
 }
 
 .pwdForgot {
-  margin-top: 1rem; 
+  margin-top: 1rem;
   text-align: center;
 }
 
@@ -175,28 +155,28 @@ button:disabled {
 
 @media (max-width: 600px) {
   html {
-    font-size: 16px; 
+    font-size: 16px;
   }
 
   h1 {
-    font-size: 20px; 
+    font-size: 20px;
   }
 
   input[type="text"],
   input[type="password"],
   button {
-    font-size: 16px; 
+    font-size: 16px;
   }
 
   button {
-    padding: 0.5rem; 
+    padding: 0.5rem;
   }
   .App {
-    width: 100%;
+    width: 90%;
     padding: 0.5rem;
     max-width: 100%;
   }
   label {
-    font-size: 0.8rem; 
+    font-size: 0.8rem;
   }
 }

@@ -1,60 +1,112 @@
-import Admin from "./components/Admin";
-import Editor from "./components/Editor.jsx";
-import ForgotPassword from "./components/ForgotPassword";
+import { Route, Routes } from "react-router-dom";
+import Admin from "./components/Admin/Admin.jsx";
+import LinkPage from "./components/Admin/LinkPage.jsx";
+import Layout from "./components/Administration/Layout.jsx";
+import Missing from "./components/Administration/Missing.jsx";
+import ForgotPassword from "./components/Authentication/ForgotPassword.jsx";
+import Login from "./components/Authentication/Login.jsx";
+import PersistLogin from "./components/Authentication/PersistLogin.jsx";
+import Register from "./components/Authentication/Register.jsx";
+import RequiredAuth from "./components/Authentication/RequiredAuth.jsx";
+import Unauthorized from "./components/Authentication/Unauthorized.jsx";
+import ComparisonsPage from "./components/Comparisons/ComparisonsPage.jsx";
+import PlayersComparison from "./components/Comparisons/PlayersComparison.jsx";
+import TeamsComparison from "./components/Comparisons/TeamsComparison.jsx";
+import HistoricalEvents from "./components/Header/HistoricalEvents.jsx";
+import ResultPredict from "./components/Header/ResultPredict.jsx";
+import StreetProject from "./components/Header/StreetProject.jsx";
+import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import Layout from "./components/Layout";
-import LinkPage from "./components/LinkPage";
-import Login from "./components/Login";
-import Lounge from "./components/Lounge";
-import Missing from "./components/Missing";
-import Unauthorized from "./components/Unauthorized";
-import Register from "./components/Register";
-import RequiredAuth from "./components/RequiredAuth";
-import { Routes, Route } from "react-router-dom";
-import PersistLogin from "./components/PersistLogin.jsx";
+import Lounge from "./components/Manager/Lounge.jsx";
+import MatchManager from "./components/Manager/MatchManager.jsx";
+import Matches from "./components/Matches/Matches.jsx";
+import RoundsPage from "./components/Matches/RoundsPage.jsx";
+import PlayerPage from "./components/Players/PlayerPage.jsx";
+import Statistics from "./components/Players/Statistics.jsx";
+import CardsPage from "./components/Players/Statistics/CardsPage.jsx";
+import FullStatistics from "./components/Players/Statistics/FullStats.jsx";
+import MinutesPlayedPage from "./components/Players/Statistics/MinutesPlayedPage.jsx";
+import ResultPage from "./components/Results/ResultPage.jsx";
+import TeamPage from "./components/Teams/TeamPage.jsx";
+import Teams from "./components/Teams/Teams.jsx";
+import TeamStandings from "./components/Teams/TeamStandings.jsx";
+import UserPage from "./components/User/UserPage.jsx";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import CoachPage from "./components/Matches/CoachPage.jsx";
+import useFetchTeams from "./hooks/useFetchTeams.jsx";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ROLES = {
   User: "ROLE_USER",
-  Editor: "ROLE_ADMIN",
+  Editor: "ROLE_MANAGER",
   Admin: "ROLE_ADMIN",
 };
 
 function App() {
+  const { teams } = useFetchTeams();
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        {/* public routes */}
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="linkpage" element={<LinkPage />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="unauthorized" element={<Unauthorized />} />
+      <Route element={<PersistLogin />}>
+        <Route path="/" element={<Layout />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="unauthorized" element={<Unauthorized />} />
 
-        {/* we want to protect these routes */}
-        <Route element={<PersistLogin />}>
+          <Route path="/" element={<Home />} />
+          <Route path="linkpage" element={<LinkPage />} />
+          <Route path="street_project" element={<StreetProject />} />
+          <Route path="all_you_need_to_know" element={<TLQDS />} />
+          <Route path="historical_events" element={<HistoricalEvents />} />
+          <Route path="predict_result" element={<ResultPredict />} />
+
           <Route
             element={
               <RequiredAuth
-                allowedRoles={[ROLES.User, ROLES.Editor, ROLES.Admin]}
+                allowedRoles={[ROLES.Editor, ROLES.Admin, ROLES.User]}
               />
             }
           >
-            <Route path="/" element={<Home />} />
-          </Route>
+            <Route
+              element={
+                <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
+              }
+            >
+              <Route path="/managment/manager" element={<MatchManager />} />
+            </Route>
 
-          <Route element={<RequiredAuth allowedRoles={[ROLES.Editor]} />}>
-            <Route path="editor" element={<Editor />} />
-          </Route>
-
-          <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-            <Route path="admin" element={<Admin />} />
-          </Route>
-
-          <Route
-            element={
-              <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
-            }
-          >
+            <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
+              <Route path="/managment/admin" element={<Admin />} />
+            </Route>
+            <Route path="/comparisons" element={<ComparisonsPage />} />
+            <Route path="/comparisons/teams" element={<TeamsComparison />} />
+            <Route
+              path="/comparisons/players"
+              element={<PlayersComparison />}
+            />
+            <Route path="rounds" element={<RoundsPage />} />
+            <Route path="matches" element={<Matches />} />
+            <Route path="/team/:teamId" element={<TeamPage teams={teams} />} />
+            <Route path="/player/:playerId" element={<PlayerPage />} />
+            <Route path="/result/:matchId" element={<ResultPage />} />
+            <Route path="group_standings" element={<TeamStandings />} />
+            <Route path="/:eventType" element={<FullStatistics />} />
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/card" element={<CardsPage />} />
+            <Route path="/minutes_played" element={<MinutesPlayedPage />} />
+            <Route path="/coach" element={<CoachPage />} />
+            <Route path="/user/:userName/:userId" element={<UserPage />} />
             <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route>
