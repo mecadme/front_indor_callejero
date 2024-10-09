@@ -164,45 +164,47 @@ const Matches = () => {
     >
       <h3>{teamName}</h3>
       <ul className={`list-unstyled `}>
-        {players.map((player) => (
-          <li key={player.playerId} className="d-flex align-items-center my-0">
-            {side === "home" ? (
-              <Row className="w-100 m-1">
-                <Col md={4}>
-                  <img
-                    src={player.photoUrl}
-                    alt={player.firstName}
-                    width="30"
-                    height="30"
-                    className="mx-2"
-                  />
-                </Col>
-                <Col md={8}>
-                  {player.firstName[0]}. {player.lastName}
-                </Col>
-              </Row>
-            ) : (
-              <Row className="w-100 m-1">
-                <Col md={8}>
-                  {player.firstName[0]}. {player.lastName}
-                </Col>
-                <Col md={4} className="d-flex justify-content-start">
-                  <img
-                    src={player.photoUrl}
-                    alt={player.firstName}
-                    width="30"
-                    height="30"
-                    className="mx-2"
-                  />
-                </Col>
-              </Row>
-            )}
-          </li>
-        ))}
+        {players
+          .filter((player) => player.status === "STARTER") // Filtrar jugadores cuyo estado es STARTER
+          .map((player) => (
+            <li key={player.playerId} className="d-flex align-items-center my-0">
+              {side === "home" ? (
+                <Row className="w-100 m-1">
+                  <Col md={4}>
+                    <img
+                      src={player.photoUrl}
+                      alt={player.firstName}
+                      width="30"
+                      height="30"
+                      className="mx-2"
+                    />
+                  </Col>
+                  <Col md={8}>
+                    {player.firstName[0]}. {player.lastName}
+                  </Col>
+                </Row>
+              ) : (
+                <Row className="w-100 m-1">
+                  <Col md={8}>
+                    {player.firstName[0]}. {player.lastName}
+                  </Col>
+                  <Col md={4} className="d-flex justify-content-start">
+                    <img
+                      src={player.photoUrl}
+                      alt={player.firstName}
+                      width="30"
+                      height="30"
+                      className="mx-2"
+                    />
+                  </Col>
+                </Row>
+              )}
+            </li>
+          ))}
       </ul>
     </Col>
   );
-
+  
   if (isLoading) {
     return <Loading />;
   }
