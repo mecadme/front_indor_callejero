@@ -222,7 +222,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     players
       .filter(
         (p) =>
-          p.status === "ACTIVE" &&
+          p.status === "ACTIVE" || p.status === "STARTER" &&
           !lineUp.some((l) => l.playerId === p.playerId)
       )
       .map((player) => (

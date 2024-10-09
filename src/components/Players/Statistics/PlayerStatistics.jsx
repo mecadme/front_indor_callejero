@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Badge,
-  Card,
   Col,
   Container,
   Image,
   Row,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import EmptyData from "../../Administration/EmptyData";
-import Header from "../../Header/Header";
-import Footer from "../../Footer/Footer";
 
 const PlayerStatistics = ({ eventType, name, limit }) => {
   const [players, setPlayers] = useState([]);

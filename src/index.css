@@ -3,6 +3,7 @@
   padding: 0;
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
+  font-variant: small-caps;
 }
 
 html, body {

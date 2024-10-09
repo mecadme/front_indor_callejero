@@ -9,33 +9,35 @@ import PersistLogin from "./components/Authentication/PersistLogin.jsx";
 import Register from "./components/Authentication/Register.jsx";
 import RequiredAuth from "./components/Authentication/RequiredAuth.jsx";
 import Unauthorized from "./components/Authentication/Unauthorized.jsx";
+import ComparisonsPage from "./components/Comparisons/ComparisonsPage.jsx";
+import PlayersComparison from "./components/Comparisons/PlayersComparison.jsx";
+import TeamsComparison from "./components/Comparisons/TeamsComparison.jsx";
 import HistoricalEvents from "./components/Header/HistoricalEvents.jsx";
 import ResultPredict from "./components/Header/ResultPredict.jsx";
 import StreetProject from "./components/Header/StreetProject.jsx";
 import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import MatchManager from "./components/Manager/MatchManager.jsx";
 import Lounge from "./components/Manager/Lounge.jsx";
+import MatchManager from "./components/Manager/MatchManager.jsx";
 import Matches from "./components/Matches/Matches.jsx";
+import RoundsPage from "./components/Matches/RoundsPage.jsx";
 import PlayerPage from "./components/Players/PlayerPage.jsx";
 import Statistics from "./components/Players/Statistics.jsx";
-import Cards from "./components/Players/Statistics/Cards.jsx";
+import CardsPage from "./components/Players/Statistics/CardsPage.jsx";
 import FullStatistics from "./components/Players/Statistics/FullStats.jsx";
-import MinutesPlayed from "./components/Players/Statistics/MinutesPlayed.jsx";
-import RoundsPage from "./components/Matches/RoundsPage.jsx";
+import MinutesPlayedPage from "./components/Players/Statistics/MinutesPlayedPage.jsx";
+import ResultPage from "./components/Results/ResultPage.jsx";
 import TeamPage from "./components/Teams/TeamPage.jsx";
 import Teams from "./components/Teams/Teams.jsx";
 import TeamStandings from "./components/Teams/TeamStandings.jsx";
-import ResultPage from "./components/Results/ResultPage.jsx";
-import ComparisonsPage from "./components/Comparisons/ComparisonsPage.jsx";
-import PlayersComparison from "./components/Comparisons/PlayersComparison.jsx";
-import TeamsComparison from "./components/Comparisons/TeamsComparison.jsx";
 import UserPage from "./components/User/UserPage.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import useFetchTeams from "./hooks/useFetchTeams.jsx";
 import CoachPage from "./components/Matches/CoachPage.jsx";
+import useFetchTeams from "./hooks/useFetchTeams.jsx";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ROLES = {
   User: "ROLE_USER",
@@ -45,6 +47,12 @@ const ROLES = {
 
 function App() {
   const { teams } = useFetchTeams();
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <Routes>
@@ -95,8 +103,8 @@ function App() {
             <Route path="/:eventType" element={<FullStatistics />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/teams" element={<Teams />} />
-            <Route path="/card" element={<Cards />} />
-            <Route path="/minutes_played" element={<MinutesPlayed />} />
+            <Route path="/card" element={<CardsPage />} />
+            <Route path="/minutes_played" element={<MinutesPlayedPage />} />
             <Route path="/coach" element={<CoachPage />} />
             <Route path="/user/:userName/:userId" element={<UserPage />} />
             <Route path="lounge" element={<Lounge />} />
