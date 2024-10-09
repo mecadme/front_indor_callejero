@@ -139,12 +139,13 @@ const Header = () => {
                     Comparar Equipos
                   </Link>
                 </NavDropdown.Item>
-              </NavDropdown>
+
                 <NavDropdown.Item>
                   <Link to="/comparisons/players" className="nav-link">
                     Comparar Jugadores
                   </Link>
                 </NavDropdown.Item>
+              </NavDropdown>
               <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
                 <NavDropdown title="Administración" id="basic-nav-dropdown">
                   <RoleBased allowedRoles={["ROLE_ADMIN"]}>
