@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "../../assets/indor_callejero_logo.png";
 import TeamsBarComponent from "./TeamsBarComponent";
 import { jwtDecode } from "jwt-decode";
@@ -10,17 +10,21 @@ import useFetchUser from "../../hooks/useFetchUser";
 import useAuth from "../../hooks/useAuth";
 import useLogOut from "../../hooks/useLogOut";
 import RoleBased from "../Administration/RoleBased";
-import { Link } from "react-router-dom";
 import "./css/Header.css";
 
 const Header = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const navigate = useNavigate();
+
   const { teams, isLoading: teamsLoading, error: teamsError } = useFetchTeams();
   const { auth } = useAuth();
   const decodedToken = auth?.accessToken ? jwtDecode(auth.accessToken) : null;
   const userName = auth?.user?.username || decodedToken?.sub || null;
-  const { user, userIsLoading, userError } = useFetchUser(userName);
+  const {
+    user,
+    isLoading: userIsLoading,
+    error: userError,
+  } = useFetchUser(userName);
   const logOut = useLogOut();
 
   const handleUserClick = (user) => {
@@ -37,7 +41,7 @@ const Header = () => {
     navigate(`/team/${teamId}`);
   };
 
-  const SingOut = async () => {
+  const handleSignOut = async () => {
     await logOut();
     localStorage.removeItem("currentUser");
     navigate("/");
@@ -64,13 +68,13 @@ const Header = () => {
             width="40"
             height="40"
           />
-          <span className="user-name ms-2" style={{ fontSize: "1.5rem" }}>
+          <span className="user-name ms-2" style={{ fontSize: "1rem" }}>
             {user.firstName} {user.lastName}
           </span>
         </div>
         <Button
-          variant="outline-dark"
-          onClick={SingOut}
+          variant="outline-light"
+          onClick={handleSignOut}
           style={{ marginRight: "0.5rem", width: "auto" }}
         >
           <span className="text-capitalize" style={{ fontSize: "1rem" }}>
@@ -93,9 +97,9 @@ const Header = () => {
 
   return (
     <header className="header">
-      <TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />
+      <TeamsBarComponent content={teams} onTeamSelect={handleTeamSelection} />
       <Navbar expand="lg" className="navbarHeader m-0 p-0" sticky="top">
-        <Container className="containerHeader p-0">
+        <Container className="containerHeader p-0 w-100">
           <Navbar.Brand className="navbar-logo">
             <Link to="/" className="nav-link">
               <img src={logo} alt="IndorCallejero logo" className="logo" />
@@ -103,7 +107,7 @@ const Header = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-1">
+            <Nav className="me-auto">
               <Nav.Item>
                 <Link
                   to="/street_project"
@@ -132,15 +136,14 @@ const Header = () => {
                 </Link>
               </Nav.Item>
               <Nav.Item>
-                <NavDropdown title="Comparaciones" id="basic-nav-dropdown">
+                <NavDropdown title="Comparaciones" id="comparisons-dropdown">
                   <NavDropdown.Item>
-                    <Link to="/comparisons/teams" className="nav-link">
+                    <Link to="/comparisons/teams" className="dropdown-item">
                       Comparar Equipos
                     </Link>
                   </NavDropdown.Item>
-
                   <NavDropdown.Item>
-                    <Link to="/comparisons/players" className="nav-link">
+                    <Link to="/comparisons/players" className="dropdown-item">
                       Comparar Jugadores
                     </Link>
                   </NavDropdown.Item>
@@ -148,17 +151,20 @@ const Header = () => {
               </Nav.Item>
               <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
                 <Nav.Item>
-                  <NavDropdown title="Administración" id="basic-nav-dropdown">
+                  <NavDropdown title="Administración" id="admin-dropdown">
                     <RoleBased allowedRoles={["ROLE_ADMIN"]}>
                       <NavDropdown.Item>
-                        <Link to="/managment/admin" className="nav-link">
+                        <Link to="/management/admin" className="dropdown-item">
                           Administrar Sistema
                         </Link>
                       </NavDropdown.Item>
                     </RoleBased>
                     <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
                       <NavDropdown.Item>
-                        <Link to="/managment/manager" className="nav-link">
+                        <Link
+                          to="/management/manager"
+                          className="dropdown-item"
+                        >
                           Administrar Partidos
                         </Link>
                       </NavDropdown.Item>
@@ -175,8 +181,8 @@ const Header = () => {
                   Facebook
                 </Nav.Link>
               </Nav.Item>
-            
-            <Nav.Item className="nav-login">
+            </Nav>
+            <Nav className="nav-login">
               {user ? (
                 renderUserInfo()
               ) : (
@@ -187,7 +193,7 @@ const Header = () => {
                   Iniciar Sesión
                 </Button>
               )}
-            </Nav.Item></Nav>
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
