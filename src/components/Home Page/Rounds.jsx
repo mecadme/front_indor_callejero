@@ -1,16 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import {
-  Badge,
-  Card,
-  Col,
-  Container,
-  ListGroup,
-  Row,
-  Pagination,
-} from "react-bootstrap";
+import { Col, Container, Pagination, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import StyleUtils from "../Utils/StyleUtils";
+import "./css/Rounds.css";
 
 const Rounds = ({ RoundsData, showPagination = true }) => {
   const navigate = useNavigate();
@@ -23,25 +16,31 @@ const Rounds = ({ RoundsData, showPagination = true }) => {
     stadium: "https://cdn-icons-png.flaticon.com/512/6409/6409911.png",
   };
 
-  // Navegación al hacer clic en un partido
   const handleMatchClick = (matchId) => {
     navigate(`/result/${matchId}`);
   };
 
-  // Navegación al hacer clic en una ronda
   const handleRoundClick = () => {
     navigate(`/rounds`);
   };
 
-  // Función para manejar la paginación
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Obtener las rondas que se deben mostrar en la página actual
   const indexOfLastRound = currentPage * roundsPerPage;
   const indexOfFirstRound = indexOfLastRound - roundsPerPage;
   const currentRounds = RoundsData.slice(indexOfFirstRound, indexOfLastRound);
 
-  // Función para obtener los estilos de cada equipo
+  const groupMatchesByDate = (matches) => {
+    return matches.reduce((acc, match) => {
+      const matchDate = new Date(match.date).toLocaleDateString();
+      if (!acc[matchDate]) {
+        acc[matchDate] = [];
+      }
+      acc[matchDate].push(match);
+      return acc;
+    }, {});
+  };
+
   const getTeamStyles = (teamColor, lighterColor) => {
     return {
       containerStyle: {
@@ -49,13 +48,13 @@ const Rounds = ({ RoundsData, showPagination = true }) => {
           zigZagSvg(teamColor, lighterColor)
         )}")`,
         backgroundSize: "cover",
-        width: "100%",
+        width: "20%",
         display: "flex",
         transition: "background-image 0.2s ease, color 0.2s ease",
       },
       textStyle: {
         color: getTextColor(lighterColor),
-        fontSize: "5rem",
+        fontSize: "2rem",
         fontWeight: "bold",
       },
     };
@@ -63,7 +62,7 @@ const Rounds = ({ RoundsData, showPagination = true }) => {
 
   return (
     <Container fluid>
-      <Container className="Rounds">
+      <Container className="Rounds p-0">
         {RoundsData.length > 0 ? (
           <>
             {showPagination && (
@@ -82,94 +81,107 @@ const Rounds = ({ RoundsData, showPagination = true }) => {
                 )}
               </Pagination>
             )}
-            {/* Mostrar las rondas actuales */}
             {currentRounds.map((round) => (
-              <Container key={round.roundId} className="mb-4 shadow-sm">
+              <Container key={round.roundId} className="m-0 shadow-sm p-1 ">
                 <Row
                   onClick={() => handleRoundClick()}
                   style={{ cursor: "pointer" }}
-                  as="h4"
-                  className="text-center"
+                  className="round-name m-0"
                 >
-                  {round.roundName}
+                  <h3>{round.roundName}</h3>
                 </Row>
-                <Row>
-                  {round.matches.map((match, index) => {
-                    const lighterHomeTeamColor = lightenColor(
-                      match.homeTeamColor,
-                      40
-                    );
-                    const lighterAwayTeamColor = lightenColor(
-                      match.awayTeamColor,
-                      40
-                    );
-
-                    const homeTeamStyles = getTeamStyles(
-                      match.homeTeamColor,
-                      lighterHomeTeamColor
-                    );
-                    const awayTeamStyles = getTeamStyles(
-                      match.awayTeamColor,
-                      lighterAwayTeamColor
-                    );
-
-                    return (
-                      <Row
-                        key={index}
-                        className="mb-3 align-items-center d-flex justify-content-center"
-                        onClick={() => handleMatchClick(match.matchId)}
-                        style={{
-                          cursor: "pointer",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Col md={6}>
-                          <Row
-                            className="d-flex justify-content-between align-items-center"
-                            style={{ gap: "0.25rem", padding: "0.5rem" }}
-                          >
-                            <Col
-                              style={homeTeamStyles.containerStyle}
-                              className="text-left" // Alinear a la izquierda
-                            >
-                              <h5 style={homeTeamStyles.textStyle}>
-                                {match.homeTeam}
-                              </h5>
-                            </Col>
-                            <Col
-                              style={awayTeamStyles.containerStyle}
-                              className="text-right" // Alinear a la derecha
-                            >
-                              <h5 style={awayTeamStyles.textStyle}>
-                                {match.awayTeam}
-                              </h5>
-                            </Col>
+                <Row className="round-matches m-0">
+                  {Object.entries(groupMatchesByDate(round.matches)).map(
+                    ([date, matches]) => (
+                      <React.Fragment key={date}>
+                        <Col className="m-0 p-0">
+                          <Row className="row-date">
+                            <h4>{date}</h4>
                           </Row>
-                          <Row>
-                            <Col className="text-center">
-                              <img
-                                src={icons.stadium}
-                                alt="place-icon"
-                                className="icon-size"
-                              />{" "}
-                              {match.place}
-                            </Col>
-                            <Col className="text-center">
-                              <img
-                                src={icons.calendar}
-                                alt="date-icon"
-                                className="icon-size"
-                              />{" "}
-                              {new Date(match.date).toLocaleTimeString()}
-                            </Col>
-                          </Row>
+                          {matches.map((match, index) => {
+                            const lighterHomeTeamColor = lightenColor(
+                              match.homeTeamColor,
+                              40
+                            );
+                            const lighterAwayTeamColor = lightenColor(
+                              match.awayTeamColor,
+                              40
+                            );
+
+                            const homeTeamStyles = getTeamStyles(
+                              match.homeTeamColor,
+                              lighterHomeTeamColor
+                            );
+                            const awayTeamStyles = getTeamStyles(
+                              match.awayTeamColor,
+                              lighterAwayTeamColor
+                            );
+
+                            return (
+                              <Row
+                                key={index}
+                                className="mb-3 align-items-center d-flex justify-content-center"
+                                onClick={() => handleMatchClick(match.matchId)}
+                                style={{
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Col md={12}>
+                                  <Row
+                                    className= "teams-names-row"
+                                    style={{
+                                      padding: "1rem",
+                                    }}
+                                  >
+                                    <Col
+                                      style={homeTeamStyles.containerStyle}
+                                      className="home-team-name"
+                                    >
+                                      <h5 style={homeTeamStyles.textStyle}>
+                                        {match.homeTeam}
+                                      </h5>
+                                    </Col>
+                                    <Col
+                                      style={awayTeamStyles.containerStyle}
+                                      className="away-team-name"
+                                    >
+                                      <h5 style={awayTeamStyles.textStyle}>
+                                        {match.awayTeam}
+                                      </h5>
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col className="text-center">
+                                      <img
+                                        src={icons.stadium}
+                                        alt="place-icon"
+                                        className="icon-size"
+                                      />{" "}
+                                      {match.place}
+                                    </Col>
+                                    <Col className="text-center">
+                                      <img
+                                        src={icons.calendar}
+                                        alt="date-icon"
+                                        className="icon-size"
+                                      />{" "}
+                                      {new Date(
+                                        match.date
+                                      ).toLocaleTimeString()}
+                                    </Col>
+                                  </Row>
+                                </Col>
+                              </Row>
+                            );
+                          })}
                         </Col>
-                      </Row>
-                    );
-                  })}
+                      </React.Fragment>
+                    )
+                  )}
                 </Row>
               </Container>
             ))}
