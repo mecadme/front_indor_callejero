@@ -1,0 +1,71 @@
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.phase-name h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 5.5rem;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.5;
+  color: #33173c;
+}
+
+
+.position-table {
+  width: 70vw;
+  margin: 1rem;
+}
+
+.position-table th {
+  background-color: #F5EDF4;
+  font-size: 1.5rem;
+  font-weight: "300";
+}
+
+.table-body {
+  color: #33173c;
+  font-size: 1.5rem;
+  font-weight: "300";
+}
+.table-body td {
+  background-color: #F5EDF4;
+}
+
+.group-name {
+  font-weight: bold;
+  padding: 5px;
+  margin: 0;
+  color: #33173c;
+}
+
+.group-name h3 {
+  font-size: 3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.team-status {
+  width: 90%;
+  height: 17px;
+  border-radius: 7px;
+}
+
+.points{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.points p {
+  margin: 0;
+  padding: 0;
+  color: #60b12e;
+}

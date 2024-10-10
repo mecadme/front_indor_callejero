@@ -1,3 +1,9 @@
+.teams-bar-container {
+  align-items: center;
+  width: 100vw;
+  background-color: #F5EDF4;
+}
+
 .teams_logo_list {
     display: flex;
     flex-wrap: nowrap;
@@ -9,18 +15,8 @@
     justify-content: space-around;
   }
   
-  .teams_bar.navbar.navbar-expand-lg.navbar-light.bg-light {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    display: flex;
-  }
-  
-  
-  .teams_logo_list::-webkit-scrollbar {
-    display:inline;
-  }
-  
+ 
+
   .logo_team {
     max-width: 60px;
     padding: 0.6rem;

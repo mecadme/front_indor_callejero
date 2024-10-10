@@ -20,8 +20,6 @@ const Header = () => {
   const { auth } = useAuth();
   const decodedToken = auth?.accessToken ? jwtDecode(auth.accessToken) : null;
   const userName = auth?.user?.username || decodedToken?.sub || null;
-
-  // Hooks must be called outside of conditionals and directly in the component body.
   const { user, userIsLoading, userError } = useFetchUser(userName);
   const logOut = useLogOut();
 
@@ -96,8 +94,8 @@ const Header = () => {
   return (
     <header className="header">
       <TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />
-      <Navbar expand="lg" className="navbarHeader" sticky="top">
-        <Container className="containerHeader">
+      <Navbar expand="lg" className="navbarHeader m-0 p-0" sticky="top">
+        <Container className="containerHeader p-0">
           <Navbar.Brand className="navbar-logo">
             <Link to="/" className="nav-link">
               <img src={logo} alt="IndorCallejero logo" className="logo" />
@@ -105,7 +103,7 @@ const Header = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
+            <Nav className="me-1">
               <Nav.Item>
                 <Link
                   to="/street_project"
@@ -133,45 +131,51 @@ const Header = () => {
                   Palmarés Históricos
                 </Link>
               </Nav.Item>
-              <NavDropdown title="Comparaciones" id="basic-nav-dropdown">
-                <NavDropdown.Item>
-                  <Link to="/comparisons/teams" className="nav-link">
-                    Comparar Equipos
-                  </Link>
-                </NavDropdown.Item>
+              <Nav.Item>
+                <NavDropdown title="Comparaciones" id="basic-nav-dropdown">
+                  <NavDropdown.Item>
+                    <Link to="/comparisons/teams" className="nav-link">
+                      Comparar Equipos
+                    </Link>
+                  </NavDropdown.Item>
 
-                <NavDropdown.Item>
-                  <Link to="/comparisons/players" className="nav-link">
-                    Comparar Jugadores
-                  </Link>
-                </NavDropdown.Item>
-              </NavDropdown>
-              <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
-                <NavDropdown title="Administración" id="basic-nav-dropdown">
-                  <RoleBased allowedRoles={["ROLE_ADMIN"]}>
-                    <NavDropdown.Item>
-                      <Link to="/managment/admin" className="nav-link">
-                        Administrar Sistema
-                      </Link>
-                    </NavDropdown.Item>
-                  </RoleBased>
-                  <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
-                    <NavDropdown.Item>
-                      <Link to="/managment/manager" className="nav-link">
-                        Administrar Partidos
-                      </Link>
-                    </NavDropdown.Item>
-                  </RoleBased>
+                  <NavDropdown.Item>
+                    <Link to="/comparisons/players" className="nav-link">
+                      Comparar Jugadores
+                    </Link>
+                  </NavDropdown.Item>
                 </NavDropdown>
+              </Nav.Item>
+              <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
+                <Nav.Item>
+                  <NavDropdown title="Administración" id="basic-nav-dropdown">
+                    <RoleBased allowedRoles={["ROLE_ADMIN"]}>
+                      <NavDropdown.Item>
+                        <Link to="/managment/admin" className="nav-link">
+                          Administrar Sistema
+                        </Link>
+                      </NavDropdown.Item>
+                    </RoleBased>
+                    <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
+                      <NavDropdown.Item>
+                        <Link to="/managment/manager" className="nav-link">
+                          Administrar Partidos
+                        </Link>
+                      </NavDropdown.Item>
+                    </RoleBased>
+                  </NavDropdown>
+                </Nav.Item>
               </RoleBased>
-              <Nav.Link
-                href="https://www.facebook.com/IndorCallejeroAzogues"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Facebook
-              </Nav.Link>
-            </Nav>
+              <Nav.Item>
+                <Nav.Link
+                  href="https://www.facebook.com/IndorCallejeroAzogues"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Facebook
+                </Nav.Link>
+              </Nav.Item>
+            
             <Nav.Item className="nav-login">
               {user ? (
                 renderUserInfo()
@@ -183,7 +187,7 @@ const Header = () => {
                   Iniciar Sesión
                 </Button>
               )}
-            </Nav.Item>
+            </Nav.Item></Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>

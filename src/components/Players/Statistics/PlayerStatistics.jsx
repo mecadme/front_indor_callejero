@@ -28,7 +28,7 @@ const PlayerStatistics = ({
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredPlayers, setFilteredPlayers] = useState([]); // Almacenará los jugadores filtrados por búsqueda
-  const playersPerPage = 6;
+  const playersPerPage = 5;
   const axiosPrivate = useAxiosPrivate();
   const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
   const navigate = useNavigate();
@@ -148,7 +148,10 @@ const PlayerStatistics = ({
                 }}
               >
                 <Row className="align-items-center text-center">
-                  <Col xs={4} className="text-center">
+                  <Col className="text-center" xs={1}>
+                    <h3>{((index+(currentPage*playersPerPage))-playersPerPage) + 1}</h3>
+                  </Col>
+                  <Col xs={3} className="text-center">
                     <Image
                       src={player.teamLogoUrl}
                       alt="Team Logo"

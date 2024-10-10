@@ -12,6 +12,7 @@ html, body {
   overflow-x: hidden;
   width: 99vw;
   text-transform: uppercase;
+  background-color: #F5EDF4;
 }
 .banner-container {
   display: flex;

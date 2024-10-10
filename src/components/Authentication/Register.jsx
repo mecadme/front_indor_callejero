@@ -19,7 +19,7 @@ import "./css/Register.css"; // Importar el archivo CSS
 
 const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const NAME_REGEX = /^[a-zA-Z]+$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[0-9]).{8,24}$/;
 
 const Register = () => {
   const userRef = useRef();
@@ -202,7 +202,7 @@ const Register = () => {
                 />
                 <Form.Control.Feedback type="invalid">
                   <FontAwesomeIcon icon={faInfoCircle} /> Debe incluir al menos
-                  una letra mayúscula, una minúscula y un número.
+                  una minúscula y un número.
                 </Form.Control.Feedback>
                 <Button
                   variant="warning"
