@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
+import { useGetCurrentValue } from "../../api/Service/CurrentValuesService";
 import Rounds from "./Rounds";
 import Sponsors from "./Sponsors";
 import Standings from "./Standings";
@@ -7,9 +8,7 @@ import WeekCoach from "./WeekCoach";
 import WeekPlayer from "./WeekPlayer";
 import WeekTeam from "./WeekTeam";
 import WeekVideos from "./WeekVideos";
-import { useGetCurrentValue } from "../../api/Service/CurrentValuesService";
 
-import axios from "../../api/axios";
 import useFetchRounds from "../../hooks/useFetchRounds";
 
 import { Col, Container, Row } from "react-bootstrap";
@@ -38,7 +37,7 @@ const MainContent = () => {
       <Container className="m-4" fluid>
         <Row>
           <Col xs={12} md={12} lg={4}>
-            <Rounds RoundsData={RoundsData} />
+            <Rounds RoundsData={RoundsData} showPagination = {false} />
           </Col>
           <Col xs={12} md={12} lg={8}>
             <Row className="row_week">
