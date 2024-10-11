@@ -24,10 +24,8 @@ const Sponsors = ({ maxContributions }) => {
     );
   }
 
-  const handleSponsorClick = (sponsor) => {
-    console.log(sponsor);
-    const url = sponsor.sponsorPageUrl || "https://www.facebook.com/IndorCallejeroAzogues";
-    window.open(url, "_blank"); 
+  const handleSponsorClick = (sponsorId) => {
+    navigate(`/sponsor/${sponsorId}`);
   };
 
   return (
@@ -44,7 +42,7 @@ const Sponsors = ({ maxContributions }) => {
                     md={4}
                     lg={2}
                     className="mb-4"
-                    onClick={() => handleSponsorClick(sponsor)}
+                    onClick={() => handleSponsorClick(sponsor.sponsorId)}
                     style={{ cursor: "pointer" }}
                   >
                     <img

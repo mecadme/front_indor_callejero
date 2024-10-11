@@ -30,6 +30,7 @@ import TeamPage from "./components/Teams/TeamPage.jsx";
 import Teams from "./components/Teams/Teams.jsx";
 import TeamStandings from "./components/Teams/TeamStandings.jsx";
 import UserPage from "./components/User/UserPage.jsx";
+import SponsorPage from "./components/Sponsor/SponsorPage.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -105,6 +106,8 @@ function App() {
             <Route path="/card" element={<CardsPage />} />
             <Route path="/minutes_played" element={<MinutesPlayedPage />} />
             <Route path="/coach/:coachId" element={<CoachPage />} />
+            <Route path="/sponsor/:sponsorId" element={<SponsorPage />} />
+
             <Route path="/user/:userName/:userId" element={<UserPage />} />
           </Route>
         </Route>

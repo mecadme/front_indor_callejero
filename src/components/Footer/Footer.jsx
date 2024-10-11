@@ -1,19 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
+import Sponsors from "../Home Page/Sponsors";
 import ComparasonsFoot from "./ComparisonsFoot";
 import PoweredBy from "./PoweredBy";
-import PredictionsFoot from "./PredictionsFoot";
 import ScheduleFoot from "./ScheduleFoot";
-import Sponsors from "../Home Page/Sponsors";
 import StandingsFoot from "./StandingsFoot";
 import StatisticsFoot from "./StatisticsFoot";
 import TeamsFoot from "./TeamsFoot";
 
-import useFetchTeams from "../../hooks/useFetchTeams";
 import useFetchRounds from "../../hooks/useFetchRounds";
-import"./css/Footer.css";
+import useFetchTeams from "../../hooks/useFetchTeams";
+import "./css/Footer.css";
 
 const Footer = () => {
   // Define el estado y la función para actualizarlo correctamente
