@@ -23,6 +23,9 @@ html, body {
   padding: 0;
 }
 
+.card-header{
+  background-color: #33173C;
+}
 
 
 
@@ -47,6 +50,15 @@ h2 {
   font-size: 24px;
   text-align: center;
 }
+
+h3 {
+  color: #33173C;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
 
 form {
   display: flex;

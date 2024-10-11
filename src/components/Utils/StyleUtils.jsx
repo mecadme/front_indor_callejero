@@ -33,7 +33,7 @@ const StyleUtils = () => {
           <defs>
             <pattern id="zigzag" patternUnits="userSpaceOnUse" width="200" height="200" patternTransform="scale(10)">
             <path d="M0,0 L0,200 " stroke="${color}" stroke-width="800" fill="none"/>
-            <path d="M-5,0 L20,40" stroke="${lightColor}" stroke-width="20" fill="${lightColor}"/>
+            <path d="M-5,0 L20,80" stroke="${lightColor}" stroke-width="20" fill="${lightColor}"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#zigzag)" />

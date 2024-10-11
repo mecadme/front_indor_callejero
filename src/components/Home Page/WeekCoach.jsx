@@ -34,7 +34,7 @@ const WeekCoach = ({ date }) => {
       style={{ cursor: "pointer" }}
     >
       <Row className="row_coach">
-        <Card className="card text-center" style={{ alignItems: "center" }}>
+        <Card className="card-coach text-center" style={{ alignItems: "center" }}>
           <h4 className="text-center mb-4">Técnico de la Fecha</h4>
           <Card.Img
             src={coach.ethicOfficerPhotoUrl}

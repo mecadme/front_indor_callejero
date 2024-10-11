@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/WeekVideos.css";
-import axios from "../../api/axios";
 import { Container } from "react-bootstrap";
+import axios from "../../api/axios";
+import "./css/WeekVideos.css";
 
 const WeekVideos = () => {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [index, setIndex] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null); // Video seleccionado
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
@@ -38,10 +34,10 @@ const WeekVideos = () => {
     fetchVideos();
   }, []);
 
-  // Función para abrir el modal
+  
   const handleShowModal = (video) => {
-    setSelectedVideo(video); // Setea el video seleccionado
-    setShowModal(true); // Abre el modal
+    setSelectedVideo(video); 
+    setShowModal(true); 
   };
 
   if (isLoading) {

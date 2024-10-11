@@ -1,0 +1,12 @@
+
+.card{
+    background-color: #3e78bc !important;
+    border-radius: 0.5rem;
+}
+.card h5{
+    color: #F5EDF4;
+}
+.card h4{
+    color: #F5EDF4;
+    font-weight: bold;
+}

@@ -18,7 +18,6 @@ import PageBanner from "../Utils/PageBanner";
 import getTeamStyles from "../Utils/TeamBannerStyle";
 import useFetchAllTeamsStats from "../../hooks/useFetchAllTeamsStats";
 
-// ENUMS para el equipo, posiciones y estados de jugador
 const TeamGroupEnum = {
   A1: "Grupo A",
   A2: "Grupo A",
@@ -46,7 +45,6 @@ const PlayerStatusEnum = {
   INACTIVE: "SUSPENDIDO",
 };
 
-// Define the desired statistics to display
 const stats = [
   { label: "GOLES", key: "goals" },
   { label: "ASISTENCIAS", key: "assists" },
@@ -62,9 +60,9 @@ const stats = [
   { label: "PORTERÍAS IMBATIDAS", key: "unbeatenMatches" },
 ];
 
-// Componente para mostrar la tarjeta de un jugador
 const PlayerCard = ({ player }) => {
-  const { firstName, lastName, photoUrl, jerseyNumber, position, status } = player;
+  const { firstName, lastName, photoUrl, jerseyNumber, position, status } =
+    player;
   const navigate = useNavigate();
 
   const handlePlayerClick = (playerId) => {
@@ -72,7 +70,11 @@ const PlayerCard = ({ player }) => {
   };
 
   return (
-    <Col xs={6} key={player.playerId} className="mb-4 text-center d-flex align-items-center">
+    <Col
+      xs={6}
+      key={player.playerId}
+      className="mb-4 text-center d-flex align-items-center"
+    >
       <Card
         style={{ width: "18rem", alignItems: "center", cursor: "pointer" }}
         onClick={() => handlePlayerClick(player.playerId)}
@@ -96,10 +98,9 @@ const PlayerCard = ({ player }) => {
   );
 };
 
-// Componente para la página de equipo
 const TeamPage = ({ teams }) => {
   const { teamId } = useParams();
-  const [key, setKey] = useState("players"); // Estado para manejar las pestañas
+  const [key, setKey] = useState("players");
 
   const team = teams.find((team) => team.teamId === parseInt(teamId));
   const navigate = useNavigate();
@@ -109,7 +110,8 @@ const TeamPage = ({ teams }) => {
     error: errorTeams,
   } = useFetchAllTeamsStats();
 
-  const { data, error, loading, getEthicsOfficerByTeamId } = useGetEthicsOfficerByTeamId();
+  const { data, error, loading, getEthicsOfficerByTeamId } =
+    useGetEthicsOfficerByTeamId();
 
   useEffect(() => {
     getEthicsOfficerByTeamId(teamId);
@@ -164,7 +166,6 @@ const TeamPage = ({ teams }) => {
           </Card.Header>
           <Card.Body>
             <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
-              {/* Pestaña de Jugadores */}
               <Tab eventKey="players" title="Jugadores">
                 {players.length > 0 ? (
                   <Container>
@@ -180,11 +181,12 @@ const TeamPage = ({ teams }) => {
                 )}
               </Tab>
 
-              {/* Pestaña de Estadísticas */}
               <Tab eventKey="stats" title="Estadísticas">
                 {teamStats ? (
                   <Container>
-                    <h3 className="text-center mb-4">Estadísticas del equipo</h3>
+                    <h3 className="text-center mb-4">
+                      Estadísticas del equipo
+                    </h3>
                     <ListGroup variant="flush">
                       {stats.map(({ label, key }) => (
                         <ListGroup.Item

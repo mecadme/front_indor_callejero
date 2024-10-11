@@ -1,28 +1,31 @@
-import { useParams } from "react-router-dom";
 import { useState } from "react";
 import {
-  Tab,
-  Tabs,
+  Badge,
   Card,
   Col,
-  Row,
-  Image,
-  Badge,
-  ProgressBar,
   Container,
+  Image,
   ListGroup,
+  ProgressBar,
+  Row,
+  Tab,
+  Tabs,
 } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetchPlayerInfo from "../../hooks/useFetchPlayerInfo";
 import useFetchPlayerStats from "../../hooks/useFetchPlayerStats";
 import EmptyData from "../Administration/EmptyData";
-import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
+import getTeamStyles from "../Utils/TeamBannerStyle";
 
 const PlayerPage = () => {
   const { playerId } = useParams();
+  const navigate = useNavigate();
   const { playerInfo, loadingInfo, errorInfo } = useFetchPlayerInfo(playerId);
   const { playerStats, loadingStats, errorStats } =
     useFetchPlayerStats(playerId);
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
   const [key, setKey] = useState("info");
 
@@ -43,6 +46,9 @@ const PlayerPage = () => {
     );
   }
 
+  const team_color = playerStats?.teamColor || "#000";
+  const teamStyles = getTeamStyles({ teamColor: team_color });
+
   const {
     firstName,
     lastName,
@@ -55,6 +61,7 @@ const PlayerPage = () => {
   } = playerInfo;
 
   const {
+    teamId,
     teamName,
     teamLogoUrl,
     teamColor,
@@ -101,6 +108,11 @@ const PlayerPage = () => {
     return a.name.localeCompare(b.name);
   });
 
+  const handleTeamSelection = (teamId) => {
+    setSelectedTeam(teamId);
+    navigate(`/team/${teamId}`);
+  };
+
   return (
     <Container fluid className="p-0">
       <Header />
@@ -108,12 +120,9 @@ const PlayerPage = () => {
       <Container
         fluid
         style={{
-          backgroundColor: teamColor,
-          padding: "20px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
+          ...teamStyles.containerStyle,
+          padding: "0.5rem 0",
+          width: "100%",
         }}
       >
         <Container>
@@ -149,7 +158,8 @@ const PlayerPage = () => {
                   <Image
                     src={teamLogoUrl}
                     fluid
-                    style={{ width: "5rem", height: "5rem" }}
+                    style={{cursor: "pointer", width: "5rem", height: "5rem" }}
+                    onClick={() => handleTeamSelection(teamId)}
                   />
                   <p>
                     <strong>Equipo:</strong> {teamName}

@@ -23,7 +23,7 @@ const PlayerCard = ({ player, gridArea }) => {
         alt={`${player.firstName} ${player.lastName}`}
         className="img-player"
       />
-      <p className="player-name mb-2">{`${player.firstName} ${player.lastName}`}</p>
+      <p className="player-name_ mb-2">{`${player.firstName[0]}. ${player.lastName}`}</p>
     </div>
   );
 };
