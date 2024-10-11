@@ -13,7 +13,7 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
     players = players.sort((a, b) => a.jerseyNumber - b.jerseyNumber);
     const Circle = ({ color }) => (
       <svg width="25" height="25">
-        <circle cx="15" cy="15" r="10" fill={color} />
+        <circle cx="15" cy="15" r="8" fill={color} />
       </svg>
     );
 
@@ -38,7 +38,7 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
               </span>
 
               <span className="player-name" style={{ fontSize: "1rem" }}>
-                {player.firstName} {player.lastName}
+                {player.firstName[0]}. {player.lastName}
               </span>
               {position === "right" && <Circle color={color} />}
             </div>

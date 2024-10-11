@@ -115,11 +115,9 @@ const ResultBanner = ({ events, matchDetails }) => {
 
   const renderTeamEvents = (team, direction) => {
     const lighterColor = lightenColor(team.color, 30);
-    const defaultTextColor = getTextColor("#b6bdc0");
-    const hoverTextColor = getTextColor(team.color);
+    const defaultTextColor = getTextColor(team.color);
     const zigZagBackground = zigZagSvg(team.color, lighterColor);
 
-    const [hovered, setHovered] = useState(false);
 
     return (
       <Col>
@@ -127,12 +125,12 @@ const ResultBanner = ({ events, matchDetails }) => {
           className="p-0"
           style={{
             backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
-              hovered ? zigZagBackground : grayZigZagSvg
+               zigZagBackground
             )}")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            color: hovered ? hoverTextColor : defaultTextColor,
+            color:  defaultTextColor,
             transition: "background-image 0.2s ease, color 0.2s ease",
           }}
           onMouseEnter={() => setHovered(true)}
@@ -143,7 +141,7 @@ const ResultBanner = ({ events, matchDetails }) => {
             style={{
               fontWeight: "bold",
               margin: "0",
-              textAlign: direction === "right" ? "left" : "right", // Alineación contraria
+              textAlign: direction === "right" ? "left" : "right", 
             }}
           >
             {team.name.toUpperCase()}
@@ -187,8 +185,8 @@ const ResultBanner = ({ events, matchDetails }) => {
 
   return (
     <Container fluid className="result-banner p-0">
-      <Row className="text-white p-0 " style={{ backgroundColor: "#33173C" }}>
-        <h2 className="text-center p-0 m-1" style={{ fontSize: "3rem" }}>
+      <Row className="text-white py-4 my-0 " style={{ backgroundColor: "#33173C" }}>
+        <h2 className="text-center p-0 m-1" style={{ fontSize: "4.5rem" }}>
           RESULTADOS / {phaseLabel}
         </h2>
       </Row>

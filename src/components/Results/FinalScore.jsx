@@ -19,15 +19,15 @@ const FinalScore = ({ events, homeTeam, awayTeam }) => {
     );
   }
 
-  // Filtrar los eventos para obtener solo los goles
+  
   const goals = events.filter((event) => event.eventType === "GOAL");
 
-  // Contar goles del equipo local (home)
+  
   const homeGoals = goals.filter(
     (goal) => goal.teamId === homeTeam.teamId
   ).length;
 
-  // Contar goles del equipo visitante (away)
+  
   const awayGoals = goals.filter(
     (goal) => goal.teamId === awayTeam.teamId
   ).length;
