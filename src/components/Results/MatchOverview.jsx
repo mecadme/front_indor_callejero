@@ -54,14 +54,15 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
   const icons = {
     calendar: "https://cdn-icons-png.flaticon.com/512/2838/2838779.png",
     stadium: "https://cdn-icons-png.flaticon.com/512/6409/6409911.png",
-    referee: "https://cdn-icons-png.flaticon.com/512/6409/6409912.png",
+    referee: "https://cdn-icons-png.flaticon.com/512/3564/3564381.png",
   };
 
   useEffect(() => {
     getRefereeByMatchId(matchDetails.matchId);
   }, []);
 
-  const referee = data?.name[0] + ". " + data?.lastName || "F. León";
+  const referee =
+    (data && data.name && data.name[0] + ". " + data.lastName) || "F. León";
 
   return (
     <Container className="match-overview-container">
@@ -70,8 +71,7 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
           {renderPlayers(homePlayers, homeTeam.color, "left")}
         </Col>
         <Col xs={6} md={6} lg={6}>
-          <p className="match-stats text-center">
-            ESTADÍSTICAS</p>
+          <p className="match-stats text-center">ESTADÍSTICAS</p>
           <MatchStats
             matchStats={matchStats}
             homeTeamId={homeTeam.teamId}
@@ -87,9 +87,8 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
               {format(new Date(matchDetails.schedule.date), "dd MMM yy, HH:mm")}
             </Col>
           </Row>
-          <Row className="d-flex justify-center">
-            <Col></Col>
-            <Col xs={4}>
+          <Row className="d-flex justify-content-center">
+            <Col xs={4} className="text-center">
               <img
                 src={icons.referee}
                 alt="referee-icon"
@@ -97,7 +96,6 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
               />{" "}
               {referee}
             </Col>
-            <Col></Col>
           </Row>
         </Col>
         <Col xs={3} md={3} lg={3}>

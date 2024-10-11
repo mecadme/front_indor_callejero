@@ -17,7 +17,6 @@ import ResultPredict from "./components/Header/ResultPredict.jsx";
 import StreetProject from "./components/Header/StreetProject.jsx";
 import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import Lounge from "./components/Manager/Lounge.jsx";
 import MatchManager from "./components/Manager/MatchManager.jsx";
 import Matches from "./components/Matches/Matches.jsx";
 import RoundsPage from "./components/Matches/RoundsPage.jsx";
@@ -107,7 +106,6 @@ function App() {
             <Route path="/minutes_played" element={<MinutesPlayedPage />} />
             <Route path="/coach" element={<CoachPage />} />
             <Route path="/user/:userName/:userId" element={<UserPage />} />
-            <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route>
 

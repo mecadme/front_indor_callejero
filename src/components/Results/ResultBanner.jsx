@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { renderIconBanner } from "../Utils/RenderIcon";
 import StyleUtils from "../Utils/StyleUtils";
@@ -45,8 +45,8 @@ const BannerEvent = React.memo(({ event, assistEvent, assistPlayer }) => {
               style={{ width: "1rem", height: "1rem" }}
             />
             <div
-              className="player-name"
-              style={{ fontWeight: "bold", fontSize: "0.75rem" }}
+              className="player-name-event"
+              style={{ fontWeight: "bold", fontSize: "0.65rem" }}
             >
               {playerName}
             </div>
@@ -75,7 +75,6 @@ const BannerEvent = React.memo(({ event, assistEvent, assistPlayer }) => {
 
 const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
 
-const grayZigZagSvg = zigZagSvg("#b6bdc0", "#D3D3D3");
 
 const ResultBanner = ({ events, matchDetails }) => {
   const { phase, homeTeam, awayTeam } = matchDetails;
@@ -133,8 +132,6 @@ const ResultBanner = ({ events, matchDetails }) => {
             color:  defaultTextColor,
             transition: "background-image 0.2s ease, color 0.2s ease",
           }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
         >
           <h2
             className="text-md-left"
@@ -185,30 +182,30 @@ const ResultBanner = ({ events, matchDetails }) => {
 
   return (
     <Container fluid className="result-banner p-0">
-      <Row className="text-white py-4 my-0 " style={{ backgroundColor: "#33173C" }}>
-        <h2 className="text-center p-0 m-1" style={{ fontSize: "4.5rem" }}>
+      <Row className="py-4 my-0 b-none" style={{ backgroundColor: "#33173C" }}>
+        <h2 className="text-center p-0 m-3" style={{ fontSize: "4.5rem" }}>
           RESULTADOS / {phaseLabel}
         </h2>
       </Row>
       <Row className="py-0">
-        <Col xs={12} md={5}>
+        <Col xs={4} md={5}>
           {homeTeam && <Row>{renderTeamEvents(homeTeam, "right")}</Row>}
         </Col>
         <Col
-          xs={12}
+          xs={4}
           md={2}
           className="d-flex justify-content-center align-items-center p-0"
         >
           <FinalScore events={events} homeTeam={homeTeam} awayTeam={awayTeam} />
         </Col>
-        <Col xs={12} md={5}>
+        <Col xs={4} md={5}>
           {awayTeam && <Row>{renderTeamEvents(awayTeam, "left")}</Row>}
         </Col>
       </Row>
-      <Row className="text-black p-0 ">
-        <h2 className="text-center p-0 m-1" style={{ fontSize: "1.3rem" }}>
+      <Row className="resume p-0">
+        <h3 className="text-center p-0 m-1" style={{ fontSize: "2.5rem" }}>
           RESUMEN
-        </h2>
+        </h3>
       </Row>
     </Container>
   );
