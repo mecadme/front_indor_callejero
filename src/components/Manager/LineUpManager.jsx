@@ -187,7 +187,9 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     <Col className="col-md-6">
       <h3 className="text-center">{teamData.name}</h3>
       <h5>Alineación:</h5>
-      {lineUp.map((player) => (
+      {lineUp
+        .filter((player) => !player.isInjured)
+        .map((player) => (
         <Container
           key={player.playerId}
           className="player d-flex align-items-center"
