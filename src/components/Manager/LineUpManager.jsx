@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Modal,
   Button,
+  ButtonGroup,
+  Col,
+  Container,
   Dropdown,
   DropdownButton,
-  Col,
+  Modal,
   Row,
-  Container,
-  ButtonGroup,
 } from "react-bootstrap";
 import {
-  useSetLineUp,
-  useRegisterMatchEvent,
   useChangePlayer,
+  useRegisterMatchEvent,
+  useSetLineUp,
 } from "../../api/Service/MatchService";
 import {
   useInjurePlayer,
@@ -76,7 +76,13 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
 
     changePlayer(matchId, { outPlayerId, inPlayerId: newPlayerId, teamId });
     updatePlayer(newPlayerId, { status: "STARTER" });
-    updateLineUp(currentTeam, outPlayerId, newPlayer);
+    updateLineUp(currentTeam, outPlayerId, {
+      ...findPlayer(currentTeam, outPlayerId),
+      isSubstituted: true,
+    });
+
+    updateLineUp(currentTeam, null, newPlayer);
+
     setShowModal(false);
   };
 
@@ -105,14 +111,14 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     const updateFunc = team === "home" ? setHomeLineUp : setAwayLineUp;
     updateFunc((prevLineUp) =>
       prevLineUp
+        .map((player) =>
+          player.playerId === outPlayerId
+            ? { ...player, isSubstituted: true }
+            : player
+        )
         .filter((player) => player.playerId !== outPlayerId)
-        .concat(newPlayer)
+        .concat(newPlayer ? [newPlayer] : [])
     );
-  };
-
-  const removePlayerFromLineUp = (team, playerId) => {
-    updateLineUp(team, playerId, null);
-    updatePlayer(playerId, { status: "ACTIVE" });
   };
 
   const submitLineUp = () => {
@@ -190,27 +196,27 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
       {lineUp
         .filter((player) => !player.isInjured)
         .map((player) => (
-        <Container
-          key={player.playerId}
-          className="player d-flex align-items-center"
-        >
-          <Row className="ml-3 d-flex align-items-center">
-            <Col className="d-flex align-items-center">
-              <img
-                src={player.photoUrl}
-                alt={player.name}
-                className="player-photo mr-3"
-                style={{ width: "2.5rem", height: "2.5rem" }}
-              />
-            </Col>
-            <Col>
-              <strong>{`${player.firstName} ${player.lastName}`}</strong>
-              <p>{player.position}</p>
-            </Col>
-            {renderPlayerActions(player, team)}
-          </Row>
-        </Container>
-      ))}
+          <Container
+            key={player.playerId}
+            className="player d-flex align-items-center"
+          >
+            <Row className="ml-3 d-flex align-items-center">
+              <Col className="d-flex align-items-center">
+                <img
+                  src={player.photoUrl}
+                  alt={player.name}
+                  className="player-photo mr-3"
+                  style={{ width: "2.5rem", height: "2.5rem" }}
+                />
+              </Col>
+              <Col>
+                <strong>{`${player.firstName} ${player.lastName}`}</strong>
+                <p>{player.position}</p>
+              </Col>
+              {renderPlayerActions(player, team)}
+            </Row>
+          </Container>
+        ))}
       {!lineUpSubmitted && (
         <>
           <h5>Jugadores Disponibles:</h5>
@@ -224,7 +230,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     players
       .filter(
         (p) =>
-          p.status === "ACTIVE" || p.status === "STARTER" &&
+          (p.status === "ACTIVE" || p.status === "STARTER") &&
           !lineUp.some((l) => l.playerId === p.playerId)
       )
       .map((player) => (
@@ -278,7 +284,8 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
           {(currentTeam === "home" ? homeTeam.players : awayTeam.players)
             .filter(
               (p) =>
-                p.status === "ACTIVE" &&
+                (p.status === "ACTIVE" || p.status === "STARTER") &&
+                !p.isSubstituted &&
                 !homeLineUp.some((l) => l.playerId === p.playerId) &&
                 !awayLineUp.some((l) => l.playerId === p.playerId)
             )

@@ -135,20 +135,23 @@ const Header = () => {
                   Palmarés Históricos
                 </Link>
               </Nav.Item>
-              <Nav.Item>
-                <NavDropdown title="Comparaciones" id="comparisons-dropdown">
-                  <NavDropdown.Item>
-                    <Link to="/comparisons/teams" className="dropdown-item">
-                      Comparar Equipos
-                    </Link>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item>
-                    <Link to="/comparisons/players" className="dropdown-item">
-                      Comparar Jugadores
-                    </Link>
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </Nav.Item>
+              <RoleBased allowedRoles={["ROLE_USER"]}>
+                <Nav.Item>
+                  <NavDropdown title="Comparaciones" id="comparisons-dropdown">
+                    <NavDropdown.Item>
+                      <Link to="/comparisons/teams" className="dropdown-item">
+                        Comparar Equipos
+                      </Link>
+                    </NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <Link to="/comparisons/players" className="dropdown-item">
+                        Comparar Jugadores
+                      </Link>
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </Nav.Item>
+              </RoleBased>
+
               <RoleBased allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}>
                 <Nav.Item>
                   <NavDropdown title="Administración" id="admin-dropdown">
@@ -172,6 +175,7 @@ const Header = () => {
                   </NavDropdown>
                 </Nav.Item>
               </RoleBased>
+
               <Nav.Item>
                 <Nav.Link
                   href="https://www.facebook.com/IndorCallejeroAzogues"

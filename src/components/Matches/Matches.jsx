@@ -166,7 +166,7 @@ const Matches = () => {
       <h3>{teamName}</h3>
       <ul className={`list-unstyled `}>
         {players
-          .filter((player) => player.status === "STARTER") // Filtrar jugadores cuyo estado es STARTER
+          
           .map((player) => (
             <li
               key={player.playerId}
@@ -335,14 +335,14 @@ const Matches = () => {
                   </Row>
                 </Card.Body>
                 <Card.Footer className="text-muted text-center">
-                  <p>
+                  {match.status === "NOT_STARTED" && (<p>
                     <img
                       src={icons.duration}
                       alt="clock-icon"
                       className="icon-size"
                     />
                     {match.duration} min
-                  </p>
+                  </p>)}
                   <p>
                     <strong>Fase:</strong>{" "}
                     {PhaseEnum[match.phase] || match.phase}

@@ -125,7 +125,7 @@
 
 @media (max-width: 1700px) {
   .nav-item {
-    width: 21rem;
+    width: 20rem;
     display: flex;
     justify-content: start;
     flex-direction: row;
@@ -135,7 +135,7 @@
 
   .nav-item a {
     padding: 0;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     justify-items: space-evenly !important;
     text-align: left;
     color: #f5edf4 !important;

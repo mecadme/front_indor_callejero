@@ -48,7 +48,7 @@ const calculateTeamScore = (teamStats) => {
     teamStats.clearances * 1 -
     teamStats.yellowCards * 1 -
     teamStats.redCards * 3 +
-    teamStats.unbeatenMatches * 2
+    teamStats.unbeatenMatches * 3
   );
 };
 
@@ -112,7 +112,7 @@ const ComparisonsPage = () => {
         <PageBanner title="Comparaciones" />
 
         <Row className="justify-content-center mt-4">
-          {/* Mejor Jugador */}
+          
           <Col xs={12} md={6} className="mb-4">
             <Card className="shadow-sm border-0 rounded-lg modern-card">
               <Card.Header className="text-center bg-gradient-primary text-white rounded-top">
@@ -154,7 +154,7 @@ const ComparisonsPage = () => {
             </Card>
           </Col>
 
-          {/* Mejor Equipo */}
+          
           <Col xs={12} md={6} className="mb-4">
             <Card className="shadow-sm border-0 rounded-lg modern-card">
               <Card.Header className="text-center bg-gradient-success text-white rounded-top">
@@ -178,7 +178,7 @@ const ComparisonsPage = () => {
                   <br />
                   <strong>Pases:</strong> {bestTeam.passes}
                   <br />
-                  <strong>Porterías Imbatidas:</strong> {bestTeam.aerials}
+                  <strong>Porterías Imbatidas:</strong> {bestTeam.unbeatenMatches}
                 </p>
                 <p className="modern-font">
                   <strong>Puntuación Total:</strong>{" "}

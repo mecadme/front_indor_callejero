@@ -1,7 +1,6 @@
-/* Estilos para el contenedor del campo */
 .field {
     display: grid;
-    width: 225px; 
+    width:25rem; 
     background-size: contain; 
     background-repeat: no-repeat;
     background-position: center;
