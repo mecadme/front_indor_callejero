@@ -15,6 +15,7 @@ import {
   useDeleteReferee,
 } from "../../api/Service/RefereeService";
 import { useGetMatches } from "../../api/Service/MatchService";
+import { format } from "date-fns";
 
 const RefereeDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
@@ -193,21 +194,30 @@ const RefereeForm = ({
           id="dropdown-basic-button"
           title={
             selectedMatch
-              ? `${
-                  matches.find((m) => m.matchId === selectedMatch)?.homeTeam
-                    .neighborhood
-                } vs ${
+              ? `
+              
+              ${
+                matches.find((m) => m.matchId === selectedMatch)?.homeTeam
+                  .neighborhood
+              } vs ${
                   matches.find((m) => m.matchId === selectedMatch)?.awayTeam
                     .neighborhood
-                }`
+                }
+                     `
               : "Selecciona un partido"
           }
         >
           {matches.map((match) => (
             <Form.Check
+              className="m-4"
+              style={{
+                fontSize: "1.5rem",
+              }}
               key={match.matchId}
               type="radio"
-              label={`${match.homeTeam.neighborhood} vs ${match.awayTeam.neighborhood}`}
+              label={`${match.matchId} ${match.homeTeam.neighborhood} vs ${
+                match.awayTeam.neighborhood
+              } -fecha: ${format(new Date(match.schedule.date), "dd MMM yy, HH:mm")} `}
               checked={selectedMatch === match.matchId}
               onChange={() => setSelectedMatch(match.matchId)}
             />

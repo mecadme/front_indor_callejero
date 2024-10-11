@@ -5,7 +5,7 @@
     "medio1.medio2"
     "defensa1.defensa2"
     ".portero.";
-  grid-template-rows: repeat(4, 1fr); 
+  grid-template-rows: repeat(4, 1fr);
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
   padding: 2rem;
@@ -16,10 +16,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
   font-weight: bold;
   text-shadow: 1px 1px 2px black;
 }
+
+.player-name {
+  font-size: 1.5rem !important;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  color: #f5edf4 !important;
+}
+
+.img-player {
+  width: 2.5rem;
+  height: auto;
+  border-radius: 50%;
+  border: 3px solid #f5edf4;
+  background-color: #f5edf4;
+}
+
 .player-portero {
   grid-area: portero;
 }
@@ -55,10 +70,24 @@
       "medio1.medio2"
       "defensa1.defensa2"
       ".portero.";
-    padding: 0.75rem;
+    padding: 3rem;
   }
 
-  .player {
-    font-size: 0.75rem;
+  .player{
+    margin: 0 1rem;
+    display: flex;
+  text-shadow: 1px 1px 2px black;
+  }
+
+  .player-name {
+    font-size: 0.75rem !important;
+    text-align: center;
+    color: #f5edf4 !important;
+  }
+  .img-player {
+    border-radius: 50%;
+    border: 2px solid #f5edf4;
+    width: 1.75rem;
+    height: auto;
   }
 }

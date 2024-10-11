@@ -1,0 +1,21 @@
+.players-list{
+    background-color: #f5edf4 !important;
+}
+.player-info {
+  background-color: #f5edf4;
+}
+.player-info span {
+  color: #33173c;
+}
+.player-name {
+  color: #33173c !important;
+}
+.match-stats {
+  font-weight: bold;
+  margin: 0;
+  font-size: 2.5rem !important;
+  color: #33173c;
+}
+
+@media screen {
+}

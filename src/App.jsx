@@ -34,10 +34,10 @@ import UserPage from "./components/User/UserPage.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import CoachPage from "./components/Matches/CoachPage.jsx";
-import useFetchTeams from "./hooks/useFetchTeams.jsx";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import CoachPage from "./components/Matches/CoachPage.jsx";
+import useFetchTeams from "./hooks/useFetchTeams.jsx";
 
 const ROLES = {
   User: "ROLE_USER",
@@ -82,11 +82,11 @@ function App() {
                 <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
               }
             >
-              <Route path="/managment/manager" element={<MatchManager />} />
+              <Route path="/management/manager" element={<MatchManager />} />
             </Route>
 
             <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-              <Route path="/managment/admin" element={<Admin />} />
+              <Route path="/management/admin" element={<Admin />} />
             </Route>
             <Route path="/comparisons" element={<ComparisonsPage />} />
             <Route path="/comparisons/teams" element={<TeamsComparison />} />

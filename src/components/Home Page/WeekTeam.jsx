@@ -3,6 +3,7 @@ import { shuffle } from "lodash";
 import { Container, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import useWeekAward from "../../hooks/useWeekAward";
+import Loading from "../Utils/Loading";
 import "./css/WeekTeam.css";
 
 const gridPositionMap = {
@@ -20,7 +21,6 @@ const PlayerCard = ({ player, gridArea }) => {
       <Image
         src={player.photoUrl}
         alt={`${player.firstName} ${player.lastName}`}
-        style={{ width: "2.5rem", height: "2.5rem" }}
         className="img-player"
       />
       <p className="player-name mb-2">{`${player.firstName} ${player.lastName}`}</p>
@@ -33,7 +33,7 @@ const WeekTeam = ({ date }) => {
   const navigate = useNavigate();
 
   if (isLoading) {
-    return <div>Cargando equipo...</div>;
+    return <Loading />;
   }
 
   if (error) {
@@ -43,21 +43,26 @@ const WeekTeam = ({ date }) => {
   const team = weekAward.team?.players || [];
   const teamId = weekAward.team?.teamId;
 
-  
-  const goalkeepers = shuffle(team.filter((player) => player.position === "GOALKEEPER"));
-  const defenders = shuffle(team.filter((player) => player.position === "DEFENDER"));
-  const midfielders = shuffle(team.filter((player) => player.position === "MIDFIELDER"));
-  const attackers = shuffle(team.filter((player) => player.position === "ATTACKER"));
+  const goalkeepers = shuffle(
+    team.filter((player) => player.position === "GOALKEEPER")
+  );
+  const defenders = shuffle(
+    team.filter((player) => player.position === "DEFENDER")
+  );
+  const midfielders = shuffle(
+    team.filter((player) => player.position === "MIDFIELDER")
+  );
+  const attackers = shuffle(
+    team.filter((player) => player.position === "ATTACKER")
+  );
 
-  
   const selectedPlayers = [
-    ...goalkeepers.slice(0, 1), 
-    ...defenders.slice(0, 2),   
-    ...midfielders.slice(0, 2), 
-    ...attackers.slice(0, 1),   
+    ...goalkeepers.slice(0, 1),
+    ...defenders.slice(0, 2),
+    ...midfielders.slice(0, 2),
+    ...attackers.slice(0, 1),
   ];
 
-  
   let defensaCount = 0;
   let medioCount = 0;
 

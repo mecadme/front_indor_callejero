@@ -195,19 +195,6 @@ const LiveMatchAdmin = ({ matches }) => {
               awayTeam={selectedMatch.awayTeam}
             />
 
-            <div className="mt-3">
-              <h5>Selecciona Árbitro</h5>
-              <select
-                className="form-select"
-                onChange={(e) =>
-                  addRefereeToMatch(e.target.value, selectedMatch.matchId)
-                }
-              >
-                <option value="1">Árbitro 1</option>
-                <option value="2">Árbitro 2</option>
-                {/* Cargar árbitros desde la API */}
-              </select>
-            </div>
           </div>
         ) : (
           <p className="mt-4">
