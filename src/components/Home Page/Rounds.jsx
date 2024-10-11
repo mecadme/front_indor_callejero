@@ -155,7 +155,13 @@ const Rounds = ({ RoundsData, showPagination = true }) => {
                                     </Col>
                                   </Row>
                                   <Row>
-                                    <Col className="text-center">
+                                    <Col className="text-center"
+                                    style={{
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => window.open(`https://www.google.com/maps/search/${match.place}`, "_blank")}
+                                    
+                                    >
                                       <img
                                         src={icons.stadium}
                                         alt="place-icon"

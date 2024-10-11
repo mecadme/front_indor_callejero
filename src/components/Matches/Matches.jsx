@@ -311,7 +311,13 @@ const Matches = () => {
                       />{" "}
                       {new Date(match.schedule.date).toLocaleDateString()}
                     </Col>
-                    <Col className="place-col">
+                    <Col className="place-col"
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => window.open(`https://www.google.com/maps/search/${match.schedule.place}`, "_blank")}
+                    
+                    >
                       <img
                         src={icons.stadium}
                         alt="location-icon"

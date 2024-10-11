@@ -113,8 +113,8 @@ const ResultBanner = ({ events, matchDetails }) => {
   const groupedEvents = groupEventsByMinuteAndTeam();
 
   const renderTeamEvents = (team, direction) => {
-    const lighterColor = lightenColor(team.color, 30);
-    const defaultTextColor = getTextColor(team.color);
+    const lighterColor = lightenColor(team.color, 40);
+    const defaultTextColor = getTextColor(lighterColor);
     const zigZagBackground = zigZagSvg(team.color, lighterColor);
 
 
@@ -139,9 +139,10 @@ const ResultBanner = ({ events, matchDetails }) => {
               fontWeight: "bold",
               margin: "0",
               textAlign: direction === "right" ? "left" : "right", 
+              color: defaultTextColor
             }}
           >
-            {team.name.toUpperCase()}
+            {team.name}
           </h2>
         </Row>
         <Row

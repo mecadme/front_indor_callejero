@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetEthicsOfficerById } from "../../../api/Service/EthicsOfficerService";
 import EmptyData from "../../Administration/EmptyData";
 import Footer from "../../Footer/Footer";
@@ -13,14 +13,19 @@ const CoachPage = () => {
   const { coachId } = useParams();
   const { data, loading, error, getEthicsOfficerById } =
     useGetEthicsOfficerById();
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
+  const navigate = useNavigate();
   useEffect(() => {
     getEthicsOfficerById(coachId);
   }, [coachId]);
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: "60vh" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "60vh" }}
+      >
         <Loading />
       </div>
     );
@@ -29,7 +34,9 @@ const CoachPage = () => {
   if (error || data === null) {
     return (
       <Container className="text-center py-5">
-        <h4 className="text-danger">Error: {error?.message || "Algo salió mal"}</h4>
+        <h4 className="text-danger">
+          Error: {error?.message || "Algo salió mal"}
+        </h4>
         <EmptyData message={"No hay información sobre el técnico"} />
       </Container>
     );
@@ -39,13 +46,17 @@ const CoachPage = () => {
   const teamStyle = getTeamStyles({ teamColor });
   const fallbackImage = "https://via.placeholder.com/150"; // Add a fallback image URL
 
+  const handleTeamSelection = (teamId) => {
+    setSelectedTeam(teamId);
+    navigate(`/team/${teamId}`);
+  };
   return (
     <>
       <Header />
       <Container fluid className="p-0">
         <Container className="banner-container">
-          <PageBanner title={"Entrenador"} />
-          {/* Full-width background section */}
+          <PageBanner title={"Oficial de Ética"} />
+
           <div
             style={{
               ...teamStyle.containerStyle,
@@ -70,10 +81,21 @@ const CoachPage = () => {
                   />
                 </Col>
                 <Col xs={12} md={6} className="text-center">
-                  <h1 className="mb-2" style={{ color: teamStyle.textColor || "#333" }}>
+                  <h1
+                    className="mb-2"
+                    style={{ color: teamStyle.textColor || "#333" }}
+                  >
                     {data?.ethicsOfficer}
                   </h1>
-                  <h3 className="mb-2 text-muted">{data?.team.neighborhood}</h3>
+                  <h3
+                    className="mb-2 text-muted"
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleTeamSelection(data?.team.teamId)}
+                  >
+                    {data?.team.neighborhood}
+                  </h3>
                 </Col>
               </Row>
             </Container>
@@ -83,7 +105,8 @@ const CoachPage = () => {
             <Row className="justify-content-center">
               <Col xs={12} md={10} lg={8} className="text-center">
                 <p style={{ lineHeight: "1.6", fontSize: "1.1rem" }}>
-                  {data?.bio || "No hay biografía disponible para este técnico."}
+                  {data?.bio ||
+                    "No hay biografía disponible para este técnico."}
                 </p>
               </Col>
             </Row>

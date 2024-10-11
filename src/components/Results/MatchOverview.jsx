@@ -78,7 +78,13 @@ const MatchOverview = ({ matchDetails, matchStats }) => {
             awayTeamId={awayTeam.teamId}
           />
           <Row>
-            <Col className="text-center">
+            <Col className="text-center"
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={() => window.open(`https://www.google.com/maps/search/${matchDetails.schedule.place}`, "_blank")}
+            
+            >
               <img src={icons.stadium} alt="place-icon" className="icon-size" />{" "}
               {matchDetails.schedule.place}
             </Col>
