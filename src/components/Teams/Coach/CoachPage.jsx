@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import Header from "../../Header/Header";
+import { Col, Container, Image, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { useGetEthicsOfficerById } from "../../../api/Service/EthicsOfficerService";
 import EmptyData from "../../Administration/EmptyData";
 import Footer from "../../Footer/Footer";
-import { Card, Container, Row, Col } from "react-bootstrap";
-import { useGetEthicsOfficerById } from "../../../api/Service/EthicsOfficerService";
-import { useParams } from "react-router-dom";
+import Header from "../../Header/Header";
 import Loading from "../../Utils/Loading";
 import PageBanner from "../../Utils/PageBanner";
 import getTeamStyles from "../../Utils/TeamBannerStyle";
@@ -18,56 +18,80 @@ const CoachPage = () => {
     getEthicsOfficerById(coachId);
   }, [coachId]);
 
-  loading && <Loading />;
-
-  if (error || data === null  ) {
+  if (loading) {
     return (
-      <div>
-        Error: {error?.message || "Algo salió mal"}
-        <EmptyData message={"No hay infomación sobre el técnico"} />
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "60vh" }}>
+        <Loading />
       </div>
     );
   }
-console.log(data)
-const teamColor = data?.team.color
-const teamStyle = getTeamStyles({teamColor})
-console.log(teamStyle)
+
+  if (error || data === null) {
+    return (
+      <Container className="text-center py-5">
+        <h4 className="text-danger">Error: {error?.message || "Algo salió mal"}</h4>
+        <EmptyData message={"No hay información sobre el técnico"} />
+      </Container>
+    );
+  }
+
+  const teamColor = data?.team.color || "#f0f0f0";
+  const teamStyle = getTeamStyles({ teamColor });
+  const fallbackImage = "https://via.placeholder.com/150"; // Add a fallback image URL
+
   return (
-    <Container fluid className="p-0">
+    <>
       <Header />
-      <Container className="banner-container">
-        <PageBanner title={"Entrenador"} />
-        <Card>
-          <Card.Header
-          style={teamStyle.containerStyle}
+      <Container fluid className="p-0">
+        <Container className="banner-container">
+          <PageBanner title={"Entrenador"} />
+          {/* Full-width background section */}
+          <div
+            style={{
+              ...teamStyle.containerStyle,
+              padding: "0.5rem 0",
+              width: "100%",
+            }}
           >
-            <Row className="align-items-center">
-              <Col xs={12} md={6} className="text-center">
-                <Card.Img
-                  variant="top"
-                  src={data?.photoUrl}
-                  alt={data}
-                  style={{ width: "15rem", height: "15rem", margin: "1rem" }}
-                />
-              </Col>
-              <Col xs={12} md={6} className="text-center">
-                <h1>{data?.ethicsOfficer}</h1>
-                <h3>{data?.team.neighborhood}</h3>
-              </Col>
-            </Row>
-          </Card.Header>
-          <Card.Body>
             <Container>
-              <h3 className="text-center mb-4"></h3>
-              <Row className="justify-content-center">
-                {data?.bio}
+              <Row className="align-items-center">
+                <Col xs={12} md={6} className="text-center mb-3 mb-md-0">
+                  <Image
+                    variant="top"
+                    src={data?.photoUrl || fallbackImage}
+                    alt={data?.ethicsOfficer || "Técnico"}
+                    style={{
+                      width: "12.25rem",
+                      height: "auto",
+                      objectFit: "cover",
+                      borderRadius: "50%",
+                      border: "2px solid #ddd",
+                    }}
+                  />
+                </Col>
+                <Col xs={12} md={6} className="text-center">
+                  <h1 className="mb-2" style={{ color: teamStyle.textColor || "#333" }}>
+                    {data?.ethicsOfficer}
+                  </h1>
+                  <h3 className="mb-2 text-muted">{data?.team.neighborhood}</h3>
+                </Col>
               </Row>
             </Container>
-          </Card.Body>
-        </Card>
+          </div>
+          <Container>
+            <h3 className="text-center mb-4">Biografía</h3>
+            <Row className="justify-content-center">
+              <Col xs={12} md={10} lg={8} className="text-center">
+                <p style={{ lineHeight: "1.6", fontSize: "1.1rem" }}>
+                  {data?.bio || "No hay biografía disponible para este técnico."}
+                </p>
+              </Col>
+            </Row>
+          </Container>
+        </Container>
       </Container>
       <Footer />
-    </Container>
+    </>
   );
 };
 
