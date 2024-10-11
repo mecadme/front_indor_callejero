@@ -44,7 +44,7 @@ const CoachPage = () => {
 
   const teamColor = data?.team.color || "#f0f0f0";
   const teamStyle = getTeamStyles({ teamColor });
-  const fallbackImage = "https://via.placeholder.com/150"; // Add a fallback image URL
+  const fallbackImage = "https://via.placeholder.com/150"; 
 
   const handleTeamSelection = (teamId) => {
     setSelectedTeam(teamId);

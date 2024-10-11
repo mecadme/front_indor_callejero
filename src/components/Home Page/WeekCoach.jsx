@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/WeekCoach.css";
-import useWeekAward from "../../hooks/useWeekAward"; // Asegúrate de que esta ruta sea correcta
+import React from "react";
 import { Card, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import useWeekAward from "../../hooks/useWeekAward"; 
+import "./css/WeekCoach.css";
 
 const WeekCoach = ({ date }) => {
   const { weekAward, isLoading, error } = useWeekAward(date);
   const navigate = useNavigate();
-
 
   if (isLoading) {
     return <div>Cargando técnico...</div>;
@@ -18,21 +17,20 @@ const WeekCoach = ({ date }) => {
     return <div>{error}</div>;
   }
 
-  
   const coach = weekAward?.ethicOfficer;
-
 
   if (!coach) {
     return <div className="alert alert-info">No hay técnico disponible</div>;
   }
 
-   const handleCoachClick = (coachId) => {
+  const handleCoachClick = (coachId) => {
     navigate(`/coach/${coachId}`);
   };
 
   return (
-    <Container className="week-coach container"
-    onClick={() => handleCoachClick(coach.ethicOfficerId)}
+    <Container
+      className="week-coach container"
+      onClick={() => handleCoachClick(coach.ethicOfficerId)}
       style={{ cursor: "pointer" }}
     >
       <Row className="row_coach">
