@@ -19,31 +19,32 @@ const WeekCoach = ({ date }) => {
   }
 
   
-  const tecnico = weekAward?.ethicOfficer;
+  const coach = weekAward?.ethicOfficer;
 
-  if (!tecnico) {
+
+  if (!coach) {
     return <div className="alert alert-info">No hay técnico disponible</div>;
   }
 
-   const handleCoachClick = () => {
-    navigate(`/coach`);
+   const handleCoachClick = (coachId) => {
+    navigate(`/coach/${coachId}`);
   };
 
   return (
     <Container className="week-coach container"
-    onClick={() => handleCoachClick()}
+    onClick={() => handleCoachClick(coach.ethicOfficerId)}
       style={{ cursor: "pointer" }}
     >
       <Row className="row_coach">
         <Card className="card text-center" style={{ alignItems: "center" }}>
           <h4 className="text-center mb-4">Técnico de la Fecha</h4>
           <Card.Img
-            src={tecnico.ethicOfficerPhotoUrl}
-            alt={tecnico.ethicOfficerName}
+            src={coach.ethicOfficerPhotoUrl}
+            alt={coach.ethicOfficerName}
             style={{ width: "4rem", height: "4rem" }}
           />
           <Card.Body className="card-body">
-            <h5 className="card-title">{tecnico.ethicOfficerName}</h5>
+            <h5 className="card-title">{coach.ethicOfficerName}</h5>
           </Card.Body>
         </Card>
       </Row>

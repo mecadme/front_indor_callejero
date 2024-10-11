@@ -35,7 +35,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import CoachPage from "./components/Matches/CoachPage.jsx";
+import CoachPage from "./components/Teams/Coach/CoachPage.jsx";
 import useFetchTeams from "./hooks/useFetchTeams.jsx";
 
 const ROLES = {
@@ -104,7 +104,7 @@ function App() {
             <Route path="/teams" element={<Teams />} />
             <Route path="/card" element={<CardsPage />} />
             <Route path="/minutes_played" element={<MinutesPlayedPage />} />
-            <Route path="/coach" element={<CoachPage />} />
+            <Route path="/coach/:coachId" element={<CoachPage />} />
             <Route path="/user/:userName/:userId" element={<UserPage />} />
           </Route>
         </Route>
