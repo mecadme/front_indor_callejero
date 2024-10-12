@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import {
-  Container,
-  Row,
-  Col,
-  Navbar,
-  Nav,
   Button,
+  Col,
+  Container,
+  Nav,
   Offcanvas,
+  Row
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import PlayersDashboard from "./PlayersDashboard";
-import CurrentValueDashboard from "./CurrentValueDashboard";
-import TeamDashboard from "./TeamDashboard";
-import EthicsOfficerDashboard from "./EthicsOfficerDashboard";
-import SponsorDashboard from "./SponsorDashboard";
-import RoundDashboard from "./RoundDashboard";
-import MatchDashboard from "./MatchDashboard";
-import FacebookVideosDashboard from "./FacebookVideosDashboard";
-import WeeklyAwardsDashboard from "./WeeklyAwardsDashboard";
-import RefereeDashboard from "./RefereeDashboard";
 import HomeButton from "../Utils/HomeButton";
+import CurrentValueDashboard from "./CurrentValueDashboard";
+import EthicsOfficerDashboard from "./EthicsOfficerDashboard";
+import FacebookVideosDashboard from "./FacebookVideosDashboard";
+import InformationDashboard from "./InformationDashboard";
+import MatchDashboard from "./MatchDashboard";
+import PlayersDashboard from "./PlayersDashboard";
+import RefereeDashboard from "./RefereeDashboard";
+import RoundDashboard from "./RoundDashboard";
+import SponsorDashboard from "./SponsorDashboard";
+import TeamDashboard from "./TeamDashboard";
+import WeeklyAwardsDashboard from "./WeeklyAwardsDashboard";
 
 const Admin = () => {
   const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
@@ -49,6 +48,8 @@ const Admin = () => {
         return <WeeklyAwardsDashboard />;
       case "referee":
         return <RefereeDashboard />;
+      case "information":
+        return <InformationDashboard />;
       default:
         return <CurrentValueDashboard />;
     }
@@ -152,6 +153,14 @@ const Admin = () => {
               }}
             >
               Premios Semanales
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setActiveDashboard("information");
+                toggleSidebar();
+              }}
+            >
+              Información
             </Nav.Link>
           </Nav>
         </Offcanvas.Body>

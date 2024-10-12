@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import {
-    Button,
-    Form,
-    FormControl,
-    InputGroup,
-    Pagination,
-    Tab,
-    Table,
-    Tabs,
+  Button,
+  Form,
+  FormControl,
+  InputGroup,
+  Pagination,
+  Tab,
+  Table,
+  Tabs,
 } from "react-bootstrap";
 import {
-    useCreateInformation,
-    useDeleteInformation,
-    useGetInformation,
-    useUpdateInformation
+  useCreateInformation,
+  useDeleteInformation,
+  useGetInformation,
+  useUpdateInformation,
 } from "../../api/Service/Information_Service.js";
 
 import UploadPhoto from "../Utils/UploadPhoto";
 
-// Handle image error globally
+const InformationType = {
+  PROJECT_STREET: "Proyecto Callejero",
+  ALL_YOU_HAVE_TO_KNOW: "Todo lo que tienes que saber",
+  HISTORICAL_EVENTS: "Palmares Históricos",
+};
 const handleImageError = (e) => {
   e.target.src = "https://cdn-icons-png.flaticon.com/512/2102/2102633.png";
 };
@@ -91,12 +95,18 @@ const InformationForm = ({ information = {}, onSubmit, buttonText }) => {
       <Form.Group>
         <Form.Label>Tipo</Form.Label>
         <Form.Control
-          type="text"
+          as="select"
           name="type"
           value={formData.type}
           onChange={handleChange}
-          placeholder="Tipo de información"
-        />
+        >
+          <option value="">Seleccione el tipo</option>
+          {Object.entries(InformationType).map(([key, value]) => (
+            <option key={key} value={key}>
+              {value}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
 
       <Form.Group>
@@ -160,7 +170,9 @@ const InformationDashboard = () => {
   };
 
   const handleDeleteInformation = async (informationId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta información?")) {
+    if (
+      window.confirm("¿Estás seguro de que deseas eliminar esta información?")
+    ) {
       await deleteInformation(informationId);
       getInformation();
       setActiveTab("list");
@@ -199,7 +211,11 @@ const InformationDashboard = () => {
   };
 
   return (
-    <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab)} className="mb-3">
+    <Tabs
+      activeKey={activeTab}
+      onSelect={(tab) => setActiveTab(tab)}
+      className="mb-3"
+    >
       <Tab eventKey="list" title="Lista de Información">
         <Table striped bordered hover>
           <thead>
@@ -228,10 +244,16 @@ const InformationDashboard = () => {
                 <td>{info.title}</td>
                 <td>{info.description}</td>
                 <td>
-                  <Button variant="primary" onClick={() => handleEditClick(info)}>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleEditClick(info)}
+                  >
                     Editar
                   </Button>
-                  <Button variant="danger" onClick={() => handleDeleteInformation(info.informationId)}>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteInformation(info.informationId)}
+                  >
                     Eliminar
                   </Button>
                 </td>
@@ -243,7 +265,10 @@ const InformationDashboard = () => {
       </Tab>
 
       <Tab eventKey="create" title="Crear Información">
-        <InformationForm onSubmit={handleCreateInformation} buttonText="Crear Información" />
+        <InformationForm
+          onSubmit={handleCreateInformation}
+          buttonText="Crear Información"
+        />
       </Tab>
 
       <Tab eventKey="edit" title="Editar Información">
@@ -278,13 +303,18 @@ const InformationDashboard = () => {
           </div>
         )}
 
-        {searchTerm && filteredInformation.length === 0 && <p>No se encontró información.</p>}
+        {searchTerm && filteredInformation.length === 0 && (
+          <p>No se encontró información.</p>
+        )}
 
         {selectedInformation ? (
           <InformationForm
             information={selectedInformation}
             onSubmit={async (updatedInfo) => {
-              await updateInformation(selectedInformation.informationId, updatedInfo);
+              await updateInformation(
+                selectedInformation.informationId,
+                updatedInfo
+              );
               setSelectedInformation(null);
               setSearchTerm("");
               getInformation();
