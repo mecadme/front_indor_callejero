@@ -1,9 +1,9 @@
-import useWeekAward from "../../hooks/useWeekAward";
 import { useNavigate } from "react-router-dom";
+import useWeekAward from "../../hooks/useWeekAward";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Card, Container, Row } from "react-bootstrap";
 import "./css/WeekPlayer.css";
-import { Card, Col, Container, Row } from "react-bootstrap";
 
 const WeekPlayer = ({ date }) => {
   
@@ -40,7 +40,7 @@ const WeekPlayer = ({ date }) => {
       style={{ cursor: "pointer" }}
     >
       <Row className="row_player">
-        <Card className="card text-center" style={{ alignItems: "center" }}>
+        <Card className="card-player text-center" style={{ alignItems: "center" }}>
           <h4 className="text-center mb-4">Jugador de la Fecha</h4>
           <Card.Img
             variant="top"

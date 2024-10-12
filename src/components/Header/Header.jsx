@@ -97,7 +97,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <TeamsBarComponent content={teams} onTeamSelect={handleTeamSelection} />
+      <TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />
       <Navbar expand="lg" className="navbarHeader m-0 p-0" sticky="top">
         <Container className="containerHeader p-0 w-100">
           <Navbar.Brand className="navbar-logo">

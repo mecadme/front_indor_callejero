@@ -11,8 +11,11 @@
 .ipsum-logo {
   width: 10rem;
   filter: grayscale(100) brightness(39);
+  cursor: pointer;
 }
 
 .nelasmi-logo {
   width: 30rem;
+  cursor: pointer;
+  filter: grayscale(100) brightness(39);
 }

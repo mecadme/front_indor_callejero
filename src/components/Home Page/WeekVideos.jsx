@@ -72,14 +72,14 @@ const WeekVideos = () => {
               >
                 <iframe
                   width="70%"
-                  height="700px"
+                  height="600px"
                   src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
                     video.videoUrl
                   )}`}
                   title={video.videoTitle}
-                  style={{ border: "none", cursor: "pointer" }}
+                  style={{ border: "none", cursor: "pointer",
+                   }}
                   allowFullScreen
-                  onClick={() => handleShowModal(video)}
                 />
                 <Carousel.Caption className="custom-caption">
                   <div className="caption-background">

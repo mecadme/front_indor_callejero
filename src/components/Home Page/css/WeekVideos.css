@@ -1,16 +1,27 @@
 .custom-caption {
-    bottom: 20px; 
+    bottom: 90px; 
     z-index: 10; 
+    color: #f72adc; 
+    background-color: #33173ccc;
+    padding: 10px 15px;
+    border-radius: 10px;
   }
   
   .caption-background {
-    background: rgba(0, 0, 0, 0.6); 
+    background: #33173C; 
     padding: 10px 15px;
     border-radius: 10px; 
   }
   
   .caption-background h3, .caption-background p {
-    color: #fff; 
+    color: #F5EDF4; 
     margin: 0;
   }
   
+  .videos{
+    width: 70vw;
+    padding: 2rem;
+    margin: 0;
+    text-align: center;
+    
+  }
