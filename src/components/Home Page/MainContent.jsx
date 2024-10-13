@@ -66,11 +66,11 @@ const MainContent = () => {
           <Sponsors maxContributions={MIN_CONTRIBUTION} />
         </Row>
 
-        <Row className="row_standings">
-          <Col xs={7} md={4} lg={3} className="standings">
+        <Row className="row_standings mx-3">
+          <Col xs={12} md={12} lg={4} className="standings">
             <Standings />
           </Col>
-          <Col xs={11} md={8} lg={9} className="week_videos">
+          <Col xs={12} md={12} lg={8} className="week_videos">
             <WeekVideos />
           </Col>
         </Row>

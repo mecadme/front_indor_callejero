@@ -1,27 +1,87 @@
 .custom-caption {
-    bottom: 90px; 
-    z-index: 10; 
-    color: #f72adc; 
-    background-color: #33173ccc;
-    padding: 10px 15px;
-    border-radius: 10px;
-  }
-  
-  .caption-background {
-    background: #33173C; 
-    padding: 10px 15px;
-    border-radius: 10px; 
-  }
-  
-  .caption-background h3, .caption-background p {
-    color: #F5EDF4; 
-    margin: 0;
-  }
-  
-  .videos{
-    width: 70vw;
+  z-index: 10;
+}
+
+.caption-background {
+  background: #33173c;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.caption-background h3,
+.caption-background p {
+  color: #f5edf4;
+  margin: 0;
+}
+
+.videos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80vw; /* Ajusta el ancho en pantallas grandes */
+  height: auto; /* Permite que la altura sea dinámica */
+  margin: 1.5rem auto;
+  padding: 3rem;
+  text-align: center;
+  background-color: #3e78bc;
+  border-radius: 1.5rem;
+}
+
+.videos h3 {
+  color: #f5edf4;
+  font-weight: bold;
+  font-size: 3.5rem;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.iframe-container {
+  width: 70%; /* Ajusta para pantallas grandes */
+  height: 550px; /* Mantén altura para videos grandes */
+  border: none;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .videos {
+    width: 90vw;
     padding: 2rem;
-    margin: 0;
-    text-align: center;
-    
   }
+
+  .iframe-container {
+    width: 80%; /* Ajusta el ancho para pantallas medianas */
+    height: 450px; 
+  }
+
+  .videos h3 {
+    font-size: 2.5rem; /* Reduce el tamaño del texto */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .videos {
+    width: 80vw;
+    height: auto;
+    padding: 1rem;
+    margin: 0;
+  }
+
+  .iframe-container {
+    width: 100%;
+    height: 300px; /* Reduce altura para pantallas móviles */
+  }
+
+  .videos h3 {
+    font-size: 2rem; /* Ajusta el tamaño en pantallas pequeñas */
+    padding: 1.5rem 0;
+  }
+
+  .caption-background h3 {
+    font-size: 1.2rem; /* Tamaño más pequeño para el título en móviles */
+  }
+
+  .caption-background p {
+    font-size: 0.9rem; /* Ajusta el tamaño de las descripciones */
+  }
+}

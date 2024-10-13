@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import Loading from "../Utils/Loading";
 import getTeamStyles from "../Utils/TeamBannerStyle";
+import "./css/Standings.css";
 
 const Standings = () => {
   const [groups, setGroups] = useState({});
@@ -58,7 +59,7 @@ const Standings = () => {
   };
 
   return (
-    <Container className="standings mt-4">
+    <Container className="standings-container mt-4">
       <h3
         className="text-center mb-4"
         onClick={handleTableClick}
@@ -67,12 +68,12 @@ const Standings = () => {
         TABLAS
       </h3>
       {Object.keys(groups).map((groupName, index) => (
-        <Card key={index} className="mb-4 shadow">
+        <Card key={index} className=" standings-card shadow mx-4">
           <Card.Header className="text-white text-center">
             <h4>{groupName}</h4>
           </Card.Header>
           <Card.Body className="p-0 m-0">
-            <ListGroup variant="flush" className="text-center p-0 m-0">
+            <ListGroup  className="home-standings text-center p-0 m-0">
               {groups[groupName].map((team, teamIndex) => {
                 const teamStyles = getTeamStyles({ teamColor: team.color });
 

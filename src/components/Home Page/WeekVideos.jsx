@@ -11,6 +11,8 @@ const WeekVideos = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [index, setIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null); // Para gestionar el video modal
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
@@ -34,10 +36,9 @@ const WeekVideos = () => {
     fetchVideos();
   }, []);
 
-  
   const handleShowModal = (video) => {
-    setSelectedVideo(video); 
-    setShowModal(true); 
+    setSelectedVideo(video);
+    setShowModal(true);
   };
 
   if (isLoading) {
@@ -49,12 +50,8 @@ const WeekVideos = () => {
   }
 
   return (
-    <Container className="videos mt-4">
-      <h3
-        className="text-center mb-4"
-      >
-        ÚLTIMOS VÍDEOS
-      </h3>
+    <Container className="videos mt-2">
+      <h3 className="text-center mb-4">ÚLTIMOS VÍDEOS</h3>
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}
@@ -71,15 +68,19 @@ const WeekVideos = () => {
                 className="video-container custom-video d-flex justify-content-center align-items-center"
               >
                 <iframe
-                  width="70%"
-                  height="600px"
+                  width="100%" // Ahora es totalmente responsive
+                  height="auto" // Ajusta la altura según el contenido
                   src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
                     video.videoUrl
                   )}`}
                   title={video.videoTitle}
-                  style={{ border: "none", cursor: "pointer",
-                   }}
+                  style={{
+                    border: "none",
+                    cursor: "pointer",
+                    borderRadius: "10px",
+                  }}
                   allowFullScreen
+                  className="iframe-container"
                 />
                 <Carousel.Caption className="custom-caption">
                   <div className="caption-background">
