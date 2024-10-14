@@ -1,0 +1,85 @@
+/* Login Component Styles */
+.login-container {
+    max-width: 40rem;
+    background: #33173C;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-title {
+    font-size: 3.8rem;
+    font-weight: bold;
+    color: #F5EDF4;
+  }
+  
+  .login-error {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login-input {
+    border-radius: 4px;
+    border: 1px solid #F5EDF4;
+    padding: 0.5rem;
+  }
+  
+  .login-feedback {
+    font-size: 0.9rem;
+    color: #dbd81e;
+  }
+  
+  .login-show-password-btn {
+    border: none;
+    background: transparent;
+    color: #faf8f8;
+    cursor: pointer;
+  }
+  
+  .login-show-password-btn:hover {
+    color: #F5EDF4;
+  }
+  
+  .login-checkbox {
+    font-size: 0.95rem;
+    color: #F5EDF4;
+  }
+  
+  .login-submit-btn {
+    width: 100%;
+    background-color: #007bff;
+    color: #F5EDF4;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .login-submit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .login-forgot-password,
+  .login-create-account {
+    font-size: 1rem !important;
+    color: #7e7d7d;
+
+
+  }
+  
+  .login-link {
+    color: #F5EDF4;
+    text-decoration: none;
+    font-size: 1.5rem;
+  }
+  
+  .login-link:hover {
+    text-decoration: none;
+  }
+  

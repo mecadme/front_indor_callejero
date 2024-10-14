@@ -12,7 +12,7 @@ import useLogOut from "../../hooks/useLogOut";
 import RoleBased from "../Administration/RoleBased";
 import "./css/Header.css";
 
-const Header = () => {
+const Header = ({ showTeamsBar = true }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const navigate = useNavigate();
 
@@ -97,7 +97,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />
+      {showTeamsBar && (<TeamsBarComponent content={teams} getAllTeams={handleTeamSelection} />)}
       <Navbar expand="lg" className="navbarHeader m-0 p-0" sticky="top">
         <Container className="containerHeader p-0 w-100">
           <Navbar.Brand className="navbar-logo">
@@ -190,12 +190,12 @@ const Header = () => {
               {user ? (
                 renderUserInfo()
               ) : (
-                <Button
+                showTeamsBar && (<Button
                   variant="outline-light"
                   onClick={() => navigate("/login")}
                 >
                   Iniciar Sesión
-                </Button>
+                </Button>)
               )}
             </Nav>
           </Navbar.Collapse>

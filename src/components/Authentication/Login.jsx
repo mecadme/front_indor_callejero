@@ -1,7 +1,7 @@
 import {
   faEye,
   faEyeSlash,
-  faInfoCircle
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { jwtDecode } from "jwt-decode";
@@ -17,6 +17,8 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import Header from "../Header/Header";
+import "./css/Login.css";
 
 const USER_NAME_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -107,93 +109,107 @@ const Login = () => {
   }, [persist]);
 
   return (
-    <Container className="mt-5" fluid style={{ maxWidth: "40rem" }}>
-      <h2 className="text-center mb-4">Iniciar sesión</h2>
+    <Container fluid className="p-0 justify-content-center align-items-center">
+      <Header showTeamsBar={false} />
 
-      {errMsg && (
-        <Alert
-          ref={errRef}
-          variant="danger"
-          className="text-center"
-          aria-live="assertive"
-        >
-          {errMsg}
-        </Alert>
-      )}
+      <Container className="login-container mt-5" fluid>
+        <h2 className="login-title text-center mb-4">Iniciar sesión</h2>
 
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="username" className="mb-3">
-          <Form.Label>Usuario:</Form.Label>
-          <InputGroup>
-            <Form.Control
-              type="text"
-              ref={userRef}
-              autoComplete="off"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              placeholder="juan_perez@example.com"
-              isInvalid={user && !validUser}
-              required
+        {errMsg && (
+          <Alert
+            ref={errRef}
+            variant="danger"
+            className="login-error text-center"
+            aria-live="assertive"
+          >
+            {errMsg}
+          </Alert>
+        )}
+
+        <Form className="login-form" onSubmit={handleSubmit}>
+          <Form.Group controlId="username" className="mb-3">
+            <Form.Label>Usuario:</Form.Label>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                ref={userRef}
+                autoComplete="off"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+                placeholder="juan_perez@example.com"
+                isInvalid={user && !validUser}
+                required
+                className="login-input"
+              />
+              <Form.Control.Feedback type="invalid" className="login-feedback">
+                <FontAwesomeIcon icon={faInfoCircle} /> Por favor, introduzca un
+                correo válido.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+
+          <Form.Group controlId="password" className="mb-3">
+            <Form.Label>Contraseña:</Form.Label>
+            <InputGroup>
+              <Form.Control
+                type={showPwd ? "text" : "password"}
+                value={pwd}
+                onChange={(e) => setPwd(e.target.value)}
+                placeholder="Ejemplo1234"
+                required
+                className="login-input"
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={toggleShowPwd}
+                className="login-show-password-btn"
+              >
+                <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
+              </Button>
+            </InputGroup>
+          </Form.Group>
+
+          <Form.Group controlId="persist" className="mb-3">
+            <Form.Check
+              type="checkbox"
+              label="Recordar usuario"
+              checked={persist}
+              onChange={togglePersist}
+              className="login-checkbox"
             />
-            <Form.Control.Feedback type="invalid">
-              <FontAwesomeIcon icon={faInfoCircle} /> Por favor, introduzca un
-              correo válido.
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group controlId="password" className="mb-0">
-          <Form.Label>Contraseña:</Form.Label>
-          <InputGroup>
-            <Form.Control
-              type={showPwd ? "text" : "password"}
-              value={pwd}
-              onChange={(e) => setPwd(e.target.value)}
-              placeholder="Ejemplo1234"
-              required
-            />
-            <Button
-              variant="warning"
-              onClick={toggleShowPwd}
-              style={{
-                border: "none",
-                background: "none",
-                cursor: "pointer",
-              }}
-            >
-              <FontAwesomeIcon icon={showPwd ? faEyeSlash : faEye} />
-            </Button>
-          </InputGroup>
-        </Form.Group>
+          <Button
+            type="submit"
+            className="login-submit-btn"
+            disabled={!validUser || !pwd || isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Spinner animation="border" size="sm" /> Iniciando sesión...
+              </>
+            ) : (
+              "Iniciar sesión"
+            )}
+          </Button>
+        </Form>
 
-        <Form.Group controlId="persist" className="mb-0">
-          <Form.Check
-            type="checkbox"
-            label="Recordar usuario"
-            checked={persist}
-            onChange={togglePersist}
-          />
-        </Form.Group>
+        <p className="login-forgot-password mt-4 text-center">
+          ¿Olvidaste tu contraseña?{" "}
+          <br />
+          <Link to="/forgot-password" className="login-link">
+            Recuperar contraseña
+          </Link>
+        </p>
 
-        <Button type="submit" disabled={!validUser || !pwd || isLoading}>
-          {isLoading ? (
-            <>
-              <Spinner animation="border" size="sm" /> Iniciando sesión...
-            </>
-          ) : (
-            "Iniciar sesión"
-          )}
-        </Button>
-      </Form>
-
-      <p className="mt-4 text-center">
-        ¿Olvidaste tu contraseña?{" "}
-        <Link to="/forgot-password">Recuperar contraseña</Link>
-      </p>
-
-      <p className="text-center">
-        ¿Necesitas una cuenta? <Link to="/register">Crear una cuenta</Link>
-      </p>
+        <p className="login-create-account text-center">
+          ¿Necesitas una cuenta?{" "}
+          <br />
+          <Link to="/register" className="login-link">
+            Crear una cuenta
+          </Link>
+        </p>
+      </Container>
     </Container>
   );
 };
