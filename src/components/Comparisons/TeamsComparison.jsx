@@ -10,6 +10,7 @@ import {
   Spinner,
   Table,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import {
   Legend,
   PolarAngleAxis,
@@ -20,14 +21,14 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import useFetchAllTeamsStats from "../../hooks/useFetchAllTeamsStats"; // Assuming there's a hook for fetching teams
+import useFetchAllTeamsStats from "../../hooks/useFetchAllTeamsStats";
 import EmptyData from "../Administration/EmptyData";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
-import TeamSelector from "./TeamSelector"; 
-import { useNavigate } from "react-router-dom";
+import PageBanner from "../Utils/PageBanner";
+import "./css/TeamsComparison.css";
+import TeamSelector from "./TeamSelector";
 
-// RadarChart Component
 const RadarChartComponent = ({ data, team1, team2 }) => {
   const sameTeamColor = team1.teamColor === team2.teamColor;
   const team1Color = team1.teamColor;
@@ -62,13 +63,11 @@ const RadarChartComponent = ({ data, team1, team2 }) => {
   );
 };
 
-// Helper function to calculate percentage
 const calculatePercentage = (value1, value2) => {
   const total = value1 + value2;
   return total === 0 ? 0 : (value1 / total) * 100;
 };
 
-// StatsTable Component
 const StatsTable = ({ team1, team2 }) => {
   const stats = [
     { label: "GOLES", key: "goals" },
@@ -112,7 +111,6 @@ const StatsTable = ({ team1, team2 }) => {
   );
 };
 const TeamCard = ({ team }) => {
-  
   const handleTeamClick = (teamId) => {
     navigate(`/team/${teamId}`);
   };
@@ -120,7 +118,7 @@ const TeamCard = ({ team }) => {
   return (
     <Col key={team.teamId} className="mb-2">
       <Card
-      onClick={() => handleTeamClick(team.teamId)}
+        onClick={() => handleTeamClick(team.teamId)}
         style={{ width: "10rem", alignItems: "center", cursor: "pointer" }}
         className="shadow-sm"
       >
@@ -138,9 +136,8 @@ const TeamCard = ({ team }) => {
   );
 };
 
-// TeamsComparison Component
 const TeamsComparison = () => {
-  const { allTeamsStats, loading, error } = useFetchAllTeamsStats(); // Fetch teams' stats
+  const { allTeamsStats, loading, error } = useFetchAllTeamsStats();
   const [selectedTeam1, setSelectedTeam1] = useState(null);
   const [selectedTeam2, setSelectedTeam2] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
@@ -196,7 +193,9 @@ const TeamsComparison = () => {
 
   const handleTeamSelect = (setTeam, otherTeam) => (team) => {
     if (team === otherTeam) {
-      setErrorMsg("No puedes seleccionar el mismo equipo para ambas comparaciones.");
+      setErrorMsg(
+        "No puedes seleccionar el mismo equipo para ambas comparaciones."
+      );
       return;
     }
     setErrorMsg("");
@@ -206,16 +205,17 @@ const TeamsComparison = () => {
   const resetTeam = (setTeam) => () => setTeam(null);
 
   return (
-    <Container fluid className="py-0 px-2 align-items-center">
+    <Container fluid className="p-0 align-items-center">
       <Header />
       {errorMsg && (
         <Alert variant="danger" className="mt-2">
           {errorMsg}
         </Alert>
       )}
+      <PageBanner title="COMPARACIÓN DE EQUIPOS" />
 
       {/* Team Selection */}
-      <Row className="mb-3">
+      <Row className="mb-3 px-5">
         <Col md={5}>
           {!selectedTeam1 ? (
             <TeamSelector
@@ -231,10 +231,13 @@ const TeamsComparison = () => {
             </div>
           )}
         </Col>
-        <Col md={2} className="d-flex justify-content-center align-items-center">
+        <Col
+          md={2}
+          className="d-flex justify-content-center align-items-center"
+        >
           <h5>VS</h5>
         </Col>
-        <Col md={5}>
+        <Col md={5} className="d-flex justify-content-center align-items-end">
           {!selectedTeam2 ? (
             <TeamSelector
               teams={allTeamsStats.filter((team) => team !== selectedTeam1)}
@@ -271,7 +274,11 @@ const TeamsComparison = () => {
               className="d-flex justify-content-center align-items-center text-center"
             >
               {radarData.length ? (
-                <RadarChartComponent data={radarData} team1={selectedTeam1} team2={selectedTeam2} />
+                <RadarChartComponent
+                  data={radarData}
+                  team1={selectedTeam1}
+                  team2={selectedTeam2}
+                />
               ) : (
                 <p>Radar chart not available</p>
               )}

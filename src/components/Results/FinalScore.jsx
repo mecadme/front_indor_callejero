@@ -3,7 +3,7 @@ import React from "react";
 const FinalScore = ({ events, homeTeam, awayTeam }) => {
   if (!events || events.length === 0) {
     return (
-      <div 
+      <div
         className="final-score text-white"
         style={{
           textAlign: "center",
@@ -19,26 +19,23 @@ const FinalScore = ({ events, homeTeam, awayTeam }) => {
     );
   }
 
-  // Filtrar los eventos para obtener solo los goles
   const goals = events.filter((event) => event.eventType === "GOAL");
 
-  // Contar goles del equipo local (home)
   const homeGoals = goals.filter(
     (goal) => goal.teamId === homeTeam.teamId
   ).length;
 
-  // Contar goles del equipo visitante (away)
   const awayGoals = goals.filter(
     (goal) => goal.teamId === awayTeam.teamId
   ).length;
 
   return (
     <div
-      className="final-score text-white"
+      className="final-score text-white m-0"
       style={{
         textAlign: "center",
-        padding: "1.5rem",
-        fontSize: "4rem",
+        padding: "4.5rem",
+        fontSize: "3.25rem",
         fontWeight: "bold",
         backgroundColor: "#33173C",
         width: "100%",

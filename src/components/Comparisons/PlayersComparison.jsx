@@ -27,6 +27,7 @@ import EmptyData from "../Administration/EmptyData";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import PlayerSelector from "./PlayerSelector";
+import PageBanner from "../Utils/PageBanner";
 
 const RadarChartComponent = ({ data, player1, player2 }) => {
   const sameTeam = player1.teamColor === player2.teamColor;
@@ -216,7 +217,7 @@ const PlayersComparison = () => {
   const resetPlayer = (setPlayer) => () => setPlayer(null);
 
   return (
-    <Container fluid className="py-0 px-2 align-items-center">
+    <Container fluid className="py-0 px-0 align-items-center">
       <Header />
       {errorMsg && (
         <Alert variant="danger" className="mt-2">
@@ -224,7 +225,8 @@ const PlayersComparison = () => {
         </Alert>
       )}
 
-      <Row className="mb-3">
+      <PageBanner title="COMPARACIóN DE JUGADORES" />
+      <Row className="mb-3 px-5">
         <Col md={5}>
           {!selectedPlayer1 ? (
             <PlayerSelector

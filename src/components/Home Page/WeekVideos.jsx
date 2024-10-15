@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/WeekVideos.css";
-import axios from "../../api/axios";
 import { Container } from "react-bootstrap";
+import axios from "../../api/axios";
+import "./css/WeekVideos.css";
 
 const WeekVideos = () => {
   const [videos, setVideos] = useState([]);
@@ -14,7 +12,7 @@ const WeekVideos = () => {
   const [error, setError] = useState(null);
   const [index, setIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null); // Video seleccionado
+  const [selectedVideo, setSelectedVideo] = useState(null); // Para gestionar el video modal
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
@@ -38,10 +36,9 @@ const WeekVideos = () => {
     fetchVideos();
   }, []);
 
-  // Función para abrir el modal
   const handleShowModal = (video) => {
-    setSelectedVideo(video); // Setea el video seleccionado
-    setShowModal(true); // Abre el modal
+    setSelectedVideo(video);
+    setShowModal(true);
   };
 
   if (isLoading) {
@@ -53,12 +50,8 @@ const WeekVideos = () => {
   }
 
   return (
-    <Container className="videos mt-4">
-      <h3
-        className="text-center mb-4"
-      >
-        ÚLTIMOS VÍDEOS
-      </h3>
+    <Container className="videos mt-2">
+      <h3 className="text-center mb-4">ÚLTIMOS VÍDEOS</h3>
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}
@@ -75,15 +68,19 @@ const WeekVideos = () => {
                 className="video-container custom-video d-flex justify-content-center align-items-center"
               >
                 <iframe
-                  width="70%"
-                  height="700px"
+                  width="100%" // Ahora es totalmente responsive
+                  height="auto" // Ajusta la altura según el contenido
                   src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
                     video.videoUrl
                   )}`}
                   title={video.videoTitle}
-                  style={{ border: "none", cursor: "pointer" }}
+                  style={{
+                    border: "none",
+                    cursor: "pointer",
+                    borderRadius: "10px",
+                  }}
                   allowFullScreen
-                  onClick={() => handleShowModal(video)}
+                  className="iframe-container"
                 />
                 <Carousel.Caption className="custom-caption">
                   <div className="caption-background">

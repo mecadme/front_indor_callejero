@@ -1,27 +1,39 @@
 .main-content {
-  padding: 5rem;
+  padding: 15rem;
   margin: 0;
   align-content: center;
   align-items: center;
 }
 
 .row_week {
-  background-color: #359c4c;
+  background-color: #33173C;
   border-radius: 1.5rem;
-  padding: 1rem;
+  padding:  4.25rem 0;
   max-width: 100%;
   max-height: 100%;
-  color: #f8f9fa;
+  color: #f5edf4;
   align-items: center;
 }
 
+.row_standings {
+  
+  align-items: center;
+}
 
+.week-team h3 {
+  color: #f5edf4;
+  font-weight: bold;
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 0 0 0 2.5rem;
+  padding: 0;
+}
 .week_team {
   display: flex;
   position: relative;
   width: 60%;
   height: 100%;
-  background-image: url("../../../assets/mainPageField.png"); /* Ruta de tu imagen */
+  background-image: url("../../../assets/mainPageField.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -30,30 +42,45 @@
 
 .sponsor_container {
   margin-top: 2rem;
-  background-color: #f8f9fa;
   border-radius: 1rem;
   padding: 1.5rem;
   font-size: 3rem;
-  text-align: center; /* Centrado del texto */
+  text-align: center;
 }
 
 .position_container {
   display: flex;
-  gap: 3rem; /* Reemplazamos grid-gap con flexbox gap */
+  gap: 3rem;
 }
 
-/* Media query para pantallas pequeñas */
 @media (max-width: 768px) {
-  .round_container {
-    display: block; /* Cambia el layout a block para pantallas pequeñas */
-    gap: 50px;
+  .week_team {
+    padding: 1rem;
+    width: 90%;
+    height: 80%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
-  .row_week {
-    display: block; /* Cada componente ocupará toda la fila */
+  .week-team h3 {
+    color: #f5edf4;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 0 0 0 2.5rem;
+    padding: 0;
   }
 
-  .position_container {
-    flex-direction: column; /* Cambia el layout de las posiciones a columnas */
+  .main-content {
+    padding: 15rem;
+    margin: 0;
+    align-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center !important;
+    
+    flex-direction: column;
   }
+
 }

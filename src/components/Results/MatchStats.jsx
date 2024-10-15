@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import "./css/MatchStats.css";
 
 const MatchStats = ({ matchStats, homeTeamId, awayTeamId }) => {
   const homeTeamStats = matchStats.find((team) => team.teamId === homeTeamId) || {};
@@ -27,8 +28,8 @@ const MatchStats = ({ matchStats, homeTeamId, awayTeamId }) => {
 
   return (
     <Container className="mt-2 text-center">
-      <Row>
-        <Col xs={2} md={2} lg={2} className="home-team-stats p-1">
+      <Row className="d-flex justify-content-center">
+        <Col xs={3} md={1} lg={2} className="team-stats p-1">
           {statsFields.map(({ key, isPercentage }) => (
             <div key={key}>
               {isPercentage
@@ -38,7 +39,7 @@ const MatchStats = ({ matchStats, homeTeamId, awayTeamId }) => {
           ))}
         </Col>
 
-        <Col md={8} xs={8} lg={8} className="stats-label text-center p-1" style={{ fontSize: "1.01rem" }}>
+        <Col md={6} xs={6} lg={6} className="stats-label text-center p-1" style={{ fontSize: "1.5rem" }}>
           {statsFields.map(({ label }) => (
             <div key={label}>
               <strong className="stats-label m-0 p-0" >{label}</strong>
@@ -46,7 +47,7 @@ const MatchStats = ({ matchStats, homeTeamId, awayTeamId }) => {
           ))}
         </Col>
 
-        <Col md={2} xs={2} lg={2} className="away-team-stats p-1">
+        <Col md={3} xs={1} lg={2} className="team-stats p-1">
           {statsFields.map(({ key, isPercentage }) => (
             <div key={key}>
               {isPercentage

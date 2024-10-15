@@ -47,7 +47,7 @@ const LineUps = ({ matchDetails }) => {
 
   const Circle = ({ color }) => (
     <svg width="50" height="50">
-      <circle cx="15" cy="15" r="7" fill={color} />
+      <circle cx="15" cy="15" r="10" fill={color} />
     </svg>
   );
 
@@ -61,9 +61,8 @@ const LineUps = ({ matchDetails }) => {
         {players.map((player) => (
           <ListGroup.Item
             key={player.playerId}
-            className="d-flex align-items-center"
+            className="players-list d-flex align-items-center"
             style={{
-              gap: "0.5rem",
               padding: "0",
               margin: "0",
               border: "none",
@@ -72,12 +71,12 @@ const LineUps = ({ matchDetails }) => {
           >
             <div className="player-info">
               {position === "left" && <Circle color={color} />}
-              <span className="player-number" style={{ fontSize: "0.75rem" }}>
+              <span className="player-number" style={{ fontSize: "1.25rem" }}>
                 {player.jerseyNumber}{" "}
               </span>
 
-              <span className="player-name" style={{ fontSize: "1.25rem" }}>
-                {player.firstName.toUpperCase()} {player.lastName.toUpperCase()}
+              <span className="player-name" style={{ fontSize: "1rem" }}>
+                {player.firstName[0]}. {player.lastName}
               </span>
               {position === "right" && <Circle color={color} />}
             </div>
@@ -90,7 +89,7 @@ const LineUps = ({ matchDetails }) => {
   return (
     <Container>
       <Row className="mb-0 align-items-center">
-        <Col xs={3} md={4} lg={4}>
+        <Col xs={2} md={4} lg={4}>
           {renderTeamNames(homeTeam, "right")}
         </Col>
         <Col xs={6} md={4} lg={4}>
@@ -107,17 +106,17 @@ const LineUps = ({ matchDetails }) => {
         </Col>
       </Row>
       <Row>
-        <Col xs={3} md={3} lg={2}>
+        <Col xs={3} md={3} lg={3}>
           {lineUp?.homePlayers &&
             renderPlayers(lineUp.homePlayers, homeTeam.color, "left")}
         </Col>
-        <Col xs={6} md={6} lg={8} className="d-flex justify-content-center" >
+        <Col xs={6} md={6} lg={6} className="d-flex justify-content-center" >
           <Field
             homeTeamColor={homeTeam.color}
             awayTeamColor={awayTeam.color}
           />
         </Col>
-        <Col xs={2} md={3} lg={2}>
+        <Col xs={2} md={3} lg={3}>
           {lineUp?.awayPlayers &&
             renderPlayers(lineUp.awayPlayers, awayTeam.color, "right")}
         </Col>

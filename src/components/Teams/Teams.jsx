@@ -6,6 +6,7 @@ import EmptyData from "../Administration/EmptyData";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import StyleUtils from "../Utils/StyleUtils";
+import PageBanner from "../Utils/PageBanner";
 
 const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
 
@@ -34,8 +35,8 @@ const Teams = () => {
   return (
     <Container fluid>
       <Header />
-      <Container fluid className="mt-5 mb-5">
-        <h2 className="text-center">{"PLANTILLAS"}</h2>
+      <Container className="banner-container">
+        <PageBanner title={"Plantillas"} />
 
         <Row>
           {teams.map((team) => {

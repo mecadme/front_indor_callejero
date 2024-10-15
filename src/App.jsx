@@ -17,7 +17,6 @@ import ResultPredict from "./components/Header/ResultPredict.jsx";
 import StreetProject from "./components/Header/StreetProject.jsx";
 import TLQDS from "./components/Header/TLQDS.jsx";
 import Home from "./components/Home";
-import Lounge from "./components/Manager/Lounge.jsx";
 import MatchManager from "./components/Manager/MatchManager.jsx";
 import Matches from "./components/Matches/Matches.jsx";
 import RoundsPage from "./components/Matches/RoundsPage.jsx";
@@ -31,13 +30,14 @@ import TeamPage from "./components/Teams/TeamPage.jsx";
 import Teams from "./components/Teams/Teams.jsx";
 import TeamStandings from "./components/Teams/TeamStandings.jsx";
 import UserPage from "./components/User/UserPage.jsx";
+import SponsorPage from "./components/Sponsor/SponsorPage.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import CoachPage from "./components/Matches/CoachPage.jsx";
-import useFetchTeams from "./hooks/useFetchTeams.jsx";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import CoachPage from "./components/Teams/Coach/CoachPage.jsx";
+import useFetchTeams from "./hooks/useFetchTeams.jsx";
 
 const ROLES = {
   User: "ROLE_USER",
@@ -82,11 +82,11 @@ function App() {
                 <RequiredAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
               }
             >
-              <Route path="/managment/manager" element={<MatchManager />} />
+              <Route path="/management/manager" element={<MatchManager />} />
             </Route>
 
             <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-              <Route path="/managment/admin" element={<Admin />} />
+              <Route path="/management/admin" element={<Admin />} />
             </Route>
             <Route path="/comparisons" element={<ComparisonsPage />} />
             <Route path="/comparisons/teams" element={<TeamsComparison />} />
@@ -105,9 +105,10 @@ function App() {
             <Route path="/teams" element={<Teams />} />
             <Route path="/card" element={<CardsPage />} />
             <Route path="/minutes_played" element={<MinutesPlayedPage />} />
-            <Route path="/coach" element={<CoachPage />} />
+            <Route path="/coach/:coachId" element={<CoachPage />} />
+            <Route path="/sponsor/:sponsorId" element={<SponsorPage />} />
+
             <Route path="/user/:userName/:userId" element={<UserPage />} />
-            <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route>
 

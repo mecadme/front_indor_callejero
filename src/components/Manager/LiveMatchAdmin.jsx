@@ -21,6 +21,10 @@ const LiveMatchAdmin = ({ matches }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [currentTab, setCurrentTab] = useState("list");
   const [selectedMatch, setSelectedMatch] = useState(null);
+
+  const [isLineUpSubmitted, setIsLineUpSubmitted] = useState(false); 
+  const [isMatchStarted, setIsMatchStarted] = useState(false); 
+
   const { startMatch } = useStartMatch();
   const { pauseMatch } = usePauseMatch();
   const { stopMatch } = useStopMatch();
@@ -32,8 +36,10 @@ const LiveMatchAdmin = ({ matches }) => {
   const resumeIcon = "https://cdn-icons-png.flaticon.com/512/9581/9581132.png";
   const stopIcon = "https://cdn-icons-png.flaticon.com/512/4029/4029077.png";
 
+  
   const handleMatchStart = (matchId) => {
     startMatch(matchId);
+    setIsMatchStarted(true); 
     if (selectedMatch) {
       const endTime = Date.now() + selectedMatch.duration * 60 * 1000;
       setMatchTimer(endTime);
@@ -65,6 +71,7 @@ const LiveMatchAdmin = ({ matches }) => {
       setTimeRemaining(0);
       setIsPaused(false);
       setSelectedMatch(null);
+      setIsMatchStarted(false); 
     } catch (error) {
       console.error("Error stopping the match:", error);
     }
@@ -87,6 +94,11 @@ const LiveMatchAdmin = ({ matches }) => {
         </div>
       );
     }
+  };
+
+  
+  const handleLineUpSubmitted = (submitted) => {
+    setIsLineUpSubmitted(submitted); 
   };
 
   return (
@@ -140,10 +152,15 @@ const LiveMatchAdmin = ({ matches }) => {
                     <span>El temporizador está detenido.</span>
                   </div>
                 )}
-                <ButtonGroup aria-label="match-control-buttons" size="lg" className="mb-3 w-50 d-flex justify-content-center mx-auto">
+                <ButtonGroup
+                  aria-label="match-control-buttons"
+                  size="lg"
+                  className="mb-3 w-50 d-flex justify-content-center mx-auto"
+                >
                   <Button
                     variant="success"
                     onClick={() => handleMatchStart(selectedMatch.matchId)}
+                    disabled={!isLineUpSubmitted || isMatchStarted} 
                   >
                     <img
                       src={startIcon}
@@ -155,6 +172,7 @@ const LiveMatchAdmin = ({ matches }) => {
                   <Button
                     variant="warning"
                     onClick={() => handleMatchPause(selectedMatch.matchId)}
+                    disabled={!isLineUpSubmitted || !isMatchStarted} 
                   >
                     <img
                       src={pauseIcon}
@@ -166,6 +184,7 @@ const LiveMatchAdmin = ({ matches }) => {
                   <Button
                     variant="primary"
                     onClick={() => handleMatchResume(selectedMatch.matchId)}
+                    disabled={!isLineUpSubmitted || !isPaused} 
                   >
                     <img
                       src={resumeIcon}
@@ -177,6 +196,7 @@ const LiveMatchAdmin = ({ matches }) => {
                   <Button
                     variant="danger"
                     onClick={() => handleMatchStop(selectedMatch.matchId)}
+                    disabled={!isLineUpSubmitted || !isMatchStarted} 
                   >
                     <img
                       src={stopIcon}
@@ -193,21 +213,8 @@ const LiveMatchAdmin = ({ matches }) => {
               matchId={selectedMatch.matchId}
               homeTeam={selectedMatch.homeTeam}
               awayTeam={selectedMatch.awayTeam}
+              onLineUpSubmitted={handleLineUpSubmitted} 
             />
-
-            <div className="mt-3">
-              <h5>Selecciona Árbitro</h5>
-              <select
-                className="form-select"
-                onChange={(e) =>
-                  addRefereeToMatch(e.target.value, selectedMatch.matchId)
-                }
-              >
-                <option value="1">Árbitro 1</option>
-                <option value="2">Árbitro 2</option>
-                {/* Cargar árbitros desde la API */}
-              </select>
-            </div>
           </div>
         ) : (
           <p className="mt-4">

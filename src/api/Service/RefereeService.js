@@ -1,7 +1,7 @@
 import useAPI from "../../hooks/useAPI";
 import { useCallback } from "react";
 
-const REFEREES_URL = "/referee";
+const REFEREES_URL = "/referees";
 
 const refereeEndpoints = {
   getAll: REFEREES_URL,

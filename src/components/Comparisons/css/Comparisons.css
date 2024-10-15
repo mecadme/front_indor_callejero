@@ -1,0 +1,91 @@
+.comparisons-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+  
+  .modern-card {
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+    width: 28rem;
+    margin: 4rem 0 0 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  
+  .bg-gradient-primary, .bg-gradient-success {
+    background: linear-gradient(135deg, #33173C, #6B2A6E);
+  }
+  
+  .best-player-image,
+  .best-team-image {
+    width: 7rem !important ;
+    height: 7rem !important ;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border: 3px solid #fff;
+  }
+  
+  .best-player-image:hover,
+  .best-team-image:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+  }
+  
+  .modern-font {
+    color: #555;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+  }
+  
+  .modern-button {
+    border-radius: 25px;
+    padding: 0.7rem 2rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #33173C !important;
+    color: #fff;
+    font-size: 1.1rem;
+    border: none;
+  }
+  
+  .modern-button:hover {
+    background-color: #6B2A6E;
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modern-button:focus {
+    outline: none;
+  }
+  
+  .card-header {
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .card-body {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .modern-card {
+      width: 90%;
+      margin-bottom: 2rem;
+    }
+  
+    .best-player-image,
+    .best-team-image {
+      width: 5.5rem;
+      height: 5.5rem;
+    }
+  }
+  

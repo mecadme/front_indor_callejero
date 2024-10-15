@@ -1,0 +1,81 @@
+
+.row-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: auto;
+  background-color: #33173c;
+}
+
+.row-date h4 {
+  color: #f8f9fa;
+  padding: 5px;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.round-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #f8f9fa;
+  padding: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: #3e78bc;
+  border-radius: 2rem 2rem 0 0;
+}
+
+.round-name h3 {
+  color: #f8f9fa;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.round-matches {
+  color: #f8f9fa;
+  margin: auto;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: #3e78bc;
+  border-radius: 2rem;
+}
+
+.teams-names-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.1rem;
+  
+}
+
+.home-team-name {
+    padding: 0 1.25rem 0 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 2rem 0 0 2rem;
+}
+.home-team-name h5 {
+  font-weight: bold;
+  text-align: left;
+  font-size: 3.5rem !important;
+}
+
+
+.away-team-name {
+  color: #f8f9fa;
+  padding: 0 1.25rem 0 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 0 2rem   2rem 0;
+}
+.away-team-name h5 {
+    font-weight: bold;
+    text-align: right !important;
+    font-size: 3.5rem !important;
+  }
+  

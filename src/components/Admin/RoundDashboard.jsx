@@ -15,6 +15,7 @@ import {
   useGetRounds,
   useUpdateRound,
 } from "../../api/Service/RoundService";
+import { format } from "date-fns";
 
 const RoundDashboard = () => {
   const [activeTab, setActiveTab] = useState("list");
@@ -210,7 +211,10 @@ const RoundForm = ({
             <Form.Check
               key={match.matchId}
               type="checkbox"
-              label={`${match.homeTeam.neighborhood} vs ${match.awayTeam.neighborhood}`}
+              label={`${match.matchId} ${match.homeTeam.neighborhood} vs ${match.awayTeam.neighborhood} ${format(
+                        new Date(match.schedule.date),
+                        "dd MMM yy, HH:mm"
+                      )}`}
               checked={selectedMatches.includes(match.matchId)}
               onChange={() => handleMatchSelection(match.matchId)}
             />

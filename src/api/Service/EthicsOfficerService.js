@@ -5,6 +5,7 @@ const ETHICS_OFFICER_URL = "/ethics_officers";
 const ethicsOfficerEndpoints = {
   getAll: ETHICS_OFFICER_URL,
   getById: (ethicsOfficerId) => `${ETHICS_OFFICER_URL}/${ethicsOfficerId}`,
+  getByTeamId: (teamId) => `${ETHICS_OFFICER_URL}/team/${teamId}`,
   create: ETHICS_OFFICER_URL,
   update: (ethicsOfficerId) => `${ETHICS_OFFICER_URL}/${ethicsOfficerId}`,
   delete: (ethicsOfficerId) => `${ETHICS_OFFICER_URL}/${ethicsOfficerId}`,
@@ -28,6 +29,15 @@ const useGetEthicsOfficerById = () => {
     fetchData("GET", ethicsOfficerEndpoints.getById(ethicsOfficerId));
 
   return { data, error, loading, getEthicsOfficerById };
+};
+
+const useGetEthicsOfficerByTeamId = () => {
+  const { data, error, loading, fetchData } = useAPI("private");
+
+  const getEthicsOfficerByTeamId = (teamId) =>
+    fetchData("GET", ethicsOfficerEndpoints.getByTeamId(teamId));
+
+  return { data, error, loading, getEthicsOfficerByTeamId };
 };
 
 const useCreateEthicsOfficer = () => {
@@ -60,6 +70,7 @@ const useDeleteEthicsOfficer = () => {
 export {
   useGetEthicsOfficers,
   useGetEthicsOfficerById,
+  useGetEthicsOfficerByTeamId,
   useCreateEthicsOfficer,
   useUpdateEthicsOfficer,
   useDeleteEthicsOfficer,

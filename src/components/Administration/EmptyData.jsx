@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, Container } from "react-bootstrap";
 
-const EmptyData = ({ message }) => {
+const EmptyData = ({ message, translateY = 5 }) => {
   return (
     <Container
       className="d-flex flex-column align-items-center justify-content-center"
@@ -12,14 +12,14 @@ const EmptyData = ({ message }) => {
         style={{
           fontSize: "1.25rem",
           width: "80%",
-          height: "60%",
+          height: `${translateY}%`,
           padding: "1.5rem",
           position: "absolute",
           top: "50%",
-          transform: "translateY(-35%)",
+          transform: `translateY(-${translateY}%)`,
         }}
       >
-        <h3>¡Anima a tu barrio!</h3>
+        <h3 className="mt-5">¡Anima a tu barrio!</h3>
 
         <p>
           {message}
@@ -37,7 +37,7 @@ const EmptyData = ({ message }) => {
             }}
           />
         </div>
-        <p> Juntos, ¡podemos lograr grandes cosas! </p>
+        <p>Juntos, ¡podemos lograr grandes cosas!</p>
       </Alert>
     </Container>
   );

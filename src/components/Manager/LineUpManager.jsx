@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Modal,
   Button,
+  ButtonGroup,
+  Col,
+  Container,
   Dropdown,
   DropdownButton,
-  Col,
+  Modal,
   Row,
-  Container,
-  ButtonGroup,
 } from "react-bootstrap";
 import {
-  useSetLineUp,
-  useRegisterMatchEvent,
   useChangePlayer,
+  useRegisterMatchEvent,
+  useSetLineUp,
 } from "../../api/Service/MatchService";
 import {
   useInjurePlayer,
@@ -21,7 +21,7 @@ import {
 
 import "./css/LineUpManager.css";
 
-const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
+const LineUpManager = ({ matchId, homeTeam, awayTeam, onLineUpSubmitted }) => {
   const [homeLineUp, setHomeLineUp] = useState([]);
   const [awayLineUp, setAwayLineUp] = useState([]);
   const [lineUpSubmitted, setLineUpSubmitted] = useState(false);
@@ -34,6 +34,13 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
   const { changePlayer } = useChangePlayer();
   const { injurePlayer } = useInjurePlayer();
   const { updatePlayer } = useUpdatePlayer();
+
+  const PlayerPositionEnum = {
+    GOALKEEPER: "Portero",
+    DEFENDER: "Defensa",
+    MIDFIELDER: "Mediocampo",
+    ATTACKER: "Delantero",
+  };
 
   const MAX_PLAYERS = 6;
   const icons = {
@@ -53,6 +60,18 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     setHomeLineUp([]);
     setAwayLineUp([]);
     setLineUpSubmitted(false);
+  };
+
+  const isSubmitDisabled = () => {
+    const homeGoalkeeper = homeLineUp.find(
+      (player) => player.position === "GOALKEEPER"
+    );
+    const awayGoalkeeper = awayLineUp.find(
+      (player) => player.position === "GOALKEEPER"
+    );
+    const homeValid = homeLineUp.length >= 3 && homeGoalkeeper;
+    const awayValid = awayLineUp.length >= 3 && awayGoalkeeper;
+    return !(homeValid && awayValid);
   };
 
   const handleEvent = (playerId, eventType, cardName = null) => {
@@ -76,14 +95,30 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
 
     changePlayer(matchId, { outPlayerId, inPlayerId: newPlayerId, teamId });
     updatePlayer(newPlayerId, { status: "STARTER" });
-    updateLineUp(currentTeam, outPlayerId, newPlayer);
+
+    updateLineUp(currentTeam, outPlayerId, {
+      ...findPlayer(currentTeam, outPlayerId),
+      isSubstituted: true,
+    });
+
+    updateLineUp(currentTeam, null, newPlayer);
+
     setShowModal(false);
   };
 
   const handleInjury = (team, playerId) => {
     if (window.confirm("¿Confirmas que el jugador está lesionado?")) {
-      injurePlayer(playerId);
-      handleSubstitution(team, playerId);
+      injurePlayer(playerId)
+        .then(() => {
+          updateLineUp(team, playerId, {
+            ...findPlayer(team, playerId),
+            isInjured: true,
+          });
+          handleSubstitution(team, playerId);
+        })
+        .catch(() => {
+          alert("Error al marcar al jugador como lesionado.");
+        });
     }
   };
 
@@ -97,22 +132,34 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
       return;
     }
 
-    updateLineUp(team, null, player);
+    updateLineUp(team, null, player, true);
     updatePlayer(player.playerId, { status: "STARTER" });
   };
 
-  const updateLineUp = (team, outPlayerId, newPlayer) => {
+  const removePlayerFromLineUp = (team, playerId) => {
     const updateFunc = team === "home" ? setHomeLineUp : setAwayLineUp;
-    updateFunc((prevLineUp) =>
-      prevLineUp
-        .filter((player) => player.playerId !== outPlayerId)
-        .concat(newPlayer)
-    );
+    updateFunc((prevLineUp) => prevLineUp.filter((player) => player.playerId !== playerId));
   };
 
-  const removePlayerFromLineUp = (team, playerId) => {
-    updateLineUp(team, playerId, null);
-    updatePlayer(playerId, { status: "ACTIVE" });
+  const updateLineUp = (team, outPlayerId, newPlayer, addAtStart = false) => {
+    const updateFunc = team === "home" ? setHomeLineUp : setAwayLineUp;
+    updateFunc((prevLineUp) => {
+      let updatedLineUp = prevLineUp
+        .map((player) =>
+          player.playerId === outPlayerId
+            ? { ...player, isSubstituted: true }
+            : player
+        )
+        .filter((player) => player.playerId !== outPlayerId);
+
+      if (newPlayer) {
+        updatedLineUp = addAtStart
+          ? [newPlayer, ...updatedLineUp]
+          : [...updatedLineUp, newPlayer];
+      }
+
+      return updatedLineUp;
+    });
   };
 
   const submitLineUp = () => {
@@ -125,90 +172,118 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
       .then(() => {
         alert("Alineación enviada correctamente");
         setLineUpSubmitted(true);
+        if (onLineUpSubmitted) {
+          onLineUpSubmitted(true);
+        }
       })
       .catch(() => alert("Error al enviar la alineación"));
   };
 
-  const renderPlayerActions = (player, team) => (
-    <ButtonGroup aria-label="player-actions" size="sm">
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={() => handleEvent(player.playerId, "goal")}
-      >
-        <img src={icons.goal} alt="goal-icon" className="icon-size" />
-      </Button>
-      <Button
-        variant="outline-secondary"
-        size="sm"
-        onClick={() => handleEvent(player.playerId, "assist")}
-      >
-        <img src={icons.assist} alt="assist-icon" className="icon-size" />
-      </Button>
-      <DropdownButton
-        as={ButtonGroup}
-        variant="warning"
-        title="Tarjeta"
-        size="sm"
-      >
-        <Dropdown.Item
-          onClick={() => handleEvent(player.playerId, "card", "YELLOW")}
+  const renderPlayerActions = (player, team) => {
+    const disabled = player.isInjured || player.isSubstituted || !lineUpSubmitted;
+
+    return (
+      <ButtonGroup aria-label="player-actions" size="sm">
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => handleEvent(player.playerId, "goal")}
+          disabled={disabled}
         >
-          <img
-            src={icons.yellowCard}
-            alt="yellow-card-icon"
-            className="icon-size"
-          />
-        </Dropdown.Item>
-        <Dropdown.Item
-          onClick={() => handleEvent(player.playerId, "card", "RED")}
+          <img src={icons.goal} alt="goal-icon" className="icon-size" />
+        </Button>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={() => handleEvent(player.playerId, "assist")}
+          disabled={disabled}
         >
-          <img src={icons.redCard} alt="red-card-icon" className="icon-size" />
-        </Dropdown.Item>
-      </DropdownButton>
-      <Button
-        variant="outline-info"
-        size="sm"
-        onClick={() => handleSubstitution(team, player.playerId)}
-      >
-        <img src={icons.substitution} alt="sub-icon" className="icon-size" />
-      </Button>
-      <Button
-        variant="outline-danger"
-        size="sm"
-        onClick={() => handleInjury(team, player.playerId)}
-      >
-        <img src={icons.injury} alt="injury-icon" className="icon-size" />
-      </Button>
-    </ButtonGroup>
-  );
+          <img src={icons.assist} alt="assist-icon" className="icon-size" />
+        </Button>
+        <DropdownButton
+          as={ButtonGroup}
+          variant="warning"
+          title="Tarjeta"
+          size="sm"
+          disabled={disabled}
+        >
+          <Dropdown.Item
+            onClick={() => handleEvent(player.playerId, "card", "YELLOW")}
+          >
+            <img
+              src={icons.yellowCard}
+              alt="yellow-card-icon"
+              className="icon-size"
+            />
+          </Dropdown.Item>
+          <Dropdown.Item
+            onClick={() => handleEvent(player.playerId, "card", "RED")}
+          >
+            <img
+              src={icons.redCard}
+              alt="red-card-icon"
+              className="icon-size"
+            />
+          </Dropdown.Item>
+        </DropdownButton>
+        <Button
+          variant="outline-info"
+          size="sm"
+          onClick={() => handleSubstitution(team, player.playerId)}
+          disabled={disabled}
+        >
+          <img src={icons.substitution} alt="sub-icon" className="icon-size" />
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={() => handleInjury(team, player.playerId)}
+          disabled={disabled}
+        >
+          <img src={icons.injury} alt="injury-icon" className="icon-size" />
+        </Button>
+      </ButtonGroup>
+    );
+  };
 
   const renderLineUpSection = (team, teamData, lineUp) => (
     <Col className="col-md-6">
       <h3 className="text-center">{teamData.name}</h3>
       <h5>Alineación:</h5>
-      {lineUp.map((player) => (
-        <Container
-          key={player.playerId}
-          className="player d-flex align-items-center"
-        >
-          <Row className="ml-3 d-flex align-items-center">
-            <Col className="d-flex align-items-center">
-              <img
-                src={player.photoUrl}
-                alt={player.name}
-                className="player-photo mr-3"
-                style={{ width: "2.5rem", height: "2.5rem" }}
-              />
-            </Col>
-            <Col>
-              <strong>{`${player.firstName} ${player.lastName}`}</strong>
-              <p>{player.position}</p>
-            </Col>
-            {renderPlayerActions(player, team)}
-          </Row>
-        </Container>
-      ))}
+      {lineUp
+        .sort((a, b) => (a.isInjured || a.isSubstituted ? 1 : -1))
+        .map((player) => (
+          <Container
+            key={player.playerId}
+            className="player d-flex align-items-center"
+          >
+            <Row className="ml-3 d-flex align-items-center">
+              <Col className="d-flex align-items-center">
+                <img
+                  src={player.photoUrl}
+                  alt={player.name}
+                  className="player-photo mr-3"
+                  style={{ width: "2.5rem", height: "2.5rem" }}
+                />
+              </Col>
+              <Col>
+                <strong>{`${player.firstName} ${player.lastName}`}</strong>
+                <p>{PlayerPositionEnum[player.position] || player.position}</p>
+              </Col>
+              {renderPlayerActions(player, team)}
+              {!lineUpSubmitted && (
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => removePlayerFromLineUp(team, player.playerId)}
+                  className="ml-2"
+                >
+                  Quitar
+                </Button>
+              )}
+            </Row>
+          </Container>
+        ))}
       {!lineUpSubmitted && (
         <>
           <h5>Jugadores Disponibles:</h5>
@@ -222,7 +297,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
     players
       .filter(
         (p) =>
-          p.status === "ACTIVE" || p.status === "STARTER" &&
+          (p.status === "ACTIVE" || p.status === "STARTER") &&
           !lineUp.some((l) => l.playerId === p.playerId)
       )
       .map((player) => (
@@ -233,9 +308,11 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
             className="player-photo mr-3"
             style={{ width: "2.5rem", height: "2.5rem" }}
           />
-          <div>
+          <div className="player-position m-0">
             {`${player.firstName} ${player.lastName}`}
-            <p>{player.position}</p>
+            <p className="player-position m-0">
+              {PlayerPositionEnum[player.position] || player.position}
+            </p>
           </div>
           <Button
             variant="outline-success"
@@ -262,7 +339,11 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
       </Row>
       {!lineUpSubmitted && (
         <div className="text-center my-4">
-          <Button variant="success" onClick={submitLineUp}>
+          <Button
+            variant="success"
+            onClick={submitLineUp}
+            disabled={isSubmitDisabled()}
+          >
             Enviar Alineación
           </Button>
         </div>
@@ -276,7 +357,8 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
           {(currentTeam === "home" ? homeTeam.players : awayTeam.players)
             .filter(
               (p) =>
-                p.status === "ACTIVE" &&
+                (p.status === "ACTIVE" || p.status === "STARTER") &&
+                !p.isSubstituted &&
                 !homeLineUp.some((l) => l.playerId === p.playerId) &&
                 !awayLineUp.some((l) => l.playerId === p.playerId)
             )
@@ -287,7 +369,7 @@ const LineUpManager = ({ matchId, homeTeam, awayTeam }) => {
                 onClick={() => confirmSubstitution(player.playerId)}
                 className="d-block w-100 mb-2"
               >
-                {`${player.firstName} ${player.lastName} - ${player.position}`}
+                {`${player.firstName} ${player.lastName} - ${PlayerPositionEnum[player.position] || player.position}`}
               </Button>
             ))}
         </Modal.Body>

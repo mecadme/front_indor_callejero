@@ -1,20 +1,19 @@
-/* Estilos para el contenedor del campo */
 .field {
     display: grid;
-    width: 395px; 
+    width:25rem; 
     background-size: contain; 
     background-repeat: no-repeat;
     background-position: center;
     margin: 0;
     padding: 0;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-template-areas:
-      ". . . home1 . away1 . . ."
-      ". home2 . . . . . away2 ."
-      "home4 . home3 . . . away3 . away4"
-      ". home5 . . . . . away5 ."
-      ". . . home6 . away6 . . .";
+      ". . . home1 away1 . . ."
+      ". home2 . . . . away2 ."
+      "home4 . home3 . . away3 . away4"
+      ". home5 . . . . away5 ."
+      ". . . home6 away6 . . .";
   }
   
 @media screen and (max-width: 768px) {

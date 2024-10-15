@@ -8,15 +8,17 @@ const PoweredBy = () => {
   return (
     <Container fluid className="powered-by m-0">
       <Row>
-        <h3>PoweredBy</h3>
+        <h3>Powered By</h3>
         
         </Row>
       <Row>
         <Col>
-          <img src={ipsum} alt="imagen" className="ipsum-logo" />
+          <img src={ipsum} alt="imagen" className="ipsum-logo"
+          onClick={() => window.open("https://ipsumsolutio.com/", "_blank")} />
         </Col>
         <Col>
-          <img src={nelasmi} alt="imagen" className="nelasmi-logo" />
+          <img src={nelasmi} alt="imagen" className="nelasmi-logo"
+          onClick={() => window.open("https://github.com/mecadme", "_blank")} />
         </Col>
       </Row>
     </Container>

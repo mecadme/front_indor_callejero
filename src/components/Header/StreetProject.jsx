@@ -2,19 +2,16 @@ import React from 'react'
 import { Container } from 'react-bootstrap'
 import Header from './Header'
 import Footer from '../Footer/Footer'
+import PageBanner from '../Utils/PageBanner'
+import PhotoCarrousell from './PhotoCarrousell'
 
 const StreetProject = () => {
   return (
     <Container fluid>
       <Header />
-      <Container>
-        <h2>Proyecto Street</h2>
-        <p>En este proyecto, el equipo de callejero se encarga de analizar las predicciones de los jugadores. Para esto, se utilizan datos de la base de datos de la NBA. </p>
-        <p>La base de datos de la NBA se compone de 2 tablas: </p>
-        <ul>
-          <li>Jugadores</li>
-          <li>Partidos</li>
-        </ul>
+      <Container className="banner-container p-0">
+        <PageBanner title="Proyecto Callejero" />
+        <PhotoCarrousell information_type="PROJECT_STREET" />
       </Container>
       <Footer />
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import "./css/Timeline.css";
 import { renderIconTimeline } from "../Utils/RenderIcon";
+import "./css/Timeline.css";
 
 const TimelineEvent = ({ event, offset }) => {
   const { eventType, minute } = event; 

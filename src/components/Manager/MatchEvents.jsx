@@ -15,7 +15,6 @@ import {
 } from "../../api/Service/MatchService";
 import Loading from "../Utils/Loading";
 import EmptyData from "../Administration/EmptyData";
-import RangeSlider from "react-bootstrap-range-slider";
 import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css";
 
 const MatchEvents = ({ matchId }) => {
@@ -23,26 +22,36 @@ const MatchEvents = ({ matchId }) => {
   const { registerMatchEvent } = useRegisterMatchEvent();
 
   const [eventCount, setEventCount] = useState(1);
-  const [minute, setMinute] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedEvent, setSubmittedEvent] = useState(null); // Track submitted event
 
   useEffect(() => {
-    getLineUp(matchId);
-  }, []);
+    if (matchId) {
+      getLineUp(matchId);
+    }
+  }, [matchId]);
 
-  const handleEvent = (playerId, eventType, cardName = null) => {
-    const eventMinutes = Array.from(
-      { length: eventCount },
-      (_, index) => minute + index
-    );
+  const handleEvent = async (playerId, eventType, cardName = null) => {
+    setIsSubmitting(true); // Start loading state
+    setSubmittedEvent({ playerId, eventType }); // Store the event to give feedback
+    const eventMinutes = Array.from({ length: eventCount }, () => 1); // Always send minute 1
 
-    eventMinutes.forEach((min) => {
-      registerMatchEvent(matchId, {
-        minute: Number(min),
-        playerId,
-        eventType,
-        ...(cardName && { cardName }),
-      });
-    });
+    try {
+      for (let min of eventMinutes) {
+        await registerMatchEvent(matchId, {
+          minute: min,
+          playerId,
+          eventType,
+          ...(cardName && { cardName }),
+        });
+      }
+      setEventCount(1); // Reset event count after successful submission
+    } catch (err) {
+      console.error("Error registrando evento:", err);
+    } finally {
+      setIsSubmitting(false); // End loading state
+      setSubmittedEvent(null); // Reset submitted event
+    }
   };
 
   const events = {
@@ -75,33 +84,28 @@ const MatchEvents = ({ matchId }) => {
           <Form.Label>Múltiples eventos:</Form.Label>
           <Form.Control
             type="number"
-            min={0}
+            min={1}
             max={50}
             value={eventCount}
             onChange={(e) => setEventCount(Number(e.target.value))}
           />
-        </Col>
-        <Col xs={8}>
-          <Form.Label>Minuto inicial:</Form.Label>
-          <RangeSlider
-            value={minute}
-            min={1}
-            max={data?.match?.duration || 40}
-            onChange={(e) => setMinute(Number(e.target.value))}
-          />
-          <Form.Text>
-            {minute} - {minute + eventCount - 1}
-          </Form.Text>
         </Col>
       </Form.Group>
       <ButtonGroup aria-label="player-actions" size="sm">
         {Object.entries(events).map(([eventKey, eventValue]) => (
           <Button
             key={eventKey}
-            variant="outline-secondary"
+            variant={
+              isSubmitting && submittedEvent?.playerId === player.playerId && submittedEvent?.eventType === eventKey
+                ? "success"
+                : "outline-secondary"
+            }
             onClick={() => handleEvent(player.playerId, eventKey)}
+            disabled={isSubmitting && submittedEvent?.playerId === player.playerId && submittedEvent?.eventType === eventKey}
           >
-            {eventValue}
+            {isSubmitting && submittedEvent?.playerId === player.playerId && submittedEvent?.eventType === eventKey
+              ? "Enviando..."
+              : eventValue}
           </Button>
         ))}
       </ButtonGroup>
@@ -128,19 +132,20 @@ const MatchEvents = ({ matchId }) => {
     </Tab>
   );
 
-  if (!data) {
-    return <EmptyData message="No existe alineación para este partido..." />;
-  }
-
   if (loading) {
     return <Loading />;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.message || "Algo salió mal"}</div>;
+  }
+
+  if (!data) {
+    return <EmptyData message="No existe alineación para este partido..." />;
   }
 
   const { homeTeam, awayTeam } = data?.match || {};
+  console.log(homeTeam, awayTeam);
 
   return (
     <Tabs defaultActiveKey="homeTeam" id="team-tabs">

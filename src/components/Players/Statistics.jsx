@@ -6,6 +6,7 @@ import Cards from "./Statistics/Cards.jsx";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import "./Statistics/css/Statistics.css";
 
 const PlayerStatisticsOverview = () => {
   const statisticsCategories = [
@@ -33,14 +34,16 @@ const PlayerStatisticsOverview = () => {
   return (
     <Container fluid className="mt-1">
       <Header />
-      <Container className="text-center mt-4">
-        <h2 style={{ textTransform: "uppercase" }}>Centro de Estadísticas</h2>
+      <Container className="stats-container">
+      <Row className="banner-row  mb-2">
+          <h2 style={{ textTransform: "uppercase" }}>Centro de Estadísticas</h2>
+        </Row>
       </Container>
-      <Row>
+      <Row className="stats-row mt-3">
         {statisticsCategories.map((category, index) => (
           <Col key={index} sm={12} md={6} lg={4} className="mb-4">
             <Card className="shadow-sm h-100">
-              <Card.Header className="text-center bg-primary text-white">
+            <Card.Header className=" stats-card-header text-center text-white">
                 <h4>
                   {category.icon} {category.name.toUpperCase()}
                 </h4>
@@ -50,6 +53,7 @@ const PlayerStatisticsOverview = () => {
                   eventType={category.eventType}
                   name={category.name}
                   limit={3}
+                  showPagination={false}
                 />
               </Card.Body>
               <Card.Footer className="text-center">
@@ -66,14 +70,14 @@ const PlayerStatisticsOverview = () => {
             </Card>
           </Col>
         ))}
-        
+
         <Col sm={12} md={6} lg={4} className="mb-4">
           <Card className="shadow-sm h-100">
-            <Card.Header className="text-center bg-info text-white">
+          <Card.Header className=" stats-card-header text-center text-white">
               <h4>⏱ MINUTOS JUGADOS</h4>
             </Card.Header>
             <Card.Body>
-              <MinutesPlayed limit={3} />
+              <MinutesPlayed limit={3} showPagination={false} />
             </Card.Body>
             <Card.Footer className="text-center">
               <Button
@@ -91,11 +95,11 @@ const PlayerStatisticsOverview = () => {
         <Col></Col>
         <Col sm={12} md={6} lg={4} className="mb-4">
           <Card className="shadow-sm h-100">
-            <Card.Header className="text-center bg-danger text-white">
+            <Card.Header className=" stats-card-header text-center text-white">
               <h4>🟨🟥 TARJETAS</h4>
             </Card.Header>
             <Card.Body>
-              <Cards limit={2} />
+              <Cards limit={2} showPagination={false} />
             </Card.Body>
             <Card.Footer className="text-center">
               <Button

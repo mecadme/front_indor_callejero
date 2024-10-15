@@ -1,19 +1,17 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
-import PlayerStatistics from "./PlayerStatistics"; // Reutiliza el componente de estadísticas
-import { Container } from "react-bootstrap";
-import Header from "../../Header/Header";
+import { Container, Row } from "react-bootstrap";
 import Footer from "../../Footer/Footer";
+import Header from "../../Header/Header";
 import Cards from "./Cards";
+import PageBanner from "../../Utils/PageBanner";
 
 const CardsPage = () => {
   return (
     <Container fluid>
       <Header />
-      <Container className="mt-5">
-        <h2 className="text-center">
-          Tarjetas
-        </h2>
+      <Container className="cards-page-container p-0">
+        <PageBanner title="Tarjetas" />
+       
         <Cards />
       </Container>
       <Footer />

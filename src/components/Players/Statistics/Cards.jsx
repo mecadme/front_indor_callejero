@@ -1,13 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Alert, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Badge,
+  Col,
+  Container,
+  Image,
+  Pagination,
+  Row,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import EmptyData from "../../Administration/EmptyData";
+import Loading from "../../Utils/Loading";
+import StyleUtils from "../../Utils/StyleUtils";
+import PlayerSearch from "./PlayerSearch";
+import "./css/Cards.css";
 
-const Cards = ({limit}) => {
+const { lightenColor, getTextColor, zigZagSvg } = StyleUtils();
+
+const Cards = ({ limit, showPagination = true }) => {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredPlayers, setFilteredPlayers] = useState([]);
+  const playersPerPage = 6;
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
 
   const CARDS_URL = "player-statistics/playerCards";
 
@@ -16,25 +36,51 @@ const Cards = ({limit}) => {
       .get(CARDS_URL)
       .then((response) => {
         setPlayers(response.data);
+        setFilteredPlayers(response.data);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch(() => {
         setError("Error al cargar los datos");
         setLoading(false);
       });
-  }, []);
+  }, [axiosPrivate]);
 
-  const displayedPlayers = limit ? players.slice(0, limit) : players;
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPlayers(players);
+    } else {
+      const filtered = players.filter((player) =>
+        `${player.firstName} ${player.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+      setFilteredPlayers(filtered);
+      setCurrentPage(1);
+    }
+  };
 
-  const yellowCards = displayedPlayers.filter((player) => player.cardName === "YELLOW");
-  const redCards = displayedPlayers.filter((player) => player.cardName === "RED");
+  const indexOfLastPlayer = currentPage * playersPerPage;
+  const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
+  const currentPlayers = filteredPlayers.slice(
+    indexOfFirstPlayer,
+    indexOfLastPlayer
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const displayedPlayers = limit
+    ? currentPlayers.slice(0, limit)
+    : currentPlayers;
+
+  const yellowCards = displayedPlayers.filter(
+    (player) => player.cardName === "YELLOW"
+  );
+  const redCards = displayedPlayers.filter(
+    (player) => player.cardName === "RED"
+  );
 
   if (loading) {
-    return (
-      <div className="text-center">
-        <Spinner animation="border" />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -43,141 +89,150 @@ const Cards = ({limit}) => {
 
   if (players.length === 0) {
     return (
-      <Container className="mt-4 text-center" style={{ padding: "10rem" }}>
-        <Alert variant="info">
-          <h3>¡Alienta a tu jugador a no cometer faltas!</h3>
-          <p>
-            Genial no ha habido{" "}
-            <strong>
-              <h4>Tarjetas</h4>
-            </strong>
-            . <br />
-            ¡Sigue apoyando para mantener un juego limpio!
-          </p>
-          <div className="mt-4">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/10368/10368405.png"
-              alt="Motivate"
-              style={{ width: "200px" }}
-            />
-          </div>
-        </Alert>
-      </Container>
+      <EmptyData
+        message="Genial no ha habido tarjetas. ¡Felicidades! Sigue apoyando por un juego limpio"
+        translateY={55}
+      />
     );
   }
 
+  const PlayerCard = ({ player, index, cardType, currentPage }) => {
+    const lighterColor = lightenColor(player.teamColor, 40);
+    const textColor = getTextColor(lighterColor);
+    const zigZagBackground = zigZagSvg(player.teamColor, lighterColor);
+    const match = player.teamLogoUrl.match(/_(\d+)\./);
+    const teamId = match ? match[1] : 1;
+
+    const handlePlayerClick = (playerId) => navigate(`/player/${playerId}`);
+    const handleTeamSelection = (teamId) => navigate(`/team/${teamId}`);
+
+    return (
+      <Row
+        key={player.playerId}
+        className="shadow-sm rounded mb-4 cards-player-card"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
+            zigZagBackground
+          )}")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          color: textColor,
+          cursor: "pointer",
+        }}
+      >
+        <Row className="align-items-center text-center">
+          <Col xs={4} className="text-center">
+            <Image
+              src={player.teamLogoUrl}
+              alt="Team Logo"
+              style={{ width: "5rem", height: "5rem", objectFit: "contain" }}
+              onClick={() => handleTeamSelection(teamId)}
+              className="img-fluid"
+            />
+          </Col>
+          <Col
+            xs={5}
+            className="d-flex flex-column justify-content-center p-2"
+            onClick={() => handlePlayerClick(player.playerId)}
+          >
+            {index === 0 && currentPage === 1 && (
+              <Container className="king-card-container mb-2">
+                <Badge bg="dark" className="king-card-badge mt-2">
+                  El rey de las {cardType === "YELLOW" ? "amarillas" : "rojas"}
+                </Badge>
+                <Image
+                  src={player.photoUrl}
+                  alt="El rey de las tarjetas"
+                  style={{
+                    width: "3rem",
+                    height: "3rem",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                  }}
+                  className="king-card-image"
+                />
+              </Container>
+            )}
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.5rem",
+                color: textColor,
+              }}
+            >
+              {player.firstName} {player.lastName}
+            </div>
+          </Col>
+          <Col xs={3} className="text-center" style={{ color: textColor }}>
+            <div
+              style={{
+                fontSize: "2rem",
+                fontWeight: "bold",
+                accentColor: player.teamColor,
+              }}
+            >
+              {player.eventCount}
+            </div>
+          </Col>
+        </Row>
+      </Row>
+    );
+  };
+
+  const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
+
   return (
-    <Container className="mt-4">
+    <Container className="mt-1 cards-container">
+      {showPagination && (
+        <Row className="mt-3 justify-content-center">
+          <PlayerSearch onSearch={handleSearch} />
+          <Pagination className="custom-pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <Pagination.Item
+                key={i + 1}
+                active={i + 1 === currentPage}
+                onClick={() => paginate(i + 1)}
+                className="custom-pagination-item"
+              >
+                {i + 1}
+              </Pagination.Item>
+            ))}
+          </Pagination>
+        </Row>
+      )}
       <Row>
-        {/* Columna izquierda - Tarjetas amarillas */}
         <Col xs={12} md={6}>
-          <h3 className="text-center">Tarjetas Amarillas</h3>
+          <h3 className="text-center cards-heading">Amarillas</h3>
           {yellowCards.length === 0 ? (
-            <p className="text-center">No hay tarjetas amarillas.</p>
+            <p className="text-center cards-no-data">
+              No hay tarjetas amarillas.
+            </p>
           ) : (
             yellowCards.map((player, index) => (
-              <Card key={player.playerId} className="mb-4 shadow-sm">
-                <Row>
-                  <Col xs={4}>
-                    <Card.Img
-                      src={player.teamLogoUrl}
-                      alt="Team Logo"
-                      style={{ width: "100%", objectFit: "contain" }}
-                    />
-                  </Col>
-                  <Col xs={8}>
-                    <Card.Body>
-                      <Card.Title>
-                      {index === 0 && (
-                          <img
-                            src={player.photoUrl}
-                            alt="Jugador"
-                            style={{
-                              width: "100px",
-                              height: "100px",
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                              marginTop: "10px",
-                            }}
-                          />
-                        )}
-                        <br />
-                        {player.firstName} {player.lastName}
-                      </Card.Title>
-                      <Card.Text>
-                        <strong>Tarjetas: </strong> {player.eventCount} <br />
-                        <strong>Equipo: </strong>{" "}
-                        <span
-                          style={{
-                            color: player.teamColor,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {player.teamColor}
-                        </span>
-                        <br />
-                        {/* Mostrar la foto del jugador solo en la primera tarjeta */}
-                        
-                      </Card.Text>
-                    </Card.Body>
-                  </Col>
-                </Row>
-              </Card>
+              <PlayerCard
+                key={player.playerId}
+                player={player}
+                index={index}
+                cardType="YELLOW"
+                currentPage={currentPage}
+              />
             ))
           )}
         </Col>
 
-        {/* Columna derecha - Tarjetas rojas */}
         <Col xs={12} md={6}>
-          <h3 className="text-center">Tarjetas Rojas</h3>
+          <h3 className="text-center cards-heading">Rojas</h3>
           {redCards.length === 0 ? (
-            <p className="text-center">No hay tarjetas rojas.</p>
+            <p className="text-center cards-no-data">No hay tarjetas rojas.</p>
           ) : (
             redCards.map((player, index) => (
-              <Card key={player.playerId} className="mb-4 shadow-sm">
-                <Row>
-                  <Col xs={4}>
-                    <Card.Img
-                      src={player.teamLogoUrl}
-                      alt="Team Logo"
-                      style={{ width: "100%", objectFit: "contain" }}
-                    />
-                  </Col>
-                  <Col xs={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        {index === 0 && (
-                          <img
-                            src={player.photoUrl}
-                            alt="Jugador"
-                            style={{
-                              width: "100px",
-                              height: "100px",
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                              marginTop: "10px",
-                            }}
-                          />
-                        )}
-                        <br />
-                        {player.firstName} {player.lastName}
-                      </Card.Title>
-                      <Card.Text>
-                        <strong>Tarjetas: </strong> {player.eventCount} <br />
-                        <strong>Equipo: </strong>{" "}
-                        <span
-                          style={{
-                            color: player.teamColor,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {player.teamColor}
-                        </span>
-                      </Card.Text>
-                    </Card.Body>
-                  </Col>
-                </Row>
-              </Card>
+              <PlayerCard
+                key={player.playerId}
+                player={player}
+                index={index}
+                cardType="RED"
+                currentPage={currentPage}
+              />
             ))
           )}
         </Col>

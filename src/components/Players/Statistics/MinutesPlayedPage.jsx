@@ -1,24 +1,23 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
-import PlayerStatistics from "./PlayerStatistics"; // Reutiliza el componente de estadísticas
-import { Container } from "react-bootstrap";
-import Header from "../../Header/Header";
+import { Container, Row } from "react-bootstrap";
 import Footer from "../../Footer/Footer";
+import Header from "../../Header/Header";
 import MinutesPlayed from "./MinutesPlayed";
+import PageBanner from "../../Utils/PageBanner";
+import "./css/MinutesPlayed.css";
 
 const MinutesPlayedPage = () => {
   return (
     <Container fluid>
       <Header />
-      <Container className="mt-5">
-        <h2 className="text-center">
-          {location.state?.name || "Estadísticas"}
-        </h2>
+      <Container className="minutes-played-container p-0">
+        <PageBanner title="Minutos jugados" />
+
         <MinutesPlayed />
       </Container>
       <Footer />
     </Container>
-  )
-}
+  );
+};
 
-export default MinutesPlayedPage
+export default MinutesPlayedPage;

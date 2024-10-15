@@ -3,15 +3,30 @@
   padding: 0;
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
-  font-variant: small-caps;
+  
 }
 
 html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  width: 100%;
+  width: 99vw;
+  text-transform: uppercase;
+  background-color: #F5EDF4;
 }
+.banner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  padding: 0;
+}
+
+.card-header{
+  background-color: #33173C;
+}
+
 
 
 a {
@@ -29,12 +44,21 @@ a:hover {
 }
 
 
-h1 {
+h2 {
   color: #F5EDF4;
   margin-bottom: 1rem;
   font-size: 24px;
   text-align: center;
 }
+
+h3 {
+  color: #33173C;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
 
 form {
   display: flex;
@@ -172,8 +196,7 @@ button:disabled {
     padding: 0.5rem;
   }
   .App {
-    width: 90%;
-    padding: 0.5rem;
+    width: 100%;
     max-width: 100%;
   }
   label {
